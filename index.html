@@ -48,48 +48,6 @@
             position: relative;
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, var(--gold) 0%, var(--light-gold) 100%);
-            border-radius: 50%;
-            transform: scale(0.8);
-        }
-
-        .logo-text {
-            position: relative;
-            z-index: 2;
-            color: var(--primary-blue);
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
         .header h1 {
             font-size: 3.5rem;
             margin-bottom: 10px;
@@ -193,6 +151,12 @@
             margin-bottom: 25px;
         }
 
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -263,6 +227,11 @@
             font-size: 1.2rem;
         }
 
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -294,6 +263,22 @@
         .stat-label {
             font-size: 1rem;
             opacity: 0.9;
+        }
+
+        .reminder-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #c0392b;
+            text-align: center;
+        }
+
+        .reminder-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .booking-section {
@@ -425,6 +410,40 @@
             padding-bottom: 10px;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border: 3px solid var(--gold);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -445,6 +464,16 @@
             border-radius: 10px;
             margin: 15px 0;
             border: 1px solid #c3e6cb;
+        }
+
+        .weekend-only {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #856404;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
@@ -471,13 +500,8 @@
                 font-size: 2.5rem;
             }
 
-            .logo-container {
-                flex-direction: column;
-            }
-
-            .logo {
-                margin-right: 0;
-                margin-bottom: 15px;
+            .form-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -485,15 +509,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo-container">
-                <div class="logo">
-                    <div class="logo-text">DR.<br>SHINE</div>
-                </div>
-                <div>
-                    <h1>Dr. Shine</h1>
-                    <p>Système de Gestion Professionnel</p>
-                </div>
-            </div>
+            <h1>Dr. Shine</h1>
+            <p>Système de Gestion Professionnel</p>
         </div>
 
         <!-- Sélection du rôle -->
@@ -555,6 +572,12 @@
                     </div>
                 </div>
                 <div class="card-content">
+                    <!-- Rappel important -->
+                    <div id="contract-reminder" class="reminder-card hidden">
+                        <div class="reminder-title">⚠️ RAPPEL IMPORTANT</div>
+                        <div id="reminder-text"></div>
+                    </div>
+
                     <!-- Stats Client -->
                     <div class="dashboard-stats">
                         <div class="stat-card">
@@ -579,6 +602,9 @@
                     <div class="booking-section">
                         <div class="booking-form">
                             <h3 class="section-title">📅 Réserver un Service</h3>
+                            <div class="weekend-only">
+                                ⏰ <strong>Disponibilités :</strong> Samedi et Dimanche uniquement, de 8h00 à 15h00
+                            </div>
                             <div class="form-group">
                                 <label for="booking-service">Service souhaité :</label>
                                 <select id="booking-service" required>
@@ -601,14 +627,14 @@
                                 <label for="booking-time">Heure préférée :</label>
                                 <select id="booking-time" required>
                                     <option value="">Sélectionnez un créneau</option>
-                                    <option value="08:00">08:00 - Matinée</option>
-                                    <option value="09:00">09:00 - Matinée</option>
-                                    <option value="10:00">10:00 - Matinée</option>
-                                    <option value="11:00">11:00 - Fin de matinée</option>
-                                    <option value="13:00">13:00 - Début d'après-midi</option>
-                                    <option value="14:00">14:00 - Après-midi</option>
-                                    <option value="15:00">15:00 - Après-midi</option>
-                                    <option value="16:00">16:00 - Fin d'après-midi</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -712,19 +738,21 @@
                                 <label for="new-client-name">Nom complet :</label>
                                 <input type="text" id="new-client-name" placeholder="Nom et prénom" required>
                             </div>
-                            <div class="form-group">
-                                <label for="new-client-email">Email :</label>
-                                <input type="email" id="new-client-email" placeholder="email@exemple.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="new-client-phone">Téléphone :</label>
-                                <input type="tel" id="new-client-phone" placeholder="819-555-0000" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-client-email">Email :</label>
+                                    <input type="email" id="new-client-email" placeholder="email@exemple.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-client-phone">Téléphone :</label>
+                                    <input type="tel" id="new-client-phone" placeholder="819-555-0000" required>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="new-client-address">Adresse :</label>
                                 <textarea id="new-client-address" rows="2" placeholder="Adresse complète" required></textarea>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="contract-amount">Montant contrat ($) :</label>
                                     <input type="number" id="contract-amount" placeholder="4000" step="100" required>
@@ -804,74 +832,250 @@
         </div>
     </div>
 
-    <script>
-        // Base de données
-        let users = [
-            {
-                id: 1,
-                name: "Nicoletta Hubencu",
-                email: "ncaraulan@gmail.com",
-                phone: "819-555-0123",
-                address: "24 Rue Demers, Sainte-Martine, J0S 1V0 QC",
-                password: "DR2025!",
-                contractAmount: 2160,
-                totalVisits: 24,
-                usedVisits: 2,
-                prepaidBalance: 180,
-                extraCredits: 0,
-                createdAt: "2025-07-13"
-            },
-            {
-                id: 2,
-                name: "Marie Dubois",
-                email: "marie@example.com",
-                phone: "819-555-0456",
-                address: "456 Avenue des Érables, Ottawa, ON",
-                password: "DR2025!",
-                contractAmount: 6000,
-                totalVisits: 24,
-                usedVisits: 15,
-                prepaidBalance: 2250,
-                extraCredits: 0,
-                createdAt: "2025-01-01"
-            }
-        ];
+    <!-- Modal pour édition client -->
+    <div id="edit-client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2 style="margin-bottom: 20px; color: var(--primary-blue);">✏️ Modifier Client</h2>
+            <div id="edit-client-form">
+                <div class="form-group">
+                    <label for="edit-name">Nom complet :</label>
+                    <input type="text" id="edit-name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-email">Email :</label>
+                        <input type="email" id="edit-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-phone">Téléphone :</label>
+                        <input type="tel" id="edit-phone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-address">Adresse :</label>
+                    <textarea id="edit-address" rows="2" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-contract-amount">Montant contrat ($) :</label>
+                        <input type="number" id="edit-contract-amount" step="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-total-visits">Passages totaux :</label>
+                        <input type="number" id="edit-total-visits" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-used-visits">Passages utilisés :</label>
+                        <input type="number" id="edit-used-visits" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-balance">Solde disponible ($) :</label>
+                        <input type="number" id="edit-balance" step="0.01" required>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="saveClientChanges()">💾 Sauvegarder</button>
+                    <button class="btn btn-warning" onclick="closeEditModal()">❌ Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        let appointments = [
-            {
-                id: 1,
-                userId: 1,
-                date: "2025-07-20",
-                time: "09:00",
-                service: "menage",
-                status: "confirmed",
-                cost: 166.67,
-                notes: "Attention aux plantes",
-                createdAt: "2025-07-10"
+    <script>
+        // ================== SYSTÈME DE BASE DE DONNÉES ==================
+        
+        // Fonctions de base de données avec localStorage
+        const DrShineDB = {
+            // Initialiser les données par défaut si elles n'existent pas
+            init() {
+                if (!localStorage.getItem('drshine_users')) {
+                    this.saveUsers(this.getDefaultUsers());
+                }
+                if (!localStorage.getItem('drshine_appointments')) {
+                    this.saveAppointments(this.getDefaultAppointments());
+                }
             },
-            {
-                id: 2,
-                userId: 1,
-                date: "2025-07-05",
-                time: "14:00",
-                service: "vitres",
-                status: "completed",
-                cost: 166.67,
-                notes: "",
-                createdAt: "2025-06-25"
+
+            // Utilisateurs
+            getUsers() {
+                const data = localStorage.getItem('drshine_users');
+                return data ? JSON.parse(data) : this.getDefaultUsers();
             },
-            {
-                id: 3,
-                userId: 2,
-                date: "2025-07-18",
-                time: "10:00",
-                service: "auto-complet",
-                status: "pending",
-                cost: 250.00,
-                notes: "Véhicule dans l'entrée",
-                createdAt: "2025-07-11"
+
+            saveUsers(users) {
+                localStorage.setItem('drshine_users', JSON.stringify(users));
+            },
+
+            addUser(user) {
+                const users = this.getUsers();
+                user.id = Math.max(...users.map(u => u.id), 0) + 1;
+                users.push(user);
+                this.saveUsers(users);
+                return user;
+            },
+
+            updateUser(userId, userData) {
+                const users = this.getUsers();
+                const index = users.findIndex(u => u.id === userId);
+                if (index !== -1) {
+                    users[index] = { ...users[index], ...userData };
+                    this.saveUsers(users);
+                    return users[index];
+                }
+                return null;
+            },
+
+            getUserById(userId) {
+                const users = this.getUsers();
+                return users.find(u => u.id === userId) || null;
+            },
+
+            // Rendez-vous
+            getAppointments() {
+                const data = localStorage.getItem('drshine_appointments');
+                return data ? JSON.parse(data) : this.getDefaultAppointments();
+            },
+
+            saveAppointments(appointments) {
+                localStorage.setItem('drshine_appointments', JSON.stringify(appointments));
+            },
+
+            addAppointment(appointment) {
+                const appointments = this.getAppointments();
+                appointment.id = Math.max(...appointments.map(a => a.id), 0) + 1;
+                appointments.push(appointment);
+                this.saveAppointments(appointments);
+                return appointment;
+            },
+
+            updateAppointment(appointmentId, appointmentData) {
+                const appointments = this.getAppointments();
+                const index = appointments.findIndex(a => a.id === appointmentId);
+                if (index !== -1) {
+                    appointments[index] = { ...appointments[index], ...appointmentData };
+                    this.saveAppointments(appointments);
+                    return appointments[index];
+                }
+                return null;
+            },
+
+            // Données par défaut
+            getDefaultUsers() {
+                return [
+                    {
+                        id: 1,
+                        name: "Nicoletta Hubencu",
+                        email: "ncaraulan@gmail.com",
+                        phone: "819-555-0123",
+                        address: "24 Rue Demers, Sainte-Martine, J0S 1V0 QC",
+                        password: "DR2025!",
+                        contractAmount: 2160,
+                        totalVisits: 24,
+                        usedVisits: 2,
+                        prepaidBalance: 1980,
+                        extraCredits: 0,
+                        createdAt: "2025-01-15",
+                        firstVisitDate: "2025-02-01"
+                    },
+                    {
+                        id: 2,
+                        name: "Marie Dubois",
+                        email: "marie@example.com",
+                        phone: "819-555-0456",
+                        address: "456 Avenue des Érables, Ottawa, ON",
+                        password: "DR2025!",
+                        contractAmount: 6000,
+                        totalVisits: 24,
+                        usedVisits: 15,
+                        prepaidBalance: 2250,
+                        extraCredits: 0,
+                        createdAt: "2025-01-01",
+                        firstVisitDate: "2025-02-15"
+                    },
+                    {
+                        id: 3,
+                        name: "Pierre Martin",
+                        email: "pierre.martin@email.com",
+                        phone: "819-555-0789",
+                        address: "123 Boulevard Principal, Gatineau, QC",
+                        password: "DR2025!",
+                        contractAmount: 4800,
+                        totalVisits: 24,
+                        usedVisits: 22,
+                        prepaidBalance: 400,
+                        extraCredits: 0,
+                        createdAt: "2024-07-10",
+                        firstVisitDate: "2024-08-01"
+                    }
+                ];
+            },
+
+            getDefaultAppointments() {
+                return [
+                    {
+                        id: 1,
+                        userId: 1,
+                        date: "2025-07-20",
+                        time: "09:00",
+                        service: "menage",
+                        status: "confirmed",
+                        cost: 90,
+                        notes: "Attention aux plantes",
+                        createdAt: "2025-07-10"
+                    },
+                    {
+                        id: 2,
+                        userId: 1,
+                        date: "2025-07-05",
+                        time: "14:00",
+                        service: "vitres",
+                        status: "completed",
+                        cost: 90,
+                        notes: "",
+                        createdAt: "2025-06-25"
+                    },
+                    {
+                        id: 3,
+                        userId: 2,
+                        date: "2025-07-21",
+                        time: "10:00",
+                        service: "auto-complet",
+                        status: "pending",
+                        cost: 250.00,
+                        notes: "Véhicule dans l'entrée",
+                        createdAt: "2025-07-11"
+                    },
+                    {
+                        id: 4,
+                        userId: 3,
+                        date: "2025-07-19",
+                        time: "08:00",
+                        service: "menage",
+                        status: "confirmed",
+                        cost: 200,
+                        notes: "",
+                        createdAt: "2025-07-12"
+                    }
+                ];
+            },
+
+            // Fonction pour réinitialiser la base de données (pour les tests)
+            reset() {
+                localStorage.removeItem('drshine_users');
+                localStorage.removeItem('drshine_appointments');
+                this.init();
             }
-        ];
+        };
+
+        // Initialiser la base de données au chargement
+        DrShineDB.init();
+
+        // Variables globales (maintenant alimentées par la BD)
+        let users = DrShineDB.getUsers();
+        let appointments = DrShineDB.getAppointments();
 
         const serviceNames = {
             'menage': '🏠 Entretien ménager',
@@ -885,6 +1089,47 @@
         };
 
         let currentUser = null;
+        let editingClientId = null;
+
+        // Fonctions utilitaires
+        function isWeekend(date) {
+            const day = new Date(date).getDay();
+            return day === 0 || day === 6; // Dimanche = 0, Samedi = 6
+        }
+
+        function getNextAvailableDate() {
+            const today = new Date();
+            let nextDate = new Date(today);
+            nextDate.setDate(today.getDate() + 1);
+            
+            while (!isWeekend(nextDate)) {
+                nextDate.setDate(nextDate.getDate() + 1);
+            }
+            
+            return nextDate.toISOString().split('T')[0];
+        }
+
+        function calculateMonthsFromFirstVisit(firstVisitDate) {
+            if (!firstVisitDate) return 0;
+            
+            const first = new Date(firstVisitDate);
+            const today = new Date();
+            
+            const months = (today.getFullYear() - first.getFullYear()) * 12 + 
+                          (today.getMonth() - first.getMonth());
+            
+            return months;
+        }
+
+        function getContractExpirationDate(firstVisitDate) {
+            if (!firstVisitDate) return null;
+            
+            const first = new Date(firstVisitDate);
+            const expiration = new Date(first);
+            expiration.setFullYear(first.getFullYear() + 1);
+            
+            return expiration;
+        }
 
         // Navigation
         function showClientLogin() {
@@ -941,7 +1186,7 @@
             }
         }
 
-        // Dashboard client
+        // Dashboard client amélioré
         function updateClientDashboard() {
             if (!currentUser) return;
 
@@ -951,9 +1196,12 @@
             const remaining = currentUser.totalVisits - currentUser.usedVisits;
             const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
 
-            document.getElementById('client-remaining-visits').textContent = remaining;
+            document.getElementById('client-remaining-visits').textContent = `${currentUser.usedVisits}/${currentUser.totalVisits}`;
             document.getElementById('client-balance').textContent = `${currentUser.prepaidBalance.toFixed(0)}$`;
             document.getElementById('client-cost-per-visit').textContent = `${costPerVisit.toFixed(0)}$`;
+
+            // Vérifier le rappel de contrat
+            checkContractReminder();
 
             // Prochain RDV
             const nextAppt = appointments
@@ -967,13 +1215,34 @@
                 document.getElementById('client-next-appointment').textContent = '--';
             }
 
-            // Date minimum
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('booking-date').min = tomorrow.toISOString().split('T')[0];
+            // Date minimum (prochaine fin de semaine)
+            document.getElementById('booking-date').min = getNextAvailableDate();
 
             loadClientAppointments();
             updateBookingSummary();
+        }
+
+        function checkContractReminder() {
+            if (!currentUser.firstVisitDate) return;
+
+            const monthsElapsed = calculateMonthsFromFirstVisit(currentUser.firstVisitDate);
+            const expirationDate = getContractExpirationDate(currentUser.firstVisitDate);
+            const daysUntilExpiration = Math.ceil((expirationDate - new Date()) / (1000 * 60 * 60 * 24));
+            
+            const reminderCard = document.getElementById('contract-reminder');
+            const reminderText = document.getElementById('reminder-text');
+
+            if (monthsElapsed >= 10 || daysUntilExpiration <= 90) {
+                reminderCard.classList.remove('hidden');
+                reminderText.innerHTML = `
+                    Vous devez consommer tous vos passages avant le <strong>${expirationDate.toLocaleDateString('fr-FR')}</strong> 
+                    (dans ${daysUntilExpiration} jours). Après cette date, vous devrez régler la totalité de votre facture.
+                    <br><br>
+                    Passages restants : <strong>${currentUser.totalVisits - currentUser.usedVisits}</strong>
+                `;
+            } else {
+                reminderCard.classList.add('hidden');
+            }
         }
 
         function loadClientAppointments() {
@@ -1008,6 +1277,16 @@
             const summaryContent = document.getElementById('booking-summary-content');
             
             if (service && date && time && currentUser) {
+                if (!isWeekend(date)) {
+                    summaryContent.innerHTML = `
+                        <p style="color: red; text-align: center;">
+                            ❌ Cette date n'est pas disponible.<br>
+                            Veuillez choisir un samedi ou dimanche.
+                        </p>
+                    `;
+                    return;
+                }
+
                 const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
                 summaryContent.innerHTML = `
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Détails de la réservation</h4>
@@ -1022,7 +1301,7 @@
             }
         }
 
-        // Réservation
+        // Réservation améliorée avec BD
         function makeBooking() {
             if (!currentUser) return;
 
@@ -1036,15 +1315,25 @@
                 return;
             }
 
-            const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
+            if (!isWeekend(date)) {
+                showNotification('Les rendez-vous ne sont disponibles que les samedis et dimanches', 'error');
+                return;
+            }
 
-            if (currentUser.prepaidBalance < costPerVisit) {
-                showNotification('Solde insuffisant. Contactez Dr. Shine.', 'error');
+            if (time > "15:00") {
+                showNotification('Aucun créneau disponible après 15h00', 'error');
+                return;
+            }
+
+            const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
+            const remaining = currentUser.totalVisits - currentUser.usedVisits;
+
+            if (remaining <= 0) {
+                showNotification('Aucun passage restant dans votre contrat', 'error');
                 return;
             }
 
             const newAppointment = {
-                id: appointments.length + 1,
                 userId: currentUser.id,
                 date: date,
                 time: time,
@@ -1055,9 +1344,25 @@
                 createdAt: new Date().toISOString().split('T')[0]
             };
 
-            appointments.push(newAppointment);
-            currentUser.usedVisits++;
-            currentUser.prepaidBalance -= costPerVisit;
+            // Ajouter le RDV à la BD
+            DrShineDB.addAppointment(newAppointment);
+
+            // Mettre à jour l'utilisateur
+            const updateData = {
+                usedVisits: currentUser.usedVisits + 1
+            };
+
+            // Si première visite, enregistrer la date
+            if (!currentUser.firstVisitDate) {
+                updateData.firstVisitDate = date;
+            }
+
+            DrShineDB.updateUser(currentUser.id, updateData);
+            
+            // Mettre à jour currentUser et les données locales
+            currentUser = DrShineDB.getUserById(currentUser.id);
+            users = DrShineDB.getUsers();
+            appointments = DrShineDB.getAppointments();
 
             // Email simulation
             console.log('📧 Email envoyé à francoisfreddyateba2@gmail.com');
@@ -1073,16 +1378,43 @@
             showNotification('Rendez-vous confirmé avec succès ! Emails envoyés.', 'success');
         }
 
-        // Dashboard admin
+        // Validation des dates pour les weekends seulement
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('booking-date');
+            
+            if (dateInput) {
+                dateInput.addEventListener('change', function() {
+                    const selectedDate = this.value;
+                    if (selectedDate && !isWeekend(selectedDate)) {
+                        showNotification('Veuillez sélectionner un samedi ou un dimanche', 'error');
+                        this.value = '';
+                    }
+                });
+            }
+
+            ['booking-service', 'booking-date', 'booking-time'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', updateBookingSummary);
+                }
+            });
+        });
+
+        // Dashboard admin amélioré
         function updateAdminDashboard() {
             const totalRevenue = users.reduce((sum, user) => sum + (user.contractAmount - user.prepaidBalance), 0);
             const totalClients = users.length;
-            const totalAppointments = appointments.length;
-            const avgSatisfaction = 4.8; // Simulation
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthlyAppointments = appointments.filter(apt => {
+                const aptDate = new Date(apt.date);
+                return aptDate.getMonth() === currentMonth && aptDate.getFullYear() === currentYear;
+            }).length;
+            const avgSatisfaction = 4.8;
 
             document.getElementById('admin-revenue').textContent = `${totalRevenue.toFixed(0)}$`;
             document.getElementById('admin-clients').textContent = totalClients;
-            document.getElementById('admin-appointments').textContent = totalAppointments;
+            document.getElementById('admin-appointments').textContent = monthlyAppointments;
             document.getElementById('admin-satisfaction').textContent = `${avgSatisfaction}⭐`;
 
             loadClientsTable();
@@ -1095,17 +1427,26 @@
             
             tbody.innerHTML = users.map(user => {
                 const remaining = user.totalVisits - user.usedVisits;
+                const monthsElapsed = calculateMonthsFromFirstVisit(user.firstVisitDate);
+                const isExpiringSoon = monthsElapsed >= 10;
+                
                 return `
-                    <tr>
-                        <td><strong>${user.name}</strong></td>
+                    <tr ${isExpiringSoon ? 'style="background-color: #fff3cd;"' : ''}>
+                        <td>
+                            <strong>${user.name}</strong>
+                            ${isExpiringSoon ? '<br><small style="color: #856404;">⚠️ Contrat expire bientôt</small>' : ''}
+                        </td>
                         <td>${user.email}<br><small>${user.phone}</small></td>
                         <td>${user.contractAmount}$</td>
-                        <td>${user.usedVisits}/${user.totalVisits} (${remaining} restants)</td>
+                        <td>
+                            <strong>${user.usedVisits}/${user.totalVisits}</strong>
+                            <br><small>(${remaining} restants)</small>
+                        </td>
                         <td style="color: ${user.prepaidBalance < 200 ? 'red' : 'green'}; font-weight: bold;">
                             ${user.prepaidBalance.toFixed(2)}$
                         </td>
                         <td>
-                            <button class="btn btn-warning" onclick="editClient(${user.id})" style="padding: 8px 15px; font-size: 0.9rem;">
+                            <button class="btn btn-warning btn-small" onclick="editClient(${user.id})">
                                 ✏️ Modifier
                             </button>
                         </td>
@@ -1135,7 +1476,7 @@
                     <td>${apt.cost.toFixed(2)}$</td>
                     <td>
                         ${apt.status !== 'completed' ? 
-                            `<button class="btn btn-success" onclick="markCompleted(${apt.id})" style="padding: 8px 15px; font-size: 0.9rem;">
+                            `<button class="btn btn-success btn-small" onclick="markCompleted(${apt.id})">
                                 ✅ Terminé
                             </button>` : 
                             '<span style="color: var(--success);">✅ Terminé</span>'
@@ -1151,7 +1492,7 @@
                 users.map(user => `<option value="${user.id}">${user.name} (${user.email})</option>`).join('');
         }
 
-        // Créer client
+        // Créer client amélioré avec BD
         function createClient() {
             const name = document.getElementById('new-client-name').value;
             const email = document.getElementById('new-client-email').value;
@@ -1172,7 +1513,6 @@
             }
 
             const newUser = {
-                id: users.length + 1,
                 name: name,
                 email: email,
                 phone: phone,
@@ -1183,10 +1523,15 @@
                 usedVisits: 0,
                 prepaidBalance: initialPayment,
                 extraCredits: 0,
-                createdAt: new Date().toISOString().split('T')[0]
+                createdAt: new Date().toISOString().split('T')[0],
+                firstVisitDate: null
             };
 
-            users.push(newUser);
+            // Ajouter à la BD
+            DrShineDB.addUser(newUser);
+            
+            // Recharger les données
+            users = DrShineDB.getUsers();
 
             // Email simulation
             console.log('📧 Identifiants envoyés à', email);
@@ -1205,27 +1550,78 @@
             showNotification(`Client créé avec succès ! Identifiants envoyés à ${email}`, 'success');
         }
 
-        // Autres fonctions
-        function markCompleted(appointmentId) {
-            const appointment = appointments.find(apt => apt.id === appointmentId);
-            if (appointment) {
-                appointment.status = 'completed';
-                loadAppointmentsTable();
-                showNotification('Service marqué comme terminé !', 'success');
-                console.log('📧 Email envoyé à francoisfreddyateba2@gmail.com');
-            }
-        }
-
+        // Édition client améliorée
         function editClient(clientId) {
+            editingClientId = clientId;
             const user = users.find(u => u.id === clientId);
             if (!user) return;
 
-            const newAmount = prompt(`Modifier le contrat de ${user.name}.\nMontant actuel: ${user.contractAmount}$\nNouveau montant:`, user.contractAmount);
+            // Remplir le formulaire de modification
+            document.getElementById('edit-name').value = user.name;
+            document.getElementById('edit-email').value = user.email;
+            document.getElementById('edit-phone').value = user.phone;
+            document.getElementById('edit-address').value = user.address;
+            document.getElementById('edit-contract-amount').value = user.contractAmount;
+            document.getElementById('edit-total-visits').value = user.totalVisits;
+            document.getElementById('edit-used-visits').value = user.usedVisits;
+            document.getElementById('edit-balance').value = user.prepaidBalance;
+
+            // Afficher le modal
+            document.getElementById('edit-client-modal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-client-modal').style.display = 'none';
+            editingClientId = null;
+        }
+
+        function saveClientChanges() {
+            if (!editingClientId) return;
+
+            const user = users.find(u => u.id === editingClientId);
+            if (!user) return;
+
+            // Récupérer les nouvelles valeurs
+            const updateData = {
+                name: document.getElementById('edit-name').value,
+                email: document.getElementById('edit-email').value,
+                phone: document.getElementById('edit-phone').value,
+                address: document.getElementById('edit-address').value,
+                contractAmount: parseFloat(document.getElementById('edit-contract-amount').value),
+                totalVisits: parseInt(document.getElementById('edit-total-visits').value),
+                usedVisits: parseInt(document.getElementById('edit-used-visits').value),
+                prepaidBalance: parseFloat(document.getElementById('edit-balance').value)
+            };
+
+            // Mettre à jour dans la BD
+            DrShineDB.updateUser(editingClientId, updateData);
             
-            if (newAmount && !isNaN(newAmount) && newAmount > 0) {
-                user.contractAmount = parseFloat(newAmount);
-                loadClientsTable();
-                showNotification(`Contrat de ${user.name} mis à jour !`, 'success');
+            // Recharger les données
+            users = DrShineDB.getUsers();
+            
+            // Si c'est l'utilisateur connecté, mettre à jour currentUser
+            if (currentUser && currentUser.id === editingClientId) {
+                currentUser = DrShineDB.getUserById(editingClientId);
+            }
+
+            closeEditModal();
+            updateAdminDashboard();
+            showNotification(`Client ${updateData.name} modifié avec succès !`, 'success');
+        }
+
+        // Autres fonctions avec BD
+        function markCompleted(appointmentId) {
+            const appointment = appointments.find(apt => apt.id === appointmentId);
+            if (appointment) {
+                // Mettre à jour dans la BD
+                DrShineDB.updateAppointment(appointmentId, { status: 'completed' });
+                
+                // Recharger les données
+                appointments = DrShineDB.getAppointments();
+                
+                loadAppointmentsTable();
+                showNotification('Service marqué comme terminé !', 'success');
+                console.log('📧 Email envoyé à francoisfreddyateba2@gmail.com');
             }
         }
 
@@ -1284,15 +1680,25 @@
             setTimeout(() => element.classList.add('hidden'), 5000);
         }
 
-        // Events pour mise à jour du récapitulatif
-        document.addEventListener('DOMContentLoaded', function() {
-            ['booking-service', 'booking-date', 'booking-time'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.addEventListener('change', updateBookingSummary);
-                }
-            });
-        });
+        // Fermer modal en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modal = document.getElementById('edit-client-modal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+
+        // ================== FONCTIONS DE GESTION BD ==================
+        // Pour réinitialiser la base de données (console développeur):
+        // DrShineDB.reset()
+        
+        // Pour sauvegarder manuellement:
+        // DrShineDB.saveUsers(users)
+        // DrShineDB.saveAppointments(appointments)
+        
+        // Pour voir les données:
+        // console.log('Users:', DrShineDB.getUsers())
+        // console.log('Appointments:', DrShineDB.getAppointments())
     </script>
 </body>
 </html>
