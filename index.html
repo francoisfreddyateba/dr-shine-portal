@@ -796,19 +796,27 @@
         </div>
 
         <!-- Barre de notifications -->
-        <div id="notificationBar" class="notification-bar hidden">
-            📢 Nouveau message ou alerte importante !
+        <div id="notificationBar" class="notification-bar">
+            🔄 Chargement du système Dr. Shine...
         </div>
 
         <!-- Sélection du rôle -->
         <div id="roleSelection" class="auth-section">
             <div class="role-selector">
-                <button class="role-btn" onclick="selectRole('client')">
-                    👤 Espace Client Premium
+                <button class="role-btn" id="clientRoleBtn" style="font-size: 1.2rem; padding: 20px 40px;">
+                    👤 Espace Client Premium<br>
+                    <small style="opacity: 0.8;">Gérez vos rendez-vous et contrats</small>
                 </button>
-                <button class="role-btn" onclick="selectRole('admin')">
-                    🔧 Administration Avancée
+                <button class="role-btn" id="adminRoleBtn" style="font-size: 1.2rem; padding: 20px 40px;">
+                    🔧 Administration Avancée<br>
+                    <small style="opacity: 0.8;">Gestion complète Dr. Shine</small>
                 </button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: white;">
+                <p><strong>🧪 Comptes de Test :</strong></p>
+                <p>👤 Client : pierre@example.com / DR2025!</p>
+                <p>🔧 Admin : admin@docshine.net / DrShine2025!</p>
             </div>
         </div>
 
@@ -842,8 +850,8 @@
                         <p id="clientInfo"></p>
                     </div>
                     <div>
-                        <button onclick="openChat()" class="btn-info" style="margin-right: 10px;">💬 Chat</button>
-                        <button onclick="logout()" class="btn-warning">Déconnexion</button>
+                        <button id="openChatBtn" class="btn-info" style="margin-right: 10px;">💬 Chat</button>
+                        <button id="clientLogoutBtn" class="btn-warning">Déconnexion</button>
                     </div>
                 </div>
 
@@ -1172,7 +1180,7 @@
                         <h2>🔧 Administration Dr. Shine Premium</h2>
                         <p>Gestion complète et analytiques avancées</p>
                     </div>
-                    <button onclick="logout()" class="btn-warning">Déconnexion</button>
+                    <button id="adminLogoutBtn" class="btn-warning">Déconnexion</button>
                 </div>
 
                 <div class="admin-content">
@@ -1726,7 +1734,7 @@
         </div>
 
         <!-- Widget Chat -->
-        <button class="chat-toggle" onclick="toggleChat()">💬</button>
+        <button class="chat-toggle" id="chatToggleBtn">💬</button>
         <div id="chatWidget" class="chat-widget">
             <div class="chat-header">
                 <span>💬 Support Dr. Shine</span>
@@ -7906,18 +7914,47 @@ ${user.name} | Contrat ${user.clientType} | ${user.prepaidBalance.toFixed(2)}$ d
         });
 
         function updateWeatherWidget() {
-            const weather = [
-                "☀️ Ensoleillé, 22°C - Parfait pour nos services extérieurs!",
-                "⛅ Partiellement nuageux, 18°C - Idéal pour le nettoyage.",
-                "🌧️ Pluie légère, 15°C - Nos services intérieurs sont disponibles!",
-                "❄️ Neige, -5°C - Services d'hiver disponibles!"
+            try {
+                const weather = [
+                    "☀️ Ensoleillé, 22°C - Parfait pour nos services extérieurs!",
+                    "⛅ Partiellement nuageux, 18°C - Idéal pour le nettoyage.",
+                    "🌧️ Pluie légère, 15°C - Nos services intérieurs sont disponibles!",
+                    "❄️ Neige, -5°C - Services d'hiver disponibles!"
+                ];
+                
+                const randomWeather = weather[Math.floor(Math.random() * weather.length)];
+                const weatherElement = document.getElementById('weatherInfo');
+                if (weatherElement) {
+                    weatherElement.innerHTML = `<p>${randomWeather}</p>`;
+                }
+            } catch (error) {
+                console.log('Erreur météo:', error);
+            }
+        }
+
+        // Test de diagnostic
+        function testSystem() {
+            console.log('🔍 Test du système...');
+            
+            const elements = [
+                'roleSelection',
+                'clientRoleBtn', 
+                'adminRoleBtn',
+                'clientInterface',
+                'adminInterface'
             ];
             
-            const randomWeather = weather[Math.floor(Math.random() * weather.length)];
-            const weatherElement = document.getElementById('weatherInfo');
-            if (weatherElement) {
-                weatherElement.innerHTML = `<p>${randomWeather}</p>`;
-            }
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                console.log(`Element ${id}:`, element ? '✅ OK' : '❌ MANQUANT');
+            });
+            
+            console.log('Variables:', {
+                currentUser: currentUser,
+                currentRole: currentRole,
+                usersCount: users.length,
+                appointmentsCount: appointments.length
+            });
         }
 
         // Mise à jour automatique toutes les 30 secondes
@@ -7929,12 +7966,8 @@ ${user.name} | Contrat ${user.clientType} | ${user.prepaidBalance.toFixed(2)}$ d
             }
         }, 30000);
 
-        // Test des fonctions au chargement
-        console.log('Fonctions disponibles:', {
-            selectRole: typeof selectRole,
-            users: users.length,
-            appointments: appointments.length
-        });
+        // Appel du test après chargement
+        setTimeout(testSystem, 2000);
     </script>
 </body>
 </html>
