@@ -1394,23 +1394,41 @@
         // Navigation
         function showClientLogin() {
             hideAll();
-            document.getElementById('client-interface').classList.remove('hidden');
+            var clientInterface = document.getElementById('client-interface');
+            if (clientInterface) {
+                clientInterface.classList.remove('hidden');
+            }
         }
 
         function showAdminLogin() {
             hideAll();
-            document.getElementById('admin-interface').classList.remove('hidden');
+            var adminInterface = document.getElementById('admin-interface');
+            if (adminInterface) {
+                adminInterface.classList.remove('hidden');
+            }
         }
 
         function backToHome() {
             hideAll();
-            document.getElementById('role-selection').classList.remove('hidden');
+            var roleSelection = document.getElementById('role-selection');
+            if (roleSelection) {
+                roleSelection.classList.remove('hidden');
+            }
         }
 
         function hideAll() {
-            document.getElementById('role-selection').classList.add('hidden');
-            document.getElementById('client-interface').classList.add('hidden');
-            document.getElementById('admin-interface').classList.add('hidden');
+            var elements = [
+                'role-selection',
+                'client-interface', 
+                'admin-interface'
+            ];
+            
+            for (var i = 0; i < elements.length; i++) {
+                var element = document.getElementById(elements[i]);
+                if (element) {
+                    element.classList.add('hidden');
+                }
+            }
         }
 
         function logout() {
@@ -1421,8 +1439,11 @@
 
         // Gestion des onglets
         function showClientTab(tabName) {
-            var tabElements = document.querySelectorAll('.client-dashboard .tab');
-            var contentElements = document.querySelectorAll('.client-dashboard .tab-content');
+            var clientDashboard = document.getElementById('client-dashboard');
+            if (!clientDashboard) return;
+            
+            var tabElements = clientDashboard.querySelectorAll('.tab');
+            var contentElements = clientDashboard.querySelectorAll('.tab-content');
             
             for (var i = 0; i < tabElements.length; i++) {
                 tabElements[i].classList.remove('active');
@@ -1441,7 +1462,7 @@
             }
             
             if (tabIndex !== -1) {
-                var dashboardTabs = document.getElementById('client-dashboard').querySelector('.tabs');
+                var dashboardTabs = clientDashboard.querySelector('.tabs');
                 if (dashboardTabs && dashboardTabs.children[tabIndex]) {
                     dashboardTabs.children[tabIndex].classList.add('active');
                 }
@@ -1458,8 +1479,11 @@
         }
 
         function showAdminTab(tabName) {
-            var tabElements = document.querySelectorAll('.admin-dashboard .tab');
-            var contentElements = document.querySelectorAll('.admin-dashboard .tab-content');
+            var adminDashboard = document.getElementById('admin-dashboard');
+            if (!adminDashboard) return;
+            
+            var tabElements = adminDashboard.querySelectorAll('.tab');
+            var contentElements = adminDashboard.querySelectorAll('.tab-content');
             
             for (var i = 0; i < tabElements.length; i++) {
                 tabElements[i].classList.remove('active');
@@ -1478,7 +1502,7 @@
             }
             
             if (tabIndex !== -1) {
-                var dashboardTabs = document.getElementById('admin-dashboard').querySelector('.tabs');
+                var dashboardTabs = adminDashboard.querySelector('.tabs');
                 if (dashboardTabs && dashboardTabs.children[tabIndex]) {
                     dashboardTabs.children[tabIndex].classList.add('active');
                 }
@@ -2368,6 +2392,41 @@
         // Initialisation sécurisée
         document.addEventListener('DOMContentLoaded', function() {
             try {
+                // Vérifier que les fonctions sont bien définies globalement
+                window.showClientLogin = showClientLogin;
+                window.showAdminLogin = showAdminLogin;
+                window.backToHome = backToHome;
+                window.loginClient = loginClient;
+                window.loginAdmin = loginAdmin;
+                window.logout = logout;
+                window.showClientTab = showClientTab;
+                window.showAdminTab = showAdminTab;
+                window.makeBooking = makeBooking;
+                window.createClient = createClient;
+                window.createAdminAppointment = createAdminAppointment;
+                window.recordPayment = recordPayment;
+                window.backupData = backupData;
+                window.restoreData = restoreData;
+                window.saveSettings = saveSettings;
+                window.exportData = exportData;
+                window.confirmResetDatabase = confirmResetDatabase;
+                window.editClient = editClient;
+                window.editAppointment = editAppointment;
+                window.updateBookingSummary = updateBookingSummary;
+                
+                // Ajouter des event listeners de secours pour les cartes de rôle
+                var roleCards = document.querySelectorAll('.role-card');
+                if (roleCards.length >= 1) {
+                    roleCards[0].addEventListener('click', function() {
+                        showClientLogin();
+                    });
+                }
+                if (roleCards.length >= 2) {
+                    roleCards[1].addEventListener('click', function() {
+                        showAdminLogin();
+                    });
+                }
+
                 // Définir la date minimum pour les rendez-vous
                 var dateInputs = ['booking-date', 'admin-apt-date'];
                 for (var i = 0; i < dateInputs.length; i++) {
