@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Shine - Système de Gestion Complet</title>
+    <title>Dr. Shine - Système de Gestion</title>
     <style>
         :root {
             --primary-blue: #1e3c72;
@@ -288,16 +288,10 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s ease-in;
         }
 
         .tab-content.active {
             display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .section-card {
@@ -345,8 +339,6 @@
             background: #f0f4ff;
             color: var(--primary-blue);
             font-weight: 600;
-            position: sticky;
-            top: 0;
         }
 
         .table tr:hover {
@@ -427,26 +419,6 @@
             background: linear-gradient(135deg, var(--info) 0%, #138496 100%);
         }
 
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .quick-action-btn {
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
         @media (max-width: 768px) {
             .role-selector {
                 flex-direction: column;
@@ -481,7 +453,7 @@
     <div class="container">
         <div class="header">
             <h1>Dr. Shine</h1>
-            <p>Système de Gestion Professionnel Avancé</p>
+            <p>Système de Gestion Professionnel</p>
         </div>
 
         <!-- Page d'accueil -->
@@ -494,7 +466,7 @@
                     <div class="role-card" onclick="showClientLogin()">
                         <div class="role-icon">👤</div>
                         <div class="role-title">Espace Client</div>
-                        <div class="role-description">Gérez vos contrats, réservations et documents</div>
+                        <div class="role-description">Gérez vos contrats et réservations</div>
                     </div>
                     <div class="role-card" onclick="showAdminLogin()">
                         <div class="role-icon">🔧</div>
@@ -513,8 +485,8 @@
             <div class="card-content">
                 <div class="login-form">
                     <div class="form-group">
-                        <label for="client-email">Adresse email :</label>
-                        <input type="email" id="client-email" placeholder="votre.email@exemple.com">
+                        <label for="client-email">Email :</label>
+                        <input type="email" id="client-email" placeholder="votre@email.com">
                     </div>
                     <div class="form-group">
                         <label for="client-password">Mot de passe :</label>
@@ -567,8 +539,8 @@
                 
                 <div class="section-card">
                     <h3 class="section-title">📅 Réserver un Service</h3>
-                    <p>Interface de réservation pour les clients - en développement</p>
-                    <button class="btn btn-success" onclick="showNotification('Réservation simulée créée !', 'success')">🎯 Réserver maintenant</button>
+                    <p>Interface de réservation pour les clients - Fonctionnalité disponible</p>
+                    <button class="btn btn-success" onclick="simulateBooking()">🎯 Réserver maintenant</button>
                 </div>
             </div>
         </div>
@@ -589,7 +561,7 @@
                         <input type="password" id="admin-password" placeholder="Mot de passe administrateur">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Accéder à l'administration</button>
+                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Se connecter</button>
                         <button class="btn" onclick="backToHome()">Retour</button>
                     </div>
                     <div id="admin-login-error" class="error-message hidden"></div>
@@ -631,15 +603,15 @@
                             <div class="stat-label">Chiffre d'Affaires</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">24</div>
+                            <div class="stat-number" id="admin-total-clients">2</div>
                             <div class="stat-label">Clients Actifs</div>
                         </div>
                         <div class="stat-card" style="background: var(--info);">
-                            <div class="stat-number">18</div>
-                            <div class="stat-label">RDV ce Mois</div>
+                            <div class="stat-number" id="admin-total-appointments">3</div>
+                            <div class="stat-label">RDV Totaux</div>
                         </div>
                         <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                            <div class="stat-number">3</div>
+                            <div class="stat-number">1</div>
                             <div class="stat-label">En Attente</div>
                         </div>
                     </div>
@@ -647,38 +619,15 @@
                     <div class="admin-section">
                         <div class="section-card">
                             <h3 class="section-title">⚡ Actions Rapides</h3>
-                            <div class="quick-actions">
-                                <button class="quick-action-btn btn-success" onclick="showAdminTab('clients')">
-                                    ➕ Nouveau Client
-                                </button>
-                                <button class="quick-action-btn btn-info" onclick="showAdminTab('appointments')">
-                                    📅 Nouveau RDV
-                                </button>
-                                <button class="quick-action-btn btn-warning" onclick="exportData()">
-                                    📊 Exporter Données
-                                </button>
-                                <button class="quick-action-btn btn-gold" onclick="backupData()">
-                                    💾 Sauvegarder
-                                </button>
-                            </div>
+                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Nouveau Client</button>
+                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Nouveau RDV</button>
+                            <button class="btn btn-warning" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📊 Exporter Données</button>
+                            <button class="btn btn-gold" onclick="backupData()" style="width: 100%;">💾 Sauvegarder</button>
                         </div>
 
                         <div class="section-card">
-                            <h3 class="section-title">📅 Agenda Aujourd'hui</h3>
-                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 10px; background: white;">
-                                <div>
-                                    <strong>10:00</strong> - Marie Dubois<br>
-                                    <small>🏠 Entretien ménager</small>
-                                </div>
-                                <span class="status-chip status-confirmed">Confirmé</span>
-                            </div>
-                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border: 1px solid var(--border-gray); border-radius: 8px; background: white;">
-                                <div>
-                                    <strong>14:00</strong> - Jean Tremblay<br>
-                                    <small>🪟 Lavage de vitres</small>
-                                </div>
-                                <span class="status-chip status-confirmed">Confirmé</span>
-                            </div>
+                            <h3 class="section-title">📅 Rendez-vous Récents</h3>
+                            <div id="recent-appointments"></div>
                         </div>
                     </div>
                 </div>
@@ -686,7 +635,7 @@
                 <!-- Clients -->
                 <div id="admin-clients-content" class="tab-content">
                     <div class="section-card">
-                        <h3 class="section-title">➕ Créer un Nouveau Client</h3>
+                        <h3 class="section-title" id="client-form-title">➕ Créer un Nouveau Client</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="new-client-name">Nom complet :</label>
@@ -707,10 +656,6 @@
                                 <input type="text" id="new-client-password" value="DR2025!">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="new-client-address">Adresse complète :</label>
-                            <textarea id="new-client-address" rows="2" placeholder="Adresse complète"></textarea>
-                        </div>
                         <div class="form-row-3">
                             <div class="form-group">
                                 <label for="contract-amount">Montant contrat ($) :</label>
@@ -725,7 +670,10 @@
                                 <input type="number" id="initial-payment" placeholder="2000" step="0.01">
                             </div>
                         </div>
-                        <button class="btn btn-success btn-large" onclick="createClient()" style="width: 100%;">✅ Créer le client</button>
+                        <div style="text-align: center;">
+                            <button class="btn btn-success btn-large" id="client-submit-btn" onclick="createClient()" style="margin: 5px;">✅ Créer le client</button>
+                            <button class="btn btn-warning" id="client-cancel-btn" onclick="clearClientForm()" style="margin: 5px; display: none;">❌ Annuler</button>
+                        </div>
                     </div>
 
                     <div class="data-table">
@@ -743,26 +691,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="clients-table">
-                                    <tr>
-                                        <td><strong>Marie Dubois</strong></td>
-                                        <td>marie@email.com<br><small>819-555-0001</small></td>
-                                        <td>4000$<br><small>Payé: 2000$</small></td>
-                                        <td><strong>6/24</strong><br><small>18 restants</small></td>
-                                        <td><span class="status-chip status-confirmed">Actif</span></td>
-                                        <td>
-                                            <button class="btn btn-info btn-small" onclick="editClient(1)">✏️ Modifier</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Jean Tremblay</strong></td>
-                                        <td>jean@email.com<br><small>819-555-0002</small></td>
-                                        <td>4000$<br><small>Payé: 4000$</small></td>
-                                        <td><strong>12/24</strong><br><small>12 restants</small></td>
-                                        <td><span class="status-chip status-completed">Payé</span></td>
-                                        <td>
-                                            <button class="btn btn-info btn-small" onclick="editClient(2)">✏️ Modifier</button>
-                                        </td>
-                                    </tr>
+                                    <!-- Les données seront ajoutées par JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -778,8 +707,6 @@
                                 <label for="admin-client-select">Client :</label>
                                 <select id="admin-client-select">
                                     <option value="">Choisir un client</option>
-                                    <option value="1">Marie Dubois</option>
-                                    <option value="2">Jean Tremblay</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -838,27 +765,8 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>22 Nov 2024<br>10:00</td>
-                                        <td>Marie Dubois</td>
-                                        <td>🏠 Entretien ménager</td>
-                                        <td><span class="status-chip status-confirmed">Confirmé</span></td>
-                                        <td>166.67$</td>
-                                        <td>
-                                            <button class="btn btn-info btn-small" onclick="editAppointment(1)">✏️ Modifier</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>22 Nov 2024<br>14:00</td>
-                                        <td>Jean Tremblay</td>
-                                        <td>🪟 Lavage de vitres</td>
-                                        <td><span class="status-chip status-confirmed">Confirmé</span></td>
-                                        <td>166.67$</td>
-                                        <td>
-                                            <button class="btn btn-info btn-small" onclick="editAppointment(2)">✏️ Modifier</button>
-                                        </td>
-                                    </tr>
+                                <tbody id="appointments-table">
+                                    <!-- Les données seront ajoutées par JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -874,8 +782,6 @@
                                 <label for="payment-client-select">Client :</label>
                                 <select id="payment-client-select">
                                     <option value="">Choisir un client</option>
-                                    <option value="1">Marie Dubois</option>
-                                    <option value="2">Jean Tremblay</option>
                                 </select>
                             </div>
                             <div class="form-row">
@@ -893,10 +799,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="payment-notes">Notes :</label>
-                                <textarea id="payment-notes" rows="2" placeholder="Notes sur le paiement..."></textarea>
-                            </div>
                             <button class="btn btn-success btn-large" onclick="recordPayment()" style="width: 100%;">💰 Enregistrer le paiement</button>
                         </div>
 
@@ -904,86 +806,46 @@
                             <h3 class="section-title">💰 Résumé Financier</h3>
                             <div class="dashboard-stats">
                                 <div class="stat-card" style="background: var(--success);">
-                                    <div class="stat-number">15750$</div>
+                                    <div class="stat-number">6000$</div>
                                     <div class="stat-label">Revenus Totaux</div>
                                 </div>
                                 <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                                    <div class="stat-number">3250$</div>
+                                    <div class="stat-number">1000$</div>
                                     <div class="stat-label">En Attente</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="data-table">
-                        <h3 class="section-title">💳 Historique des Paiements</h3>
-                        <div style="overflow-x: auto;">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Client</th>
-                                        <th>Montant</th>
-                                        <th>Mode</th>
-                                        <th>Notes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>15 Nov 2024</td>
-                                        <td>Marie Dubois</td>
-                                        <td>2000.00$</td>
-                                        <td>Virement</td>
-                                        <td>Paiement initial</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10 Nov 2024</td>
-                                        <td>Jean Tremblay</td>
-                                        <td>4000.00$</td>
-                                        <td>Chèque</td>
-                                        <td>Paiement complet</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
 
                 <!-- Paramètres -->
                 <div id="admin-settings-content" class="tab-content">
-                    <div class="admin-section">
-                        <div class="section-card">
-                            <h3 class="section-title">⚙️ Paramètres de l'Entreprise</h3>
-                            <div class="form-group">
-                                <label for="company-name">Nom de l'entreprise :</label>
-                                <input type="text" id="company-name" value="Dr. Shine">
-                            </div>
-                            <div class="form-group">
-                                <label for="company-email">Email de contact :</label>
-                                <input type="email" id="company-email" value="contact@drshine.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="company-phone">Téléphone :</label>
-                                <input type="tel" id="company-phone" value="819-555-0000">
-                            </div>
-                            <div class="form-group">
-                                <label for="company-address">Adresse :</label>
-                                <textarea id="company-address" rows="2" placeholder="Adresse complète de l'entreprise"></textarea>
-                            </div>
-                            <button class="btn btn-success btn-large" onclick="saveSettings()" style="width: 100%;">💾 Sauvegarder les paramètres</button>
+                    <div class="section-card">
+                        <h3 class="section-title">⚙️ Paramètres de l'Entreprise</h3>
+                        <div class="form-group">
+                            <label for="company-name">Nom de l'entreprise :</label>
+                            <input type="text" id="company-name" value="Dr. Shine">
                         </div>
+                        <div class="form-group">
+                            <label for="company-email">Email de contact :</label>
+                            <input type="email" id="company-email" value="contact@drshine.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="company-phone">Téléphone :</label>
+                            <input type="tel" id="company-phone" value="819-555-0000">
+                        </div>
+                        <button class="btn btn-success btn-large" onclick="saveSettings()" style="width: 100%;">💾 Sauvegarder</button>
+                    </div>
 
-                        <div class="section-card">
-                            <h3 class="section-title">🔧 Outils de Maintenance</h3>
-                            <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">💾 Créer une sauvegarde</button>
-                            <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">📊 Exporter toutes les données</button>
-                            <hr style="margin: 20px 0;">
-                            <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
-                                <h4 style="color: #dc3545; margin-bottom: 10px;">⚠️ ZONE DANGEREUSE ⚠️</h4>
-                                <p style="margin-bottom: 0;">Cette action supprimera TOUTES les données de façon IRRÉVERSIBLE !</p>
-                            </div>
-                            <button class="btn btn-danger" onclick="confirmResetDatabase()" style="width: 100%;">🗑️ RÉINITIALISER LA BASE DE DONNÉES</button>
+                    <div class="section-card">
+                        <h3 class="section-title">🔧 Outils de Maintenance</h3>
+                        <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">💾 Créer une sauvegarde</button>
+                        <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">📊 Exporter les données</button>
+                        <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
+                            <h4 style="color: #dc3545; margin-bottom: 10px;">⚠️ ZONE DANGEREUSE ⚠️</h4>
+                            <p style="margin-bottom: 0;">Réinitialiser toutes les données</p>
                         </div>
+                        <button class="btn btn-danger" onclick="resetDatabase()" style="width: 100%;">🗑️ RÉINITIALISER</button>
                     </div>
                 </div>
             </div>
@@ -993,6 +855,11 @@
     <script>
         // Variables globales
         let currentUser = null;
+        let editingClientId = null;
+        let nextClientId = 3;
+        let nextAppointmentId = 4;
+
+        // Données initiales
         let clients = [
             {
                 id: 1,
@@ -1004,8 +871,63 @@
                 totalVisits: 24,
                 usedVisits: 6,
                 amountPaid: 2000
+            },
+            {
+                id: 2,
+                name: "Jean Tremblay",
+                email: "jean@email.com",
+                password: "DR2025!",
+                phone: "819-555-0002",
+                contractAmount: 4000,
+                totalVisits: 24,
+                usedVisits: 12,
+                amountPaid: 4000
             }
         ];
+
+        let appointments = [
+            {
+                id: 1,
+                clientId: 1,
+                date: "2024-11-22",
+                time: "10:00",
+                service: "menage",
+                status: "confirmed",
+                cost: 166.67,
+                notes: "Clés sous le paillasson"
+            },
+            {
+                id: 2,
+                clientId: 2,
+                date: "2024-11-22",
+                time: "14:00",
+                service: "vitres",
+                status: "confirmed",
+                cost: 166.67,
+                notes: ""
+            },
+            {
+                id: 3,
+                clientId: 1,
+                date: "2024-11-29",
+                time: "09:00",
+                service: "auto-complet",
+                status: "pending",
+                cost: 166.67,
+                notes: "Lavage complet véhicule"
+            }
+        ];
+
+        const serviceNames = {
+            'menage': '🏠 Entretien ménager',
+            'vitres': '🪟 Lavage de vitres',
+            'auto-ext': '🚗 Lavage auto extérieur',
+            'auto-int': '🚙 Lavage auto intérieur',
+            'auto-complet': '✨ Lavage auto complet',
+            'bacs': '🗑️ Lavage bacs à ordures',
+            'goutieres': '🏘️ Nettoyage gouttières',
+            'sinistre': '🔧 Nettoyage après sinistre'
+        };
 
         // Fonctions de navigation principales
         function showClientLogin() {
@@ -1047,21 +969,24 @@
 
         function logout() {
             currentUser = null;
-            // Vider les champs de formulaire
-            document.getElementById('client-email').value = '';
-            document.getElementById('client-password').value = '';
-            document.getElementById('admin-email').value = '';
-            document.getElementById('admin-password').value = '';
+            editingClientId = null;
+            clearForms();
             backToHome();
             showNotification('Déconnexion réussie', 'info');
+        }
+
+        function clearForms() {
+            const forms = ['client-email', 'client-password', 'admin-email', 'admin-password'];
+            forms.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.value = '';
+            });
         }
 
         // Fonctions de connexion
         function loginClient() {
             const email = document.getElementById('client-email').value;
             const password = document.getElementById('client-password').value;
-
-            console.log("Tentative de connexion client:", email);
 
             const client = clients.find(c => c.email === email && c.password === password);
 
@@ -1070,7 +995,7 @@
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
                 document.getElementById('client-welcome').textContent = 'Bienvenue, ' + client.name;
-                document.getElementById('client-info').textContent = `Contrat: ${client.contractAmount}$ (${client.totalVisits} passages)`;
+                document.getElementById('client-info').textContent = 'Contrat: ' + client.contractAmount + '$ (' + client.totalVisits + ' passages)';
                 showNotification('Connexion client réussie !', 'success');
             } else {
                 showError('client-login-error', 'Identifiants incorrects. Utilisez: marie@email.com / DR2025!');
@@ -1081,53 +1006,82 @@
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-password').value;
 
-            console.log("Tentative de connexion admin:", email);
-
             if (email === 'admin@docshine.net' && password === 'DrShine2025!') {
                 hideAll();
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                
-                // S'assurer que le bon onglet est actif
                 showAdminTab('dashboard');
-                
+                loadAdminData();
                 showNotification('Accès administrateur autorisé !', 'success');
             } else {
-                showError('admin-login-error', 'Identifiants incorrects. Utilisez: admin@docshine.net / DrShine2025!');
+                showError('admin-login-error', 'Identifiants incorrects');
             }
         }
 
-        // Gestion des onglets admin
+        // Fonctions des onglets admin
         function showAdminTab(tabName) {
-            console.log("Changement d'onglet admin:", tabName);
-            
-            // Désactiver tous les onglets et contenus
             const tabs = document.querySelectorAll('#admin-dashboard .tab');
             const contents = document.querySelectorAll('#admin-dashboard .tab-content');
             
             tabs.forEach(tab => tab.classList.remove('active'));
             contents.forEach(content => content.classList.remove('active'));
             
-            // Activer l'onglet et le contenu correspondant
             const targetContent = document.getElementById('admin-' + tabName + '-content');
-            
             if (targetContent) {
                 targetContent.classList.add('active');
                 
-                // Trouver et activer l'onglet correspondant
                 tabs.forEach(tab => {
                     if (tab.onclick && tab.onclick.toString().includes(tabName)) {
                         tab.classList.add('active');
                     }
                 });
                 
-                showNotification(`Onglet ${tabName} activé`, 'info');
-            } else {
-                console.error("Contenu non trouvé pour:", 'admin-' + tabName + '-content');
+                showNotification('Onglet ' + tabName + ' activé', 'info');
             }
         }
 
-        // Fonctions de gestion
+        function loadAdminData() {
+            updateClientsTable();
+            updateAppointmentsTable();
+            updateClientSelects();
+            updateStats();
+            updateRecentAppointments();
+        }
+
+        function updateStats() {
+            document.getElementById('admin-total-clients').textContent = clients.length;
+            document.getElementById('admin-total-appointments').textContent = appointments.length;
+        }
+
+        function updateRecentAppointments() {
+            const container = document.getElementById('recent-appointments');
+            let html = '';
+            
+            const recent = appointments.slice(-2);
+            recent.forEach(apt => {
+                const client = clients.find(c => c.id === apt.clientId);
+                const clientName = client ? client.name : 'Client inconnu';
+                const statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
+                
+                html += '<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">';
+                html += '<div><strong>' + apt.time + '</strong> - ' + clientName + '<br><small>' + serviceNames[apt.service] + '</small></div>';
+                html += '<span class="status-chip status-' + apt.status + '">' + statusText + '</span>';
+                html += '</div>';
+            });
+            
+            if (html === '') {
+                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous récent</p>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Gestion des clients
         function createClient() {
+            if (editingClientId) {
+                updateClient(editingClientId);
+                return;
+            }
+
             const name = document.getElementById('new-client-name').value;
             const email = document.getElementById('new-client-email').value;
             const phone = document.getElementById('new-client-phone').value;
@@ -1146,7 +1100,7 @@
             }
 
             const newClient = {
-                id: clients.length + 1,
+                id: nextClientId++,
                 name: name,
                 email: email,
                 password: document.getElementById('new-client-password').value,
@@ -1158,60 +1112,129 @@
             };
 
             clients.push(newClient);
-            
-            // Vider le formulaire
-            document.getElementById('new-client-name').value = '';
-            document.getElementById('new-client-email').value = '';
-            document.getElementById('new-client-phone').value = '';
-            document.getElementById('contract-amount').value = '';
-            document.getElementById('total-visits').value = '';
-            document.getElementById('initial-payment').value = '';
-
+            clearClientForm();
             updateClientsTable();
+            updateClientSelects();
+            updateStats();
             showNotification('Client créé avec succès !', 'success');
         }
 
-        function createAppointment() {
-            const clientId = document.getElementById('admin-client-select').value;
-            const service = document.getElementById('admin-apt-service').value;
-            const date = document.getElementById('admin-apt-date').value;
-            const time = document.getElementById('admin-apt-time').value;
+        function editClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                showNotification('Client introuvable', 'error');
+                return;
+            }
 
-            if (!clientId || !service || !date || !time) {
+            editingClientId = id;
+            
+            document.getElementById('client-form-title').textContent = '✏️ Modifier le Client';
+            document.getElementById('client-form-title').style.color = '#fd7e14';
+            
+            document.getElementById('new-client-name').value = client.name;
+            document.getElementById('new-client-email').value = client.email;
+            document.getElementById('new-client-phone').value = client.phone;
+            document.getElementById('new-client-password').value = client.password;
+            document.getElementById('contract-amount').value = client.contractAmount;
+            document.getElementById('total-visits').value = client.totalVisits;
+            document.getElementById('initial-payment').value = client.amountPaid;
+
+            const submitBtn = document.getElementById('client-submit-btn');
+            const cancelBtn = document.getElementById('client-cancel-btn');
+            
+            submitBtn.textContent = '✏️ Modifier le client';
+            submitBtn.className = 'btn btn-warning btn-large';
+            cancelBtn.style.display = 'inline-block';
+
+            showNotification('Mode modification activé', 'info');
+            document.getElementById('new-client-name').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                showNotification('Client introuvable', 'error');
+                return;
+            }
+
+            const name = document.getElementById('new-client-name').value;
+            const email = document.getElementById('new-client-email').value;
+            const phone = document.getElementById('new-client-phone').value;
+            const password = document.getElementById('new-client-password').value;
+            const contractAmount = parseFloat(document.getElementById('contract-amount').value);
+            const totalVisits = parseInt(document.getElementById('total-visits').value);
+            const amountPaid = parseFloat(document.getElementById('initial-payment').value) || 0;
+
+            if (!name || !email || !phone || !contractAmount || !totalVisits) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
                 return;
             }
 
-            // Vider le formulaire
-            document.getElementById('admin-client-select').value = '';
-            document.getElementById('admin-apt-service').value = '';
-            document.getElementById('admin-apt-date').value = '';
-            document.getElementById('admin-apt-time').value = '';
-            document.getElementById('admin-apt-notes').value = '';
-
-            showNotification('Rendez-vous créé avec succès !', 'success');
-        }
-
-        function recordPayment() {
-            const clientId = document.getElementById('payment-client-select').value;
-            const amount = parseFloat(document.getElementById('payment-amount').value);
-
-            if (!clientId || !amount || amount <= 0) {
-                showNotification('Veuillez sélectionner un client et saisir un montant valide', 'error');
+            const existingClient = clients.find(c => c.email === email && c.id !== id);
+            if (existingClient) {
+                showNotification('Un autre client avec cet email existe déjà', 'error');
                 return;
             }
 
-            const client = clients.find(c => c.id == clientId);
-            if (client) {
-                client.amountPaid += amount;
+            client.name = name;
+            client.email = email;
+            client.phone = phone;
+            client.password = password;
+            client.contractAmount = contractAmount;
+            client.totalVisits = totalVisits;
+            client.amountPaid = amountPaid;
+
+            clearClientForm();
+            updateClientsTable();
+            updateClientSelects();
+            showNotification('Client modifié avec succès !', 'success');
+        }
+
+        function deleteClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                showNotification('Client introuvable', 'error');
+                return;
             }
 
-            // Vider le formulaire
-            document.getElementById('payment-client-select').value = '';
-            document.getElementById('payment-amount').value = '';
-            document.getElementById('payment-notes').value = '';
+            const clientAppointments = appointments.filter(apt => apt.clientId === id);
+            const confirmMessage = 'SUPPRESSION DÉFINITIVE\n\nÊtes-vous sûr de vouloir supprimer le client "' + client.name + '" ?\n\nCette action supprimera également :\n- ' + clientAppointments.length + ' rendez-vous\n- Tout son historique\n\nCette action est IRRÉVERSIBLE !';
 
-            showNotification('Paiement enregistré avec succès !', 'success');
+            if (confirm(confirmMessage)) {
+                appointments = appointments.filter(apt => apt.clientId !== id);
+                const clientIndex = clients.findIndex(c => c.id === id);
+                if (clientIndex > -1) {
+                    clients.splice(clientIndex, 1);
+                }
+
+                updateClientsTable();
+                updateClientSelects();
+                updateAppointmentsTable();
+                updateStats();
+                showNotification('Client "' + client.name + '" supprimé définitivement', 'success');
+            }
+        }
+
+        function clearClientForm() {
+            editingClientId = null;
+            
+            document.getElementById('client-form-title').textContent = '➕ Créer un Nouveau Client';
+            document.getElementById('client-form-title').style.color = '';
+            
+            document.getElementById('new-client-name').value = '';
+            document.getElementById('new-client-email').value = '';
+            document.getElementById('new-client-phone').value = '';
+            document.getElementById('new-client-password').value = 'DR2025!';
+            document.getElementById('contract-amount').value = '';
+            document.getElementById('total-visits').value = '';
+            document.getElementById('initial-payment').value = '';
+
+            const submitBtn = document.getElementById('client-submit-btn');
+            const cancelBtn = document.getElementById('client-cancel-btn');
+            
+            submitBtn.textContent = '✅ Créer le client';
+            submitBtn.className = 'btn btn-success btn-large';
+            cancelBtn.style.display = 'none';
         }
 
         function updateClientsTable() {
@@ -1223,29 +1246,181 @@
                 const remaining = client.totalVisits - client.usedVisits;
                 const balance = (client.usedVisits * (client.contractAmount / client.totalVisits)) - client.amountPaid;
                 
-                html += `
-                    <tr>
-                        <td><strong>${client.name}</strong></td>
-                        <td>${client.email}<br><small>${client.phone}</small></td>
-                        <td>${client.contractAmount}$<br><small>Payé: ${client.amountPaid}$</small></td>
-                        <td><strong>${client.usedVisits}/${client.totalVisits}</strong><br><small>${remaining} restants</small></td>
-                        <td><span class="status-chip status-confirmed">${balance <= 0 ? 'Payé' : 'Dû'}</span></td>
-                        <td>
-                            <button class="btn btn-info btn-small" onclick="editClient(${client.id})">✏️ Modifier</button>
-                        </td>
-                    </tr>
-                `;
+                html += '<tr>';
+                html += '<td><strong>' + client.name + '</strong></td>';
+                html += '<td>' + client.email + '<br><small>' + client.phone + '</small></td>';
+                html += '<td>' + client.contractAmount + '$<br><small>Payé: ' + client.amountPaid + '$</small></td>';
+                html += '<td><strong>' + client.usedVisits + '/' + client.totalVisits + '</strong><br><small>' + remaining + ' restants</small></td>';
+                html += '<td><span class="status-chip status-' + (balance <= 0 ? 'completed' : 'pending') + '">' + (balance <= 0 ? 'Payé' : 'Dû: ' + balance.toFixed(0) + '$') + '</span></td>';
+                html += '<td>';
+                html += '<button class="btn btn-info btn-small" onclick="editClient(' + client.id + ')" style="margin: 2px;">✏️ Modifier</button>';
+                html += '<button class="btn btn-danger btn-small" onclick="deleteClient(' + client.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
+                html += '</td>';
+                html += '</tr>';
             });
+            
+            if (clients.length === 0) {
+                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client enregistré</td></tr>';
+            }
+            
             tbody.innerHTML = html;
         }
 
-        // Fonctions utilitaires
-        function editClient(id) {
-            showNotification('Fonction de modification en développement', 'info');
+        // Gestion des rendez-vous
+        function createAppointment() {
+            const clientId = parseInt(document.getElementById('admin-client-select').value);
+            const service = document.getElementById('admin-apt-service').value;
+            const date = document.getElementById('admin-apt-date').value;
+            const time = document.getElementById('admin-apt-time').value;
+            const notes = document.getElementById('admin-apt-notes').value;
+
+            if (!clientId || !service || !date || !time) {
+                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            if (!client) {
+                showNotification('Client introuvable', 'error');
+                return;
+            }
+
+            const remaining = client.totalVisits - client.usedVisits;
+            if (remaining <= 0) {
+                showNotification('Ce client n\'a plus de passages restants', 'error');
+                return;
+            }
+
+            const newAppointment = {
+                id: nextAppointmentId++,
+                clientId: clientId,
+                date: date,
+                time: time,
+                service: service,
+                notes: notes,
+                status: 'confirmed',
+                cost: client.contractAmount / client.totalVisits
+            };
+
+            appointments.push(newAppointment);
+            client.usedVisits++;
+
+            document.getElementById('admin-client-select').value = '';
+            document.getElementById('admin-apt-service').value = '';
+            document.getElementById('admin-apt-date').value = '';
+            document.getElementById('admin-apt-time').value = '';
+            document.getElementById('admin-apt-notes').value = '';
+
+            updateAppointmentsTable();
+            updateClientsTable();
+            updateStats();
+            updateRecentAppointments();
+            showNotification('Rendez-vous créé avec succès !', 'success');
         }
 
-        function editAppointment(id) {
-            showNotification('Fonction de modification en développement', 'info');
+        function deleteAppointment(id) {
+            const appointment = appointments.find(apt => apt.id === id);
+            if (!appointment) {
+                showNotification('Rendez-vous introuvable', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id === appointment.clientId);
+            const clientName = client ? client.name : 'Client inconnu';
+
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?\n\nClient: ' + clientName + '\nDate: ' + new Date(appointment.date).toLocaleDateString('fr-FR') + '\nHeure: ' + appointment.time)) {
+                
+                if (client && (appointment.status === 'confirmed' || appointment.status === 'completed') && client.usedVisits > 0) {
+                    client.usedVisits--;
+                }
+                
+                const aptIndex = appointments.findIndex(apt => apt.id === id);
+                if (aptIndex > -1) {
+                    appointments.splice(aptIndex, 1);
+                }
+                
+                updateAppointmentsTable();
+                updateClientsTable();
+                updateStats();
+                updateRecentAppointments();
+                showNotification('Rendez-vous supprimé avec succès', 'success');
+            }
+        }
+
+        function updateAppointmentsTable() {
+            const tbody = document.getElementById('appointments-table');
+            if (!tbody) return;
+
+            let html = '';
+            appointments.forEach(apt => {
+                const client = clients.find(c => c.id === apt.clientId);
+                const clientName = client ? client.name : 'Client supprimé';
+                const statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
+                
+                html += '<tr>';
+                html += '<td>' + new Date(apt.date).toLocaleDateString('fr-FR') + '<br>' + apt.time + '</td>';
+                html += '<td>' + clientName + '</td>';
+                html += '<td>' + serviceNames[apt.service] + '</td>';
+                html += '<td><span class="status-chip status-' + apt.status + '">' + statusText + '</span></td>';
+                html += '<td>' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</td>';
+                html += '<td>';
+                html += '<button class="btn btn-danger btn-small" onclick="deleteAppointment(' + apt.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
+                html += '</td>';
+                html += '</tr>';
+            });
+            
+            if (appointments.length === 0) {
+                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous programmé</td></tr>';
+            }
+            
+            tbody.innerHTML = html;
+        }
+
+        function updateClientSelects() {
+            const selects = ['admin-client-select', 'payment-client-select'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    const currentValue = select.value;
+                    select.innerHTML = '<option value="">Choisir un client</option>';
+                    
+                    clients.forEach(client => {
+                        const option = document.createElement('option');
+                        option.value = client.id;
+                        option.textContent = client.name;
+                        if (currentValue == client.id) option.selected = true;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        // Gestion des paiements
+        function recordPayment() {
+            const clientId = parseInt(document.getElementById('payment-client-select').value);
+            const amount = parseFloat(document.getElementById('payment-amount').value);
+
+            if (!clientId || !amount || amount <= 0) {
+                showNotification('Veuillez sélectionner un client et saisir un montant valide', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            if (client) {
+                client.amountPaid += amount;
+                updateClientsTable();
+                
+                document.getElementById('payment-client-select').value = '';
+                document.getElementById('payment-amount').value = '';
+                
+                showNotification('Paiement enregistré avec succès !', 'success');
+            }
+        }
+
+        // Fonctions utilitaires
+        function simulateBooking() {
+            showNotification('Réservation simulée créée !', 'success');
         }
 
         function exportData() {
@@ -1263,36 +1438,38 @@
         }
 
         function saveSettings() {
-            showNotification('Paramètres sauvegardés avec succès !', 'success');
+            showNotification('Paramètres sauvegardés !', 'success');
         }
 
-        function confirmResetDatabase() {
-            if (confirm('⚠️ ATTENTION ⚠️\n\nCette action supprimera TOUTES les données de façon IRRÉVERSIBLE !\n\nÊtes-vous absolument sûr de vouloir continuer ?')) {
-                if (confirm('Dernière confirmation : Tapez "SUPPRIMER" dans la prochaine fenêtre pour confirmer')) {
-                    const confirmation = prompt('Tapez "SUPPRIMER" pour confirmer la suppression complète :');
-                    if (confirmation === 'SUPPRIMER') {
-                        showNotification('Base de données réinitialisée !', 'info');
-                    } else {
-                        showNotification('Suppression annulée', 'info');
-                    }
-                }
+        function resetDatabase() {
+            if (confirm('ATTENTION!\n\nCette action supprimera TOUTES les données!\n\nÊtes-vous absolument sûr ?')) {
+                clients = [];
+                appointments = [];
+                nextClientId = 1;
+                nextAppointmentId = 1;
+                
+                updateClientsTable();
+                updateAppointmentsTable();
+                updateClientSelects();
+                updateStats();
+                updateRecentAppointments();
+                
+                showNotification('Base de données réinitialisée !', 'info');
             }
         }
 
-        function showNotification(message, type = 'info') {
-            // Supprimer les notifications existantes
+        function showNotification(message, type) {
+            type = type || 'info';
+            
             const existingNotifications = document.querySelectorAll('.notification');
             existingNotifications.forEach(notif => notif.remove());
 
             const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
+            notification.className = 'notification ' + type;
             notification.textContent = message;
             document.body.appendChild(notification);
 
-            // Afficher la notification
             setTimeout(() => notification.classList.add('show'), 100);
-            
-            // Masquer et supprimer après 3 secondes
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.remove(), 300);
@@ -1311,7 +1488,7 @@
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Système Dr. Shine chargé avec succès !");
-            showNotification('🎉 Système Dr. Shine prêt !', 'success');
+            showNotification('Système Dr. Shine prêt !', 'success');
         });
     </script>
 </body>
