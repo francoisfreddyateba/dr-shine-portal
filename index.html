@@ -595,7 +595,7 @@
                             <textarea id="client-booking-notes" rows="2" placeholder="Précisions sur le service, accès, etc..."></textarea>
                         </div>
                         <div style="text-align: center;">
-                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">Confirmer la reservation</button>
+                            <button class="btn btn-success btn-large" id="client-confirm-booking" disabled style="width: 100%;">Confirmer la reservation</button>
                         </div>
                     </div>
                     <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
@@ -1047,6 +1047,8 @@
             var email = document.getElementById('client-email').value;
             var password = document.getElementById('client-password').value;
 
+            console.log('Tentative de connexion client:', email);
+
             var client = null;
             for (var i = 0; i < clients.length; i++) {
                 if (clients[i].email === email && clients[i].password === password) {
@@ -1057,33 +1059,18 @@
 
             if (client) {
                 currentUser = client;
+                console.log('Client connecte:', client.name, '- Passages restants:', (client.totalVisits - client.usedVisits));
+                
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
                 
                 // Initialiser le dashboard client
                 updateClientDashboard();
                 
-                // Attacher les événements pour la réservation
-                setupClientBookingEvents();
-                
                 showNotification('Connexion client reussie !', 'success');
             } else {
+                console.log('Echec connexion client');
                 showError('client-login-error', 'Identifiants incorrects ou client inexistant');
-            }
-        }
-
-        function setupClientBookingEvents() {
-            var dateField = document.getElementById('client-booking-date');
-            var confirmBtn = document.getElementById('client-confirm-booking');
-            
-            if (dateField) {
-                dateField.removeEventListener('change', updateAvailableTimeSlots);
-                dateField.addEventListener('change', updateAvailableTimeSlots);
-            }
-            
-            if (confirmBtn) {
-                confirmBtn.removeEventListener('click', confirmClientBooking);
-                confirmBtn.addEventListener('click', confirmClientBooking);
             }
         }
 
@@ -1170,9 +1157,13 @@
         function updateClientBookingSection() {
             if (!currentUser) return;
             
+            console.log('Mise a jour section reservation pour:', currentUser.name);
+            
             var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
             var bookingForm = document.getElementById('client-booking-form');
             var noVisitsMessage = document.getElementById('client-no-visits');
+            
+            console.log('Passages restants:', passagesRestants);
             
             if (passagesRestants > 0) {
                 bookingForm.classList.remove('hidden');
@@ -1184,10 +1175,21 @@
                     dateField.setAttribute('min', today);
                     dateField.removeEventListener('change', updateAvailableTimeSlots);
                     dateField.addEventListener('change', updateAvailableTimeSlots);
+                    console.log('Evenement change attache au champ date');
                 }
+                
+                var confirmBtn = document.getElementById('client-confirm-booking');
+                if (confirmBtn) {
+                    confirmBtn.removeEventListener('click', confirmClientBooking);
+                    confirmBtn.addEventListener('click', confirmClientBooking);
+                    console.log('Evenement click attache au bouton confirmation');
+                }
+                
+                console.log('Section reservation activee');
             } else {
                 bookingForm.classList.add('hidden');
                 noVisitsMessage.classList.remove('hidden');
+                console.log('Section reservation desactivee - aucun passage restant');
             }
         }
 
@@ -1262,18 +1264,30 @@
             var time = selectedTimeSlot;
             var notes = document.getElementById('client-booking-notes').value;
             
+            console.log('=== DEBUT RESERVATION CLIENT ===');
+            console.log('Service:', service);
+            console.log('Date:', date);
+            console.log('Heure:', time);
+            console.log('Notes:', notes);
+            console.log('Client:', currentUser.name);
+            
             if (!service || !date || !time) {
+                console.log('ERREUR: Champs manquants');
                 showNotification('Veuillez selectionner un service, une date et un creneau horaire', 'error');
                 return;
             }
             
             if (!currentUser) {
+                console.log('ERREUR: Pas de client connecte');
                 showNotification('Erreur de session utilisateur', 'error');
                 return;
             }
             
             var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
+            console.log('Passages restants avant reservation:', passagesRestants);
+            
             if (passagesRestants <= 0) {
+                console.log('ERREUR: Aucun passage restant');
                 showNotification('Aucun passage restant disponible', 'error');
                 return;
             }
@@ -1281,6 +1295,7 @@
             // Vérifier si le créneau est encore disponible
             for (var i = 0; i < appointments.length; i++) {
                 if (appointments[i].date === date && appointments[i].time === time) {
+                    console.log('ERREUR: Creneau deja pris');
                     showNotification('Ce creneau n\'est plus disponible', 'error');
                     updateAvailableTimeSlots();
                     return;
@@ -1298,9 +1313,18 @@
                 cost: currentUser.contractAmount / currentUser.totalVisits
             };
             
+            console.log('NOUVEAU RENDEZ-VOUS CREE:', newAppointment);
+            
+            // Ajouter le rendez-vous et décrémenter les passages
             appointments.push(newAppointment);
             currentUser.usedVisits++;
+            
+            console.log('Passages utilises apres reservation:', currentUser.usedVisits);
+            console.log('Total rendez-vous dans la base:', appointments.length);
+            
+            // Sauvegarder immédiatement
             Storage.save();
+            console.log('SAUVEGARDE EFFECTUEE');
             
             // Reset du formulaire
             document.getElementById('client-service-select').value = '';
@@ -1310,10 +1334,18 @@
             document.getElementById('client-confirm-booking').disabled = true;
             selectedTimeSlot = null;
             
-            // Mise à jour de l'interface
+            // Mise à jour de l'interface client
             updateClientDashboard();
             
-            showNotification('Rendez-vous confirme avec succes ! Votre passage a ete comptabilise.', 'success');
+            // Si on est aussi connecté en admin, mettre à jour l'interface admin
+            var adminDashboard = document.getElementById('admin-dashboard');
+            if (adminDashboard && !adminDashboard.classList.contains('hidden')) {
+                console.log('Mise a jour interface admin detectee');
+                loadAdminData();
+            }
+            
+            console.log('=== RESERVATION CLIENT TERMINEE AVEC SUCCES ===');
+            showNotification('SUCCES ! Votre rendez-vous du ' + new Date(date).toLocaleDateString('fr-FR') + ' a ' + time + ' a ete confirme. Votre passage a ete comptabilise.', 'success');
         }
 
         function updateClientAppointmentsList() {
@@ -1956,7 +1988,6 @@
             var remaining = Math.max(0, totalVisits - usedVisits);
             document.getElementById('remaining-visits').value = remaining;
             
-            // Changer la couleur selon les passages restants
             var remainingField = document.getElementById('remaining-visits');
             if (remaining <= 2) {
                 remainingField.style.color = '#dc3545';
@@ -2088,7 +2119,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Chargement du systeme Dr. Shine...");
+            console.log("=== DEMARRAGE SYSTEME DR. SHINE ===");
             
             var totalVisitsField = document.getElementById('total-visits');
             var usedVisitsField = document.getElementById('used-visits');
@@ -2096,17 +2127,20 @@
             if (totalVisitsField && usedVisitsField) {
                 totalVisitsField.addEventListener('input', updateRemainingVisits);
                 usedVisitsField.addEventListener('input', updateRemainingVisits);
+                console.log('Evenements calcul passages attaches');
             }
             
             var dataLoaded = Storage.load();
             
             if (dataLoaded) {
-                console.log("Donnees chargees:", clients.length + " clients, " + appointments.length + " rendez-vous");
+                console.log("DONNEES CHARGEES - Clients:", clients.length, "- Rendez-vous:", appointments.length);
                 showNotification('Donnees precedentes chargees ! (' + clients.length + ' clients, ' + appointments.length + ' RDV)', 'success');
             } else {
-                console.log("Aucune donnee sauvegardee - demarrage avec base vierge");
+                console.log("AUCUNE DONNEE - Demarrage avec base vierge");
                 showNotification('Systeme Dr. Shine pret ! (Base de donnees vierge)', 'success');
             }
+            
+            console.log("=== SYSTEME PRET ===");
         });
     </script>
 </body>
