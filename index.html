@@ -10,8 +10,6 @@
             --secondary-blue: #2a5298;
             --gold: #D4AF37;
             --light-gold: #FFD700;
-            --dark-blue: #0f2347;
-            --light-blue: #f0f4ff;
             --success: #28a745;
             --warning: #ffc107;
             --danger: #dc3545;
@@ -87,10 +85,11 @@
             gap: 30px;
             justify-content: center;
             margin: 40px 0;
+            flex-wrap: wrap;
         }
 
         .role-card {
-            background: linear-gradient(135deg, var(--light-blue) 0%, white 100%);
+            background: linear-gradient(135deg, #f0f4ff 0%, white 100%);
             border: 3px solid var(--border-gray);
             border-radius: 20px;
             padding: 40px;
@@ -98,8 +97,8 @@
             cursor: pointer;
             transition: all 0.3s;
             min-width: 280px;
-            position: relative;
-            overflow: hidden;
+            max-width: 350px;
+            flex: 1;
         }
 
         .role-card:hover {
@@ -169,7 +168,6 @@
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-            transform: translateY(-2px);
         }
 
         .btn {
@@ -182,16 +180,13 @@
             font-size: 1rem;
             font-weight: 600;
             transition: all 0.3s;
-            border: 2px solid transparent;
-            display: inline-block;
-            text-decoration: none;
             margin: 5px;
+            display: inline-block;
         }
 
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
-            border-color: var(--gold);
         }
 
         .btn-gold {
@@ -263,6 +258,7 @@
             display: flex;
             margin-bottom: 20px;
             border-bottom: 2px solid var(--border-gray);
+            flex-wrap: wrap;
         }
 
         .tab {
@@ -275,23 +271,33 @@
             color: var(--dark-gray);
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
+            flex: 1;
+            min-width: 150px;
         }
 
         .tab.active {
             color: var(--primary-blue);
             border-bottom-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
         }
 
         .tab:hover {
             color: var(--primary-blue);
+            background: rgba(212, 175, 55, 0.05);
         }
 
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease-in;
         }
 
         .tab-content.active {
             display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .section-card {
@@ -318,25 +324,29 @@
             margin: 30px 0;
             border: 2px solid var(--border-gray);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
         }
 
         .table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            min-width: 600px;
         }
 
         .table th, .table td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-gray);
+            vertical-align: middle;
         }
 
         .table th {
-            background: var(--light-blue);
+            background: #f0f4ff;
             color: var(--primary-blue);
             font-weight: 600;
-            font-size: 1rem;
+            position: sticky;
+            top: 0;
         }
 
         .table tr:hover {
@@ -364,27 +374,6 @@
         .status-completed {
             background: #cce5ff;
             color: #004085;
-        }
-
-        .booking-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .booking-form {
-            background: var(--light-gray);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid var(--border-gray);
-        }
-
-        .booking-summary {
-            background: linear-gradient(135deg, var(--light-blue) 0%, white 100%);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid var(--gold);
         }
 
         .admin-section {
@@ -419,6 +408,7 @@
             transform: translateX(400px);
             transition: transform 0.3s;
             min-width: 300px;
+            max-width: 400px;
         }
 
         .notification.show {
@@ -437,19 +427,24 @@
             background: linear-gradient(135deg, var(--info) 0%, #138496 100%);
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: var(--light-gray);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
-            transition: width 0.3s ease;
+        .quick-action-btn {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         @media (max-width: 768px) {
@@ -458,13 +453,7 @@
                 align-items: center;
             }
 
-            .role-card {
-                min-width: auto;
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .booking-section, .admin-section {
+            .admin-section {
                 grid-template-columns: 1fr;
             }
 
@@ -480,13 +469,10 @@
                 grid-template-columns: 1fr;
             }
 
-            .tabs {
-                flex-wrap: wrap;
-            }
-
             .tab {
-                flex: 1;
-                min-width: 120px;
+                min-width: 100px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -498,7 +484,7 @@
             <p>Système de Gestion Professionnel Avancé</p>
         </div>
 
-        <!-- Sélection du rôle -->
+        <!-- Page d'accueil -->
         <div id="role-selection" class="main-card">
             <div class="card-header">
                 <h2 style="text-align: center; margin: 0;">Accès au Système</h2>
@@ -519,415 +505,232 @@
             </div>
         </div>
 
-        <!-- Interface Client -->
-        <div id="client-interface" class="hidden">
-            <!-- Connexion Client -->
-            <div id="client-login" class="main-card">
-                <div class="card-header">
-                    <h2 style="margin: 0;">🔐 Connexion Client</h2>
-                </div>
-                <div class="card-content">
-                    <div class="login-form">
-                        <div class="form-group">
-                            <label for="client-email">Adresse email :</label>
-                            <input type="email" id="client-email" placeholder="votre.email@exemple.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="client-password">Mot de passe :</label>
-                            <input type="password" id="client-password" placeholder="Votre mot de passe" required>
-                        </div>
-                        <div style="text-align: center;">
-                            <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
-                            <button class="btn" onclick="backToHome()">Retour</button>
-                        </div>
-                        <div id="client-login-error" class="error-message hidden"></div>
-                    </div>
-                </div>
+        <!-- Connexion Client -->
+        <div id="client-login" class="main-card hidden">
+            <div class="card-header">
+                <h2 style="margin: 0;">🔐 Connexion Client</h2>
             </div>
-
-            <!-- Dashboard Client -->
-            <div id="client-dashboard" class="main-card hidden">
-                <div class="card-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h2 id="client-welcome" style="margin: 0;">Bienvenue</h2>
-                            <p id="client-info" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
-                        </div>
-                        <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
+            <div class="card-content">
+                <div class="login-form">
+                    <div class="form-group">
+                        <label for="client-email">Adresse email :</label>
+                        <input type="email" id="client-email" placeholder="votre.email@exemple.com">
                     </div>
-                </div>
-                <div class="card-content">
-                    <!-- Onglets Client -->
-                    <div class="tabs">
-                        <button class="tab active" onclick="showClientTab('overview')">📊 Vue d'ensemble</button>
-                        <button class="tab" onclick="showClientTab('booking')">📅 Réservations</button>
-                        <button class="tab" onclick="showClientTab('documents')">📄 Documents</button>
-                        <button class="tab" onclick="showClientTab('payments')">💰 Paiements</button>
+                    <div class="form-group">
+                        <label for="client-password">Mot de passe :</label>
+                        <input type="password" id="client-password" placeholder="Votre mot de passe">
                     </div>
-
-                    <!-- Vue d'ensemble -->
-                    <div id="client-overview" class="tab-content active">
-                        <!-- Stats Client -->
-                        <div class="dashboard-stats">
-                            <div class="stat-card">
-                                <div class="stat-number" id="client-remaining-visits">18</div>
-                                <div class="stat-label">Passages Restants</div>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);">
-                                <div class="stat-number" id="client-amount-paid">2000$</div>
-                                <div class="stat-label">Montant Payé</div>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%); color: var(--primary-blue);">
-                                <div class="stat-number" id="client-amount-due">1000$</div>
-                                <div class="stat-label">Montant Dû</div>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--info) 0%, #138496 100%);">
-                                <div class="stat-number" id="client-next-appointment">3j</div>
-                                <div class="stat-label">Prochain RDV</div>
-                            </div>
-                        </div>
-
-                        <!-- Progression du contrat -->
-                        <div class="section-card">
-                            <h3 class="section-title">📈 Progression du Contrat</h3>
-                            <div id="contract-progress">
-                                <p>Services utilisés : <span id="progress-text">6/24</span></p>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="progress-fill" style="width: 25%"></div>
-                                </div>
-                                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--dark-gray);">
-                                    Contrat valide jusqu'au : <span id="contract-expiry">15 décembre 2025</span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Historique récent -->
-                        <div class="data-table">
-                            <h3 class="section-title">📊 Historique Récent</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date & Heure</th>
-                                        <th>Service</th>
-                                        <th>Statut</th>
-                                        <th>Coût</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="client-recent-history">
-                                    <tr>
-                                        <td>15 Nov 2024 - 10:00</td>
-                                        <td>🏠 Entretien ménager</td>
-                                        <td><span class="status-chip status-completed">Terminé</span></td>
-                                        <td>166.67$</td>
-                                    </tr>
-                                    <tr>
-                                        <td>08 Nov 2024 - 14:00</td>
-                                        <td>🪟 Lavage de vitres</td>
-                                        <td><span class="status-chip status-completed">Terminé</span></td>
-                                        <td>166.67$</td>
-                                    </tr>
-                                    <tr>
-                                        <td>01 Nov 2024 - 09:00</td>
-                                        <td>🚗 Lavage auto extérieur</td>
-                                        <td><span class="status-chip status-completed">Terminé</span></td>
-                                        <td>166.67$</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div style="text-align: center;">
+                        <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
+                        <button class="btn" onclick="backToHome()">Retour</button>
                     </div>
-
-                    <!-- Réservations -->
-                    <div id="client-booking" class="tab-content">
-                        <div class="booking-section">
-                            <div class="booking-form">
-                                <h3 class="section-title">📅 Réserver un Service</h3>
-                                <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin: 10px 0; color: #856404; font-size: 0.9rem;">
-                                    ⏰ <strong>Disponibilités :</strong> Samedi et Dimanche uniquement, de 8h00 à 15h00
-                                </div>
-                                <div class="form-group">
-                                    <label for="booking-service">Service souhaité :</label>
-                                    <select id="booking-service" required>
-                                        <option value="">Sélectionnez un service</option>
-                                        <option value="menage">🏠 Entretien ménager</option>
-                                        <option value="vitres">🪟 Lavage de vitres</option>
-                                        <option value="auto-ext">🚗 Lavage auto extérieur</option>
-                                        <option value="auto-int">🚙 Lavage auto intérieur</option>
-                                        <option value="auto-complet">✨ Lavage auto complet</option>
-                                        <option value="bacs">🗑️ Lavage bacs à ordures</option>
-                                        <option value="goutieres">🏘️ Nettoyage gouttières</option>
-                                        <option value="sinistre">🔧 Nettoyage après sinistre</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="booking-date">Date souhaitée :</label>
-                                    <input type="date" id="booking-date" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="booking-time">Heure préférée :</label>
-                                    <select id="booking-time" required>
-                                        <option value="">Sélectionnez un créneau</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="booking-notes">Instructions spéciales :</label>
-                                    <textarea id="booking-notes" rows="3" placeholder="Accès, clés, précisions particulières..."></textarea>
-                                </div>
-                                <button class="btn btn-success btn-large" onclick="makeBooking()" style="width: 100%;">✅ Confirmer le rendez-vous</button>
-                            </div>
-
-                            <div class="booking-summary">
-                                <h3 class="section-title">📋 Récapitulatif</h3>
-                                <div id="booking-summary-content">
-                                    <p style="text-align: center; color: var(--dark-gray);">Sélectionnez un service et une date pour voir le récapitulatif</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tous les rendez-vous -->
-                        <div class="data-table">
-                            <h3 class="section-title">📅 Tous mes Rendez-vous</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date & Heure</th>
-                                        <th>Service</th>
-                                        <th>Statut</th>
-                                        <th>Coût</th>
-                                        <th>Notes</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="client-appointments-table">
-                                    <tr>
-                                        <td>22 Nov 2024 - 10:00</td>
-                                        <td>🏠 Entretien ménager</td>
-                                        <td><span class="status-chip status-confirmed">Confirmé</span></td>
-                                        <td>166.67$</td>
-                                        <td>Clés sous le paillasson</td>
-                                    </tr>
-                                    <tr>
-                                        <td>29 Nov 2024 - 14:00</td>
-                                        <td>🪟 Lavage de vitres</td>
-                                        <td><span class="status-chip status-confirmed">Confirmé</span></td>
-                                        <td>166.67$</td>
-                                        <td>-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Documents -->
-                    <div id="client-documents" class="tab-content">
-                        <div class="data-table">
-                            <h3 class="section-title">📄 Mes Documents</h3>
-                            <div id="client-documents-list">
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                                    <div style="border: 2px solid var(--border-gray); border-radius: 10px; padding: 20px; background: var(--light-gray);">
-                                        <h4 style="color: var(--primary-blue); margin-bottom: 10px;">📋 Contrat de Service</h4>
-                                        <p style="color: var(--dark-gray); margin-bottom: 15px;">Contrat signé le 15 janvier 2024</p>
-                                        <button class="btn btn-info btn-small">📥 Télécharger</button>
-                                    </div>
-                                    <div style="border: 2px solid var(--border-gray); border-radius: 10px; padding: 20px; background: var(--light-gray);">
-                                        <h4 style="color: var(--primary-blue); margin-bottom: 10px;">🧾 Factures</h4>
-                                        <p style="color: var(--dark-gray); margin-bottom: 15px;">3 factures disponibles</p>
-                                        <button class="btn btn-info btn-small">📥 Voir toutes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Paiements -->
-                    <div id="client-payments" class="tab-content">
-                        <div class="data-table">
-                            <h3 class="section-title">💰 Historique des Paiements</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Montant</th>
-                                        <th>Mode de paiement</th>
-                                        <th>Statut</th>
-                                        <th>Reçu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>15 Jan 2024</td>
-                                        <td>2000.00$</td>
-                                        <td>Virement bancaire</td>
-                                        <td><span class="status-chip status-completed">Reçu</span></td>
-                                        <td><button class="btn btn-info btn-small">📥 PDF</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div id="client-login-error" class="error-message hidden"></div>
+                    <div style="margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px; font-size: 0.9rem;">
+                        <strong>Compte de test :</strong><br>
+                        Email: marie@email.com<br>
+                        Mot de passe: DR2025!
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Interface Admin -->
-        <div id="admin-interface" class="hidden">
-            <!-- Connexion Admin -->
-            <div id="admin-login" class="main-card">
-                <div class="card-header">
-                    <h2 style="margin: 0;">🔐 Connexion Administration</h2>
+        <!-- Dashboard Client -->
+        <div id="client-dashboard" class="main-card hidden">
+            <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <h2 id="client-welcome" style="margin: 0;">Bienvenue Client</h2>
+                        <p id="client-info" style="margin: 5px 0 0 0; opacity: 0.9;">Interface client</p>
+                    </div>
+                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
                 </div>
-                <div class="card-content">
-                    <div class="login-form">
-                        <div class="form-group">
-                            <label for="admin-email">Email administrateur :</label>
-                            <input type="email" id="admin-email" placeholder="admin@docshine.net" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-password">Mot de passe :</label>
-                            <input type="password" id="admin-password" placeholder="Mot de passe administrateur" required>
-                        </div>
-                        <div style="text-align: center;">
-                            <button class="btn btn-gold btn-large" onclick="loginAdmin()">Accéder à l'administration</button>
-                            <button class="btn" onclick="backToHome()">Retour</button>
-                        </div>
-                        <div id="admin-login-error" class="error-message hidden"></div>
+            </div>
+            <div class="card-content">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Passages Restants</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--success);">
+                        <div class="stat-number">2000$</div>
+                        <div class="stat-label">Montant Payé</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
+                        <div class="stat-number">1000$</div>
+                        <div class="stat-label">Montant Dû</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--info);">
+                        <div class="stat-number">3j</div>
+                        <div class="stat-label">Prochain RDV</div>
+                    </div>
+                </div>
+                
+                <div class="section-card">
+                    <h3 class="section-title">📅 Réserver un Service</h3>
+                    <p>Interface de réservation pour les clients - en développement</p>
+                    <button class="btn btn-success" onclick="showNotification('Réservation simulée créée !', 'success')">🎯 Réserver maintenant</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connexion Admin -->
+        <div id="admin-login" class="main-card hidden">
+            <div class="card-header">
+                <h2 style="margin: 0;">🔐 Connexion Administration</h2>
+            </div>
+            <div class="card-content">
+                <div class="login-form">
+                    <div class="form-group">
+                        <label for="admin-email">Email administrateur :</label>
+                        <input type="email" id="admin-email" placeholder="admin@docshine.net">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Mot de passe :</label>
+                        <input type="password" id="admin-password" placeholder="Mot de passe administrateur">
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Accéder à l'administration</button>
+                        <button class="btn" onclick="backToHome()">Retour</button>
+                    </div>
+                    <div id="admin-login-error" class="error-message hidden"></div>
+                    <div style="margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px; font-size: 0.9rem;">
+                        <strong>Identifiants admin :</strong><br>
+                        Email: admin@docshine.net<br>
+                        Mot de passe: DrShine2025!
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Dashboard Admin -->
-            <div id="admin-dashboard" class="main-card hidden">
-                <div class="card-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h2 style="margin: 0;">🔧 Administration Dr. Shine</h2>
-                            <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complète et analytiques</p>
+        <!-- Dashboard Admin -->
+        <div id="admin-dashboard" class="main-card hidden">
+            <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <h2 style="margin: 0;">🔧 Administration Dr. Shine</h2>
+                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complète et analytiques</p>
+                    </div>
+                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
+                </div>
+            </div>
+            <div class="card-content">
+                <!-- Onglets Admin -->
+                <div class="tabs">
+                    <button class="tab active" onclick="showAdminTab('dashboard')">📊 Tableau de bord</button>
+                    <button class="tab" onclick="showAdminTab('clients')">👥 Clients</button>
+                    <button class="tab" onclick="showAdminTab('appointments')">📅 Rendez-vous</button>
+                    <button class="tab" onclick="showAdminTab('finances')">💰 Finances</button>
+                    <button class="tab" onclick="showAdminTab('settings')">⚙️ Paramètres</button>
+                </div>
+
+                <!-- Tableau de bord -->
+                <div id="admin-dashboard-content" class="tab-content active">
+                    <div class="dashboard-stats">
+                        <div class="stat-card" style="background: var(--success);">
+                            <div class="stat-number">15750$</div>
+                            <div class="stat-label">Chiffre d'Affaires</div>
                         </div>
-                        <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
+                        <div class="stat-card">
+                            <div class="stat-number">24</div>
+                            <div class="stat-label">Clients Actifs</div>
+                        </div>
+                        <div class="stat-card" style="background: var(--info);">
+                            <div class="stat-number">18</div>
+                            <div class="stat-label">RDV ce Mois</div>
+                        </div>
+                        <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">En Attente</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <div class="section-card">
+                            <h3 class="section-title">⚡ Actions Rapides</h3>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn btn-success" onclick="showAdminTab('clients')">
+                                    ➕ Nouveau Client
+                                </button>
+                                <button class="quick-action-btn btn-info" onclick="showAdminTab('appointments')">
+                                    📅 Nouveau RDV
+                                </button>
+                                <button class="quick-action-btn btn-warning" onclick="exportData()">
+                                    📊 Exporter Données
+                                </button>
+                                <button class="quick-action-btn btn-gold" onclick="backupData()">
+                                    💾 Sauvegarder
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="section-card">
+                            <h3 class="section-title">📅 Agenda Aujourd'hui</h3>
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 10px; background: white;">
+                                <div>
+                                    <strong>10:00</strong> - Marie Dubois<br>
+                                    <small>🏠 Entretien ménager</small>
+                                </div>
+                                <span class="status-chip status-confirmed">Confirmé</span>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border: 1px solid var(--border-gray); border-radius: 8px; background: white;">
+                                <div>
+                                    <strong>14:00</strong> - Jean Tremblay<br>
+                                    <small>🪟 Lavage de vitres</small>
+                                </div>
+                                <span class="status-chip status-confirmed">Confirmé</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card-content">
-                    <!-- Onglets Admin -->
-                    <div class="tabs">
-                        <button class="tab active" onclick="showAdminTab('dashboard')">📊 Tableau de bord</button>
-                        <button class="tab" onclick="showAdminTab('clients')">👥 Clients</button>
-                        <button class="tab" onclick="showAdminTab('appointments')">📅 Rendez-vous</button>
-                        <button class="tab" onclick="showAdminTab('finances')">💰 Finances</button>
-                        <button class="tab" onclick="showAdminTab('settings')">⚙️ Paramètres</button>
-                    </div>
 
-                    <!-- Tableau de bord -->
-                    <div id="admin-dashboard-tab" class="tab-content active">
-                        <!-- Stats Admin -->
-                        <div class="dashboard-stats">
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);">
-                                <div class="stat-number" id="admin-revenue">15750$</div>
-                                <div class="stat-label">Chiffre d'Affaires</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="admin-clients">24</div>
-                                <div class="stat-label">Clients Actifs</div>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--info) 0%, #138496 100%);">
-                                <div class="stat-number" id="admin-appointments">18</div>
-                                <div class="stat-label">RDV ce Mois</div>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%); color: var(--primary-blue);">
-                                <div class="stat-number" id="admin-pending">3</div>
-                                <div class="stat-label">En Attente</div>
-                            </div>
-                        </div>
-
-                        <!-- Actions rapides -->
-                        <div class="admin-section">
-                            <div class="section-card">
-                                <h3 class="section-title">⚡ Actions Rapides</h3>
-                                <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Nouveau Client</button>
-                                <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Nouveau RDV</button>
-                                <button class="btn btn-warning" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📊 Exporter Données</button>
-                                <button class="btn btn-gold" onclick="backupData()" style="width: 100%;">💾 Sauvegarder</button>
-                            </div>
-
-                            <div class="section-card">
-                                <h3 class="section-title">📅 Agenda Aujourd'hui</h3>
-                                <div id="today-agenda">
-                                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">
-                                        <div>
-                                            <strong>10:00</strong> - Marie Dubois<br>
-                                            <small>🏠 Entretien ménager</small>
-                                        </div>
-                                        <span class="status-chip status-confirmed">Confirmé</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">
-                                        <div>
-                                            <strong>14:00</strong> - Jean Tremblay<br>
-                                            <small>🪟 Lavage de vitres</small>
-                                        </div>
-                                        <span class="status-chip status-confirmed">Confirmé</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Clients -->
-                    <div id="admin-clients-tab" class="tab-content">
-                        <div class="section-card">
-                            <h3 class="section-title">➕ Nouveau Client</h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="new-client-name">Nom complet :</label>
-                                    <input type="text" id="new-client-name" placeholder="Nom et prénom" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new-client-email">Email :</label>
-                                    <input type="email" id="new-client-email" placeholder="email@exemple.com" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="new-client-phone">Téléphone :</label>
-                                    <input type="tel" id="new-client-phone" placeholder="819-555-0000" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new-client-password">Mot de passe :</label>
-                                    <input type="text" id="new-client-password" value="DR2025!" required>
-                                </div>
+                <!-- Clients -->
+                <div id="admin-clients-content" class="tab-content">
+                    <div class="section-card">
+                        <h3 class="section-title">➕ Créer un Nouveau Client</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-client-name">Nom complet :</label>
+                                <input type="text" id="new-client-name" placeholder="Prénom Nom">
                             </div>
                             <div class="form-group">
-                                <label for="new-client-address">Adresse complète :</label>
-                                <textarea id="new-client-address" rows="2" placeholder="Adresse complète" required></textarea>
+                                <label for="new-client-email">Email :</label>
+                                <input type="email" id="new-client-email" placeholder="email@exemple.com">
                             </div>
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label for="contract-amount">Montant contrat ($) :</label>
-                                    <input type="number" id="contract-amount" placeholder="4000" step="100" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="total-visits">Passages inclus :</label>
-                                    <input type="number" id="total-visits" placeholder="24" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="initial-payment">Paiement initial ($) :</label>
-                                    <input type="number" id="initial-payment" placeholder="Montant reçu" step="0.01" required>
-                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-client-phone">Téléphone :</label>
+                                <input type="tel" id="new-client-phone" placeholder="819-555-0000">
                             </div>
                             <div class="form-group">
-                                <label for="client-notes">Notes sur le client :</label>
-                                <textarea id="client-notes" rows="2" placeholder="Informations particulières..."></textarea>
+                                <label for="new-client-password">Mot de passe :</label>
+                                <input type="text" id="new-client-password" value="DR2025!">
                             </div>
-                            <button class="btn btn-success" onclick="createClient()" style="width: 100%;">✅ Créer le client</button>
                         </div>
+                        <div class="form-group">
+                            <label for="new-client-address">Adresse complète :</label>
+                            <textarea id="new-client-address" rows="2" placeholder="Adresse complète"></textarea>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label for="contract-amount">Montant contrat ($) :</label>
+                                <input type="number" id="contract-amount" placeholder="4000" step="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="total-visits">Passages inclus :</label>
+                                <input type="number" id="total-visits" placeholder="24">
+                            </div>
+                            <div class="form-group">
+                                <label for="initial-payment">Paiement initial ($) :</label>
+                                <input type="number" id="initial-payment" placeholder="2000" step="0.01">
+                            </div>
+                        </div>
+                        <button class="btn btn-success btn-large" onclick="createClient()" style="width: 100%;">✅ Créer le client</button>
+                    </div>
 
-                        <div class="data-table">
-                            <h3 class="section-title">👥 Liste des Clients</h3>
+                    <div class="data-table">
+                        <h3 class="section-title">👥 Liste des Clients</h3>
+                        <div style="overflow-x: auto;">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -935,47 +738,27 @@
                                         <th>Contact</th>
                                         <th>Contrat</th>
                                         <th>Passages</th>
-                                        <th>Montant Dû</th>
+                                        <th>Statut</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="clients-table">
                                     <tr>
-                                        <td>
-                                            <strong>Marie Dubois</strong>
-                                        </td>
+                                        <td><strong>Marie Dubois</strong></td>
                                         <td>marie@email.com<br><small>819-555-0001</small></td>
-                                        <td>
-                                            4000$
-                                            <br><small>Payé: 2000$</small>
-                                        </td>
-                                        <td>
-                                            <strong style="color: orange">6/24</strong>
-                                            <br><small>18 restants</small>
-                                        </td>
-                                        <td>
-                                            <strong style="color: orange">1000$</strong>
-                                        </td>
+                                        <td>4000$<br><small>Payé: 2000$</small></td>
+                                        <td><strong>6/24</strong><br><small>18 restants</small></td>
+                                        <td><span class="status-chip status-confirmed">Actif</span></td>
                                         <td>
                                             <button class="btn btn-info btn-small" onclick="editClient(1)">✏️ Modifier</button>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <strong>Jean Tremblay</strong>
-                                        </td>
+                                        <td><strong>Jean Tremblay</strong></td>
                                         <td>jean@email.com<br><small>819-555-0002</small></td>
-                                        <td>
-                                            4000$
-                                            <br><small>Payé: 4000$</small>
-                                        </td>
-                                        <td>
-                                            <strong style="color: inherit">12/24</strong>
-                                            <br><small>12 restants</small>
-                                        </td>
-                                        <td>
-                                            <strong style="color: inherit">0$</strong>
-                                        </td>
+                                        <td>4000$<br><small>Payé: 4000$</small></td>
+                                        <td><strong>12/24</strong><br><small>12 restants</small></td>
+                                        <td><span class="status-chip status-completed">Payé</span></td>
                                         <td>
                                             <button class="btn btn-info btn-small" onclick="editClient(2)">✏️ Modifier</button>
                                         </td>
@@ -984,64 +767,66 @@
                             </table>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Rendez-vous -->
-                    <div id="admin-appointments-tab" class="tab-content">
-                        <div class="section-card">
-                            <h3 class="section-title">📅 Nouveau Rendez-vous</h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="admin-client-select">Client :</label>
-                                    <select id="admin-client-select" required>
-                                        <option value="">Choisir un client</option>
-                                        <option value="1">Marie Dubois</option>
-                                        <option value="2">Jean Tremblay</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-apt-service">Service :</label>
-                                    <select id="admin-apt-service" required>
-                                        <option value="">Sélectionner un service</option>
-                                        <option value="menage">🏠 Entretien ménager</option>
-                                        <option value="vitres">🪟 Lavage de vitres</option>
-                                        <option value="auto-ext">🚗 Lavage auto extérieur</option>
-                                        <option value="auto-int">🚙 Lavage auto intérieur</option>
-                                        <option value="auto-complet">✨ Lavage auto complet</option>
-                                        <option value="bacs">🗑️ Lavage bacs à ordures</option>
-                                        <option value="goutieres">🏘️ Nettoyage gouttières</option>
-                                        <option value="sinistre">🔧 Nettoyage après sinistre</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="admin-apt-date">Date :</label>
-                                    <input type="date" id="admin-apt-date" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-apt-time">Heure :</label>
-                                    <select id="admin-apt-time" required>
-                                        <option value="">Sélectionner</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                    </select>
-                                </div>
+                <!-- Rendez-vous -->
+                <div id="admin-appointments-content" class="tab-content">
+                    <div class="section-card">
+                        <h3 class="section-title">📅 Créer un Nouveau Rendez-vous</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="admin-client-select">Client :</label>
+                                <select id="admin-client-select">
+                                    <option value="">Choisir un client</option>
+                                    <option value="1">Marie Dubois</option>
+                                    <option value="2">Jean Tremblay</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="admin-apt-notes">Notes :</label>
-                                <textarea id="admin-apt-notes" rows="2" placeholder="Instructions particulières..."></textarea>
+                                <label for="admin-apt-service">Service :</label>
+                                <select id="admin-apt-service">
+                                    <option value="">Sélectionner un service</option>
+                                    <option value="menage">🏠 Entretien ménager</option>
+                                    <option value="vitres">🪟 Lavage de vitres</option>
+                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
+                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
+                                    <option value="auto-complet">✨ Lavage auto complet</option>
+                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
+                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
+                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
+                                </select>
                             </div>
-                            <button class="btn btn-success" onclick="createAdminAppointment()" style="width: 100%;">✅ Créer le RDV</button>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="admin-apt-date">Date :</label>
+                                <input type="date" id="admin-apt-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-apt-time">Heure :</label>
+                                <select id="admin-apt-time">
+                                    <option value="">Sélectionner</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-apt-notes">Notes :</label>
+                            <textarea id="admin-apt-notes" rows="2" placeholder="Instructions particulières..."></textarea>
+                        </div>
+                        <button class="btn btn-success btn-large" onclick="createAppointment()" style="width: 100%;">✅ Créer le rendez-vous</button>
+                    </div>
 
-                        <div class="data-table">
-                            <h3 class="section-title">📅 Tous les Rendez-vous</h3>
+                    <div class="data-table">
+                        <h3 class="section-title">📅 Tous les Rendez-vous</h3>
+                        <div style="overflow-x: auto;">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -1053,9 +838,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="appointments-table">
+                                <tbody>
                                     <tr>
-                                        <td>22 Nov 2024 - 10:00</td>
+                                        <td>22 Nov 2024<br>10:00</td>
                                         <td>Marie Dubois</td>
                                         <td>🏠 Entretien ménager</td>
                                         <td><span class="status-chip status-confirmed">Confirmé</span></td>
@@ -1065,7 +850,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>22 Nov 2024 - 14:00</td>
+                                        <td>22 Nov 2024<br>14:00</td>
                                         <td>Jean Tremblay</td>
                                         <td>🪟 Lavage de vitres</td>
                                         <td><span class="status-chip status-confirmed">Confirmé</span></td>
@@ -1074,73 +859,65 @@
                                             <button class="btn btn-info btn-small" onclick="editAppointment(2)">✏️ Modifier</button>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>29 Nov 2024 - 09:00</td>
-                                        <td>Marie Dubois</td>
-                                        <td>🚗 Lavage auto complet</td>
-                                        <td><span class="status-chip status-pending">En attente</span></td>
-                                        <td>166.67$</td>
-                                        <td>
-                                            <button class="btn btn-info btn-small" onclick="editAppointment(3)">✏️ Modifier</button>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Finances -->
-                    <div id="admin-finances-tab" class="tab-content">
-                        <div class="admin-section">
-                            <div class="section-card">
-                                <h3 class="section-title">💰 Gestion des Paiements</h3>
+                <!-- Finances -->
+                <div id="admin-finances-content" class="tab-content">
+                    <div class="admin-section">
+                        <div class="section-card">
+                            <h3 class="section-title">💰 Enregistrer un Paiement</h3>
+                            <div class="form-group">
+                                <label for="payment-client-select">Client :</label>
+                                <select id="payment-client-select">
+                                    <option value="">Choisir un client</option>
+                                    <option value="1">Marie Dubois</option>
+                                    <option value="2">Jean Tremblay</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group">
-                                    <label for="payment-client-select">Client :</label>
-                                    <select id="payment-client-select">
-                                        <option value="">Choisir un client</option>
-                                        <option value="1">Marie Dubois</option>
-                                        <option value="2">Jean Tremblay</option>
+                                    <label for="payment-amount">Montant ($) :</label>
+                                    <input type="number" id="payment-amount" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment-method">Mode de paiement :</label>
+                                    <select id="payment-method">
+                                        <option value="cash">Espèces</option>
+                                        <option value="card">Carte</option>
+                                        <option value="transfer">Virement</option>
+                                        <option value="check">Chèque</option>
                                     </select>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="payment-amount">Montant ($) :</label>
-                                        <input type="number" id="payment-amount" step="0.01" placeholder="0.00">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="payment-method">Mode de paiement :</label>
-                                        <select id="payment-method">
-                                            <option value="cash">Espèces</option>
-                                            <option value="card">Carte</option>
-                                            <option value="transfer">Virement</option>
-                                            <option value="check">Chèque</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="payment-notes">Notes :</label>
-                                    <textarea id="payment-notes" rows="2" placeholder="Notes sur le paiement..."></textarea>
-                                </div>
-                                <button class="btn btn-success" onclick="recordPayment()" style="width: 100%;">💰 Enregistrer le paiement</button>
                             </div>
+                            <div class="form-group">
+                                <label for="payment-notes">Notes :</label>
+                                <textarea id="payment-notes" rows="2" placeholder="Notes sur le paiement..."></textarea>
+                            </div>
+                            <button class="btn btn-success btn-large" onclick="recordPayment()" style="width: 100%;">💰 Enregistrer le paiement</button>
+                        </div>
 
-                            <div class="section-card">
-                                <h3 class="section-title">💰 Résumé Financier</h3>
-                                <div class="dashboard-stats">
-                                    <div class="stat-card" style="background: var(--success);">
-                                        <div class="stat-number" id="total-revenue">15750$</div>
-                                        <div class="stat-label">Revenus Totaux</div>
-                                    </div>
-                                    <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                                        <div class="stat-number" id="pending-amount">3250$</div>
-                                        <div class="stat-label">En Attente</div>
-                                    </div>
+                        <div class="section-card">
+                            <h3 class="section-title">💰 Résumé Financier</h3>
+                            <div class="dashboard-stats">
+                                <div class="stat-card" style="background: var(--success);">
+                                    <div class="stat-number">15750$</div>
+                                    <div class="stat-label">Revenus Totaux</div>
+                                </div>
+                                <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
+                                    <div class="stat-number">3250$</div>
+                                    <div class="stat-label">En Attente</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="data-table">
-                            <h3 class="section-title">💳 Historique des Paiements</h3>
+                    <div class="data-table">
+                        <h3 class="section-title">💳 Historique des Paiements</h3>
+                        <div style="overflow-x: auto;">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -1170,42 +947,42 @@
                             </table>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Paramètres -->
-                    <div id="admin-settings-tab" class="tab-content">
-                        <div class="admin-section">
-                            <div class="section-card">
-                                <h3 class="section-title">⚙️ Paramètres Généraux</h3>
-                                <div class="form-group">
-                                    <label for="company-name">Nom de l'entreprise :</label>
-                                    <input type="text" id="company-name" value="Dr. Shine">
-                                </div>
-                                <div class="form-group">
-                                    <label for="company-email">Email de contact :</label>
-                                    <input type="email" id="company-email" placeholder="contact@drshine.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="company-phone">Téléphone :</label>
-                                    <input type="tel" id="company-phone" placeholder="819-555-0000">
-                                </div>
-                                <div class="form-group">
-                                    <label for="company-address">Adresse :</label>
-                                    <textarea id="company-address" rows="2" placeholder="Adresse complète"></textarea>
-                                </div>
-                                <button class="btn btn-success" onclick="saveSettings()" style="width: 100%;">💾 Sauvegarder</button>
+                <!-- Paramètres -->
+                <div id="admin-settings-content" class="tab-content">
+                    <div class="admin-section">
+                        <div class="section-card">
+                            <h3 class="section-title">⚙️ Paramètres de l'Entreprise</h3>
+                            <div class="form-group">
+                                <label for="company-name">Nom de l'entreprise :</label>
+                                <input type="text" id="company-name" value="Dr. Shine">
                             </div>
+                            <div class="form-group">
+                                <label for="company-email">Email de contact :</label>
+                                <input type="email" id="company-email" value="contact@drshine.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-phone">Téléphone :</label>
+                                <input type="tel" id="company-phone" value="819-555-0000">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-address">Adresse :</label>
+                                <textarea id="company-address" rows="2" placeholder="Adresse complète de l'entreprise"></textarea>
+                            </div>
+                            <button class="btn btn-success btn-large" onclick="saveSettings()" style="width: 100%;">💾 Sauvegarder les paramètres</button>
+                        </div>
 
-                            <div class="section-card">
-                                <h3 class="section-title">🔧 Maintenance</h3>
-                                <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 10px;">💾 Sauvegarder BD</button>
-                                <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 20px;">📊 Exporter Données</button>
-                                
-                                <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
-                                    <h4 style="color: #dc3545; margin-bottom: 10px;">⚠️ ZONE DANGEREUSE ⚠️</h4>
-                                    <p>Cette action supprimera TOUTES les données de façon IRRÉVERSIBLE !</p>
-                                </div>
-                                <button class="btn btn-danger" onclick="confirmResetDatabase()" style="width: 100%;">🗑️ SUPPRIMER TOUTES LES DONNÉES</button>
+                        <div class="section-card">
+                            <h3 class="section-title">🔧 Outils de Maintenance</h3>
+                            <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">💾 Créer une sauvegarde</button>
+                            <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">📊 Exporter toutes les données</button>
+                            <hr style="margin: 20px 0;">
+                            <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
+                                <h4 style="color: #dc3545; margin-bottom: 10px;">⚠️ ZONE DANGEREUSE ⚠️</h4>
+                                <p style="margin-bottom: 0;">Cette action supprimera TOUTES les données de façon IRRÉVERSIBLE !</p>
                             </div>
+                            <button class="btn btn-danger" onclick="confirmResetDatabase()" style="width: 100%;">🗑️ RÉINITIALISER LA BASE DE DONNÉES</button>
                         </div>
                     </div>
                 </div>
@@ -1214,7 +991,7 @@
     </div>
 
     <script>
-        // Variables globales pour stocker les données
+        // Variables globales
         let currentUser = null;
         let clients = [
             {
@@ -1227,66 +1004,21 @@
                 totalVisits: 24,
                 usedVisits: 6,
                 amountPaid: 2000
-            },
-            {
-                id: 2,
-                name: "Jean Tremblay", 
-                email: "jean@email.com",
-                password: "DR2025!",
-                phone: "819-555-0002",
-                contractAmount: 4000,
-                totalVisits: 24,
-                usedVisits: 12,
-                amountPaid: 4000
             }
         ];
 
-        let appointments = [
-            {
-                id: 1,
-                clientId: 1,
-                date: "2024-11-22",
-                time: "10:00",
-                service: "menage",
-                status: "confirmed",
-                cost: 166.67,
-                notes: "Clés sous le paillasson"
-            },
-            {
-                id: 2,
-                clientId: 2,
-                date: "2024-11-22", 
-                time: "14:00",
-                service: "vitres",
-                status: "confirmed",
-                cost: 166.67,
-                notes: ""
-            }
-        ];
-
-        const serviceNames = {
-            'menage': '🏠 Entretien ménager',
-            'vitres': '🪟 Lavage de vitres',
-            'auto-ext': '🚗 Lavage auto extérieur',
-            'auto-int': '🚙 Lavage auto intérieur',
-            'auto-complet': '✨ Lavage auto complet',
-            'bacs': '🗑️ Lavage bacs à ordures',
-            'goutieres': '🏘️ Nettoyage gouttières',
-            'sinistre': '🔧 Nettoyage après sinistre'
-        };
-
-        // Fonctions de navigation
+        // Fonctions de navigation principales
         function showClientLogin() {
             console.log("Affichage connexion client");
             hideAll();
-            document.getElementById('client-interface').classList.remove('hidden');
+            document.getElementById('client-login').classList.remove('hidden');
             showNotification('Interface client activée', 'info');
         }
 
         function showAdminLogin() {
             console.log("Affichage connexion admin");
             hideAll();
-            document.getElementById('admin-interface').classList.remove('hidden');
+            document.getElementById('admin-login').classList.remove('hidden');
             showNotification('Interface admin activée', 'info');
         }
 
@@ -1299,8 +1031,10 @@
         function hideAll() {
             const elements = [
                 'role-selection',
-                'client-interface', 
-                'admin-interface'
+                'client-login',
+                'admin-login', 
+                'client-dashboard',
+                'admin-dashboard'
             ];
             
             elements.forEach(elementId => {
@@ -1313,6 +1047,11 @@
 
         function logout() {
             currentUser = null;
+            // Vider les champs de formulaire
+            document.getElementById('client-email').value = '';
+            document.getElementById('client-password').value = '';
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-password').value = '';
             backToHome();
             showNotification('Déconnexion réussie', 'info');
         }
@@ -1322,17 +1061,19 @@
             const email = document.getElementById('client-email').value;
             const password = document.getElementById('client-password').value;
 
-            // Chercher le client dans la base
+            console.log("Tentative de connexion client:", email);
+
             const client = clients.find(c => c.email === email && c.password === password);
 
             if (client) {
                 currentUser = client;
-                document.getElementById('client-login').classList.add('hidden');
+                hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
-                updateClientDashboard();
-                showNotification('Connexion réussie !', 'success');
+                document.getElementById('client-welcome').textContent = 'Bienvenue, ' + client.name;
+                document.getElementById('client-info').textContent = `Contrat: ${client.contractAmount}$ (${client.totalVisits} passages)`;
+                showNotification('Connexion client réussie !', 'success');
             } else {
-                showError('client-login-error', 'Email ou mot de passe incorrect. Essayez: marie@email.com / DR2025!');
+                showError('client-login-error', 'Identifiants incorrects. Utilisez: marie@email.com / DR2025!');
             }
         }
 
@@ -1340,162 +1081,67 @@
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-password').value;
 
+            console.log("Tentative de connexion admin:", email);
+
             if (email === 'admin@docshine.net' && password === 'DrShine2025!') {
-                document.getElementById('admin-login').classList.add('hidden');
+                hideAll();
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                updateAdminDashboard();
+                
+                // S'assurer que le bon onglet est actif
+                showAdminTab('dashboard');
+                
                 showNotification('Accès administrateur autorisé !', 'success');
             } else {
-                showError('admin-login-error', 'Identifiants incorrects. Essayez: admin@docshine.net / DrShine2025!');
+                showError('admin-login-error', 'Identifiants incorrects. Utilisez: admin@docshine.net / DrShine2025!');
             }
         }
 
-        // Gestion des onglets
-        function showClientTab(tabName) {
-            const clientDashboard = document.getElementById('client-dashboard');
-            const tabs = clientDashboard.querySelectorAll('.tab');
-            const contents = clientDashboard.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-            
-            const activeTab = Array.from(tabs).find(tab => tab.onclick.toString().includes(tabName));
-            const activeContent = document.getElementById('client-' + tabName);
-            
-            if (activeTab) activeTab.classList.add('active');
-            if (activeContent) activeContent.classList.add('active');
-
-            if (tabName === 'booking') {
-                setTimeout(updateBookingSummary, 100);
-            }
-        }
-
+        // Gestion des onglets admin
         function showAdminTab(tabName) {
-            const adminDashboard = document.getElementById('admin-dashboard');
-            const tabs = adminDashboard.querySelectorAll('.tab');
-            const contents = adminDashboard.querySelectorAll('.tab-content');
+            console.log("Changement d'onglet admin:", tabName);
+            
+            // Désactiver tous les onglets et contenus
+            const tabs = document.querySelectorAll('#admin-dashboard .tab');
+            const contents = document.querySelectorAll('#admin-dashboard .tab-content');
             
             tabs.forEach(tab => tab.classList.remove('active'));
             contents.forEach(content => content.classList.remove('active'));
             
-            const activeTab = Array.from(tabs).find(tab => tab.onclick.toString().includes(tabName));
-            const activeContent = document.getElementById('admin-' + tabName + '-tab');
+            // Activer l'onglet et le contenu correspondant
+            const targetContent = document.getElementById('admin-' + tabName + '-content');
             
-            if (activeTab) activeTab.classList.add('active');
-            if (activeContent) activeContent.classList.add('active');
-        }
-
-        // Mise à jour des dashboards
-        function updateClientDashboard() {
-            if (!currentUser) return;
-
-            document.getElementById('client-welcome').textContent = 'Bienvenue, ' + currentUser.name;
-            document.getElementById('client-info').textContent = 'Contrat: ' + currentUser.contractAmount + '$ (' + currentUser.totalVisits + ' passages)';
-
-            const remaining = currentUser.totalVisits - currentUser.usedVisits;
-            const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
-            const amountDue = currentUser.usedVisits * costPerVisit;
-
-            document.getElementById('client-remaining-visits').textContent = remaining;
-            document.getElementById('client-amount-paid').textContent = currentUser.amountPaid + '$';
-            document.getElementById('client-amount-due').textContent = Math.round(amountDue - currentUser.amountPaid) + '$';
-
-            const progressPercent = (currentUser.usedVisits / currentUser.totalVisits) * 100;
-            document.getElementById('progress-text').textContent = currentUser.usedVisits + '/' + currentUser.totalVisits;
-            document.getElementById('progress-fill').style.width = progressPercent + '%';
-        }
-
-        function updateAdminDashboard() {
-            // Mettre à jour les statistiques admin
-            const totalRevenue = clients.reduce((sum, client) => sum + client.amountPaid, 0);
-            const totalClients = clients.length;
-            
-            document.getElementById('admin-revenue').textContent = totalRevenue + '$';
-            document.getElementById('admin-clients').textContent = totalClients;
-        }
-
-        // Fonctions de réservation
-        function updateBookingSummary() {
-            const service = document.getElementById('booking-service').value;
-            const date = document.getElementById('booking-date').value;
-            const time = document.getElementById('booking-time').value;
-            const summaryContent = document.getElementById('booking-summary-content');
-            
-            if (service && date && time && currentUser) {
-                const costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
+            if (targetContent) {
+                targetContent.classList.add('active');
                 
-                summaryContent.innerHTML = `
-                    <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Détails de la réservation</h4>
-                    <p><strong>Service :</strong> ${serviceNames[service]}</p>
-                    <p><strong>Date :</strong> ${new Date(date).toLocaleDateString('fr-FR')}</p>
-                    <p><strong>Heure :</strong> ${time}</p>
-                    <p><strong>Coût :</strong> ${costPerVisit.toFixed(2)}$</p>
-                    <hr style="margin: 15px 0;">
-                    <p style="color: var(--success); font-weight: bold; margin-top: 15px;">✅ Service inclus dans votre contrat</p>
-                `;
+                // Trouver et activer l'onglet correspondant
+                tabs.forEach(tab => {
+                    if (tab.onclick && tab.onclick.toString().includes(tabName)) {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                showNotification(`Onglet ${tabName} activé`, 'info');
             } else {
-                summaryContent.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">Sélectionnez un service et une date pour voir le récapitulatif</p>';
+                console.error("Contenu non trouvé pour:", 'admin-' + tabName + '-content');
             }
         }
 
-        function makeBooking() {
-            const service = document.getElementById('booking-service').value;
-            const date = document.getElementById('booking-date').value;
-            const time = document.getElementById('booking-time').value;
-            const notes = document.getElementById('booking-notes').value;
-
-            if (!service || !date || !time) {
-                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-                return;
-            }
-
-            if (!currentUser) return;
-
-            const remaining = currentUser.totalVisits - currentUser.usedVisits;
-            if (remaining <= 0) {
-                showNotification('Aucun passage restant dans votre contrat', 'error');
-                return;
-            }
-
-            // Ajouter le rendez-vous
-            const newAppointment = {
-                id: appointments.length + 1,
-                clientId: currentUser.id,
-                date: date,
-                time: time,
-                service: service,
-                notes: notes,
-                status: 'confirmed',
-                cost: currentUser.contractAmount / currentUser.totalVisits
-            };
-
-            appointments.push(newAppointment);
-            currentUser.usedVisits++;
-
-            // Mettre à jour la vue
-            updateClientDashboard();
-            
-            // Vider le formulaire
-            document.getElementById('booking-service').value = '';
-            document.getElementById('booking-date').value = '';
-            document.getElementById('booking-time').value = '';
-            document.getElementById('booking-notes').value = '';
-
-            showNotification('Rendez-vous confirmé !', 'success');
-        }
-
-        // Fonctions admin
+        // Fonctions de gestion
         function createClient() {
             const name = document.getElementById('new-client-name').value;
             const email = document.getElementById('new-client-email').value;
             const phone = document.getElementById('new-client-phone').value;
-            const password = document.getElementById('new-client-password').value;
             const contractAmount = parseFloat(document.getElementById('contract-amount').value);
             const totalVisits = parseInt(document.getElementById('total-visits').value);
-            const initialPayment = parseFloat(document.getElementById('initial-payment').value);
+            const initialPayment = parseFloat(document.getElementById('initial-payment').value) || 0;
 
             if (!name || !email || !phone || !contractAmount || !totalVisits) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                return;
+            }
+
+            if (clients.find(c => c.email === email)) {
+                showNotification('Un client avec cet email existe déjà', 'error');
                 return;
             }
 
@@ -1503,12 +1149,12 @@
                 id: clients.length + 1,
                 name: name,
                 email: email,
-                password: password,
+                password: document.getElementById('new-client-password').value,
                 phone: phone,
                 contractAmount: contractAmount,
                 totalVisits: totalVisits,
                 usedVisits: 0,
-                amountPaid: initialPayment || 0
+                amountPaid: initialPayment
             };
 
             clients.push(newClient);
@@ -1521,41 +1167,20 @@
             document.getElementById('total-visits').value = '';
             document.getElementById('initial-payment').value = '';
 
-            updateAdminDashboard();
+            updateClientsTable();
             showNotification('Client créé avec succès !', 'success');
         }
 
-        function createAdminAppointment() {
-            const clientId = parseInt(document.getElementById('admin-client-select').value);
+        function createAppointment() {
+            const clientId = document.getElementById('admin-client-select').value;
             const service = document.getElementById('admin-apt-service').value;
             const date = document.getElementById('admin-apt-date').value;
             const time = document.getElementById('admin-apt-time').value;
-            const notes = document.getElementById('admin-apt-notes').value;
 
             if (!clientId || !service || !date || !time) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
                 return;
             }
-
-            const client = clients.find(c => c.id === clientId);
-            if (!client) {
-                showNotification('Client introuvable', 'error');
-                return;
-            }
-
-            const newAppointment = {
-                id: appointments.length + 1,
-                clientId: clientId,
-                date: date,
-                time: time,
-                service: service,
-                notes: notes,
-                status: 'confirmed',
-                cost: client.contractAmount / client.totalVisits
-            };
-
-            appointments.push(newAppointment);
-            client.usedVisits++;
 
             // Vider le formulaire
             document.getElementById('admin-client-select').value = '';
@@ -1568,7 +1193,7 @@
         }
 
         function recordPayment() {
-            const clientId = parseInt(document.getElementById('payment-client-select').value);
+            const clientId = document.getElementById('payment-client-select').value;
             const amount = parseFloat(document.getElementById('payment-amount').value);
 
             if (!clientId || !amount || amount <= 0) {
@@ -1576,16 +1201,86 @@
                 return;
             }
 
-            const client = clients.find(c => c.id === clientId);
+            const client = clients.find(c => c.id == clientId);
             if (client) {
                 client.amountPaid += amount;
-                updateAdminDashboard();
-                showNotification('Paiement enregistré avec succès !', 'success');
             }
+
+            // Vider le formulaire
+            document.getElementById('payment-client-select').value = '';
+            document.getElementById('payment-amount').value = '';
+            document.getElementById('payment-notes').value = '';
+
+            showNotification('Paiement enregistré avec succès !', 'success');
+        }
+
+        function updateClientsTable() {
+            const tbody = document.getElementById('clients-table');
+            if (!tbody) return;
+
+            let html = '';
+            clients.forEach(client => {
+                const remaining = client.totalVisits - client.usedVisits;
+                const balance = (client.usedVisits * (client.contractAmount / client.totalVisits)) - client.amountPaid;
+                
+                html += `
+                    <tr>
+                        <td><strong>${client.name}</strong></td>
+                        <td>${client.email}<br><small>${client.phone}</small></td>
+                        <td>${client.contractAmount}$<br><small>Payé: ${client.amountPaid}$</small></td>
+                        <td><strong>${client.usedVisits}/${client.totalVisits}</strong><br><small>${remaining} restants</small></td>
+                        <td><span class="status-chip status-confirmed">${balance <= 0 ? 'Payé' : 'Dû'}</span></td>
+                        <td>
+                            <button class="btn btn-info btn-small" onclick="editClient(${client.id})">✏️ Modifier</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
         }
 
         // Fonctions utilitaires
+        function editClient(id) {
+            showNotification('Fonction de modification en développement', 'info');
+        }
+
+        function editAppointment(id) {
+            showNotification('Fonction de modification en développement', 'info');
+        }
+
+        function exportData() {
+            showNotification('Export des données en cours...', 'info');
+            setTimeout(() => {
+                showNotification('Données exportées avec succès !', 'success');
+            }, 2000);
+        }
+
+        function backupData() {
+            showNotification('Création de la sauvegarde...', 'info');
+            setTimeout(() => {
+                showNotification('Sauvegarde créée avec succès !', 'success');
+            }, 1500);
+        }
+
+        function saveSettings() {
+            showNotification('Paramètres sauvegardés avec succès !', 'success');
+        }
+
+        function confirmResetDatabase() {
+            if (confirm('⚠️ ATTENTION ⚠️\n\nCette action supprimera TOUTES les données de façon IRRÉVERSIBLE !\n\nÊtes-vous absolument sûr de vouloir continuer ?')) {
+                if (confirm('Dernière confirmation : Tapez "SUPPRIMER" dans la prochaine fenêtre pour confirmer')) {
+                    const confirmation = prompt('Tapez "SUPPRIMER" pour confirmer la suppression complète :');
+                    if (confirmation === 'SUPPRIMER') {
+                        showNotification('Base de données réinitialisée !', 'info');
+                    } else {
+                        showNotification('Suppression annulée', 'info');
+                    }
+                }
+            }
+        }
+
         function showNotification(message, type = 'info') {
+            // Supprimer les notifications existantes
             const existingNotifications = document.querySelectorAll('.notification');
             existingNotifications.forEach(notif => notif.remove());
 
@@ -1594,7 +1289,10 @@
             notification.textContent = message;
             document.body.appendChild(notification);
 
+            // Afficher la notification
             setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Masquer et supprimer après 3 secondes
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.remove(), 300);
@@ -1610,45 +1308,10 @@
             }
         }
 
-        function editClient(id) {
-            showNotification('Fonction de modification en développement', 'info');
-        }
-
-        function editAppointment(id) {
-            showNotification('Fonction de modification en développement', 'info');
-        }
-
-        function exportData() {
-            showNotification('Export des données en cours...', 'info');
-        }
-
-        function backupData() {
-            showNotification('Sauvegarde créée avec succès !', 'success');
-        }
-
-        function saveSettings() {
-            showNotification('Paramètres sauvegardés !', 'success');
-        }
-
-        function confirmResetDatabase() {
-            if (confirm('Êtes-vous sûr de vouloir supprimer TOUTES les données ?')) {
-                showNotification('Base de données réinitialisée !', 'info');
-            }
-        }
-
-        // Événements du formulaire de réservation
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            // Mettre à jour le récapitulatif quand on change les champs
-            const bookingService = document.getElementById('booking-service');
-            const bookingDate = document.getElementById('booking-date');
-            const bookingTime = document.getElementById('booking-time');
-            
-            if (bookingService) bookingService.addEventListener('change', updateBookingSummary);
-            if (bookingDate) bookingDate.addEventListener('change', updateBookingSummary);
-            if (bookingTime) bookingTime.addEventListener('change', updateBookingSummary);
-
             console.log("Système Dr. Shine chargé avec succès !");
-            showNotification('Système Dr. Shine prêt !', 'success');
+            showNotification('🎉 Système Dr. Shine prêt !', 'success');
         });
     </script>
 </body>
