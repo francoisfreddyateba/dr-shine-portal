@@ -595,7 +595,7 @@
                             <textarea id="client-booking-notes" rows="2" placeholder="Précisions sur le service, accès, etc..."></textarea>
                         </div>
                         <div style="text-align: center;">
-                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">✅ Confirmer la réservation</button>
+                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">Confirmer la reservation</button>
                         </div>
                     </div>
                     <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
@@ -1059,10 +1059,31 @@
                 currentUser = client;
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
+                
+                // Initialiser le dashboard client
                 updateClientDashboard();
+                
+                // Attacher les événements pour la réservation
+                setupClientBookingEvents();
+                
                 showNotification('Connexion client reussie !', 'success');
             } else {
                 showError('client-login-error', 'Identifiants incorrects ou client inexistant');
+            }
+        }
+
+        function setupClientBookingEvents() {
+            var dateField = document.getElementById('client-booking-date');
+            var confirmBtn = document.getElementById('client-confirm-booking');
+            
+            if (dateField) {
+                dateField.removeEventListener('change', updateAvailableTimeSlots);
+                dateField.addEventListener('change', updateAvailableTimeSlots);
+            }
+            
+            if (confirmBtn) {
+                confirmBtn.removeEventListener('click', confirmClientBooking);
+                confirmBtn.addEventListener('click', confirmClientBooking);
             }
         }
 
@@ -1157,14 +1178,13 @@
                 bookingForm.classList.remove('hidden');
                 noVisitsMessage.classList.add('hidden');
                 
-                // Définir la date minimale à aujourd'hui
                 var today = new Date().toISOString().split('T')[0];
-                document.getElementById('client-booking-date').setAttribute('min', today);
-                
-                // Ajouter l'événement pour la sélection de date
                 var dateField = document.getElementById('client-booking-date');
-                dateField.removeEventListener('change', updateAvailableTimeSlots);
-                dateField.addEventListener('change', updateAvailableTimeSlots);
+                if (dateField) {
+                    dateField.setAttribute('min', today);
+                    dateField.removeEventListener('change', updateAvailableTimeSlots);
+                    dateField.addEventListener('change', updateAvailableTimeSlots);
+                }
             } else {
                 bookingForm.classList.add('hidden');
                 noVisitsMessage.classList.remove('hidden');
@@ -1211,30 +1231,29 @@
         }
 
         function selectTimeSlot(time) {
-            // Désélectionner tous les autres créneaux
             var allSlots = document.querySelectorAll('#client-time-slots .btn');
             for (var i = 0; i < allSlots.length; i++) {
-                allSlots[i].classList.remove('btn-warning');
-                allSlots[i].classList.add('btn-info');
+                if (allSlots[i].classList.contains('btn-warning')) {
+                    allSlots[i].classList.remove('btn-warning');
+                    allSlots[i].classList.add('btn-info');
+                }
             }
             
-            // Sélectionner le créneau cliqué
             var clickedSlot = null;
             for (var j = 0; j < allSlots.length; j++) {
-                if (allSlots[j].textContent.indexOf(time) === 0) {
+                if (allSlots[j].textContent.trim() === time) {
                     clickedSlot = allSlots[j];
                     break;
                 }
             }
             
-            if (clickedSlot) {
+            if (clickedSlot && !clickedSlot.disabled) {
                 clickedSlot.classList.remove('btn-info');
                 clickedSlot.classList.add('btn-warning');
+                selectedTimeSlot = time;
+                document.getElementById('client-confirm-booking').disabled = false;
+                showNotification('Creneau ' + time + ' selectionne', 'info');
             }
-            
-            // Stocker le créneau sélectionné et activer le bouton de confirmation
-            selectedTimeSlot = time;
-            document.getElementById('client-confirm-booking').disabled = false;
         }
 
         function confirmClientBooking() {
@@ -1259,6 +1278,15 @@
                 return;
             }
             
+            // Vérifier si le créneau est encore disponible
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === date && appointments[i].time === time) {
+                    showNotification('Ce creneau n\'est plus disponible', 'error');
+                    updateAvailableTimeSlots();
+                    return;
+                }
+            }
+            
             var newAppointment = {
                 id: nextAppointmentId++,
                 clientId: currentUser.id,
@@ -1274,6 +1302,7 @@
             currentUser.usedVisits++;
             Storage.save();
             
+            // Reset du formulaire
             document.getElementById('client-service-select').value = '';
             document.getElementById('client-booking-date').value = '';
             document.getElementById('client-booking-notes').value = '';
@@ -1281,8 +1310,10 @@
             document.getElementById('client-confirm-booking').disabled = true;
             selectedTimeSlot = null;
             
+            // Mise à jour de l'interface
             updateClientDashboard();
-            showNotification('Rendez-vous confirme avec succes !', 'success');
+            
+            showNotification('Rendez-vous confirme avec succes ! Votre passage a ete comptabilise.', 'success');
         }
 
         function updateClientAppointmentsList() {
