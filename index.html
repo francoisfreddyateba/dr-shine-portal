@@ -497,10 +497,11 @@
                         <button class="btn" onclick="backToHome()">Retour</button>
                     </div>
                     <div id="client-login-error" class="error-message hidden"></div>
-                    <div style="margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px; font-size: 0.9rem;">
-                        <strong>Compte de test :</strong><br>
-                        Email: marie@email.com<br>
-                        Mot de passe: DR2025!
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.9rem; color: #856404;">
+                        <strong>📝 Pour commencer :</strong><br>
+                        1. Connectez-vous en tant qu'administrateur<br>
+                        2. Créez votre premier client<br>
+                        3. Revenez ici avec les identifiants du client créé
                     </div>
                 </div>
             </div>
@@ -599,19 +600,19 @@
                 <div id="admin-dashboard-content" class="tab-content active">
                     <div class="dashboard-stats">
                         <div class="stat-card" style="background: var(--success);">
-                            <div class="stat-number">15750$</div>
+                            <div class="stat-number" id="admin-revenue">0$</div>
                             <div class="stat-label">Chiffre d'Affaires</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number" id="admin-total-clients">2</div>
+                            <div class="stat-number" id="admin-total-clients">0</div>
                             <div class="stat-label">Clients Actifs</div>
                         </div>
                         <div class="stat-card" style="background: var(--info);">
-                            <div class="stat-number" id="admin-total-appointments">3</div>
+                            <div class="stat-number" id="admin-total-appointments">0</div>
                             <div class="stat-label">RDV Totaux</div>
                         </div>
                         <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                            <div class="stat-number">1</div>
+                            <div class="stat-number" id="admin-pending">0</div>
                             <div class="stat-label">En Attente</div>
                         </div>
                     </div>
@@ -619,15 +620,17 @@
                     <div class="admin-section">
                         <div class="section-card">
                             <h3 class="section-title">⚡ Actions Rapides</h3>
-                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Nouveau Client</button>
-                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Nouveau RDV</button>
+                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Créer votre premier client</button>
+                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Programmer un RDV</button>
                             <button class="btn btn-warning" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📊 Exporter Données</button>
                             <button class="btn btn-gold" onclick="backupData()" style="width: 100%;">💾 Sauvegarder</button>
                         </div>
 
                         <div class="section-card">
                             <h3 class="section-title">📅 Rendez-vous Récents</h3>
-                            <div id="recent-appointments"></div>
+                            <div id="recent-appointments">
+                                <p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous pour le moment.<br>Créez votre premier client pour commencer !</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -691,7 +694,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="clients-table">
-                                    <!-- Les données seront ajoutées par JavaScript -->
+                                    <tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client pour le moment. Créez votre premier client !</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -766,7 +769,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="appointments-table">
-                                    <!-- Les données seront ajoutées par JavaScript -->
+                                    <tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous pour le moment.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -806,11 +809,11 @@
                             <h3 class="section-title">💰 Résumé Financier</h3>
                             <div class="dashboard-stats">
                                 <div class="stat-card" style="background: var(--success);">
-                                    <div class="stat-number">6000$</div>
+                                    <div class="stat-number" id="finance-total-revenue">0$</div>
                                     <div class="stat-label">Revenus Totaux</div>
                                 </div>
                                 <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                                    <div class="stat-number">1000$</div>
+                                    <div class="stat-number" id="finance-pending-amount">0$</div>
                                     <div class="stat-label">En Attente</div>
                                 </div>
                             </div>
@@ -854,71 +857,16 @@
 
     <script>
         // Variables globales
-        let currentUser = null;
-        let editingClientId = null;
-        let nextClientId = 3;
-        let nextAppointmentId = 4;
+        var currentUser = null;
+        var editingClientId = null;
+        var nextClientId = 1;
+        var nextAppointmentId = 1;
 
-        // Données initiales
-        let clients = [
-            {
-                id: 1,
-                name: "Marie Dubois",
-                email: "marie@email.com",
-                password: "DR2025!",
-                phone: "819-555-0001",
-                contractAmount: 4000,
-                totalVisits: 24,
-                usedVisits: 6,
-                amountPaid: 2000
-            },
-            {
-                id: 2,
-                name: "Jean Tremblay",
-                email: "jean@email.com",
-                password: "DR2025!",
-                phone: "819-555-0002",
-                contractAmount: 4000,
-                totalVisits: 24,
-                usedVisits: 12,
-                amountPaid: 4000
-            }
-        ];
+        // Base de données vierge
+        var clients = [];
+        var appointments = [];
 
-        let appointments = [
-            {
-                id: 1,
-                clientId: 1,
-                date: "2024-11-22",
-                time: "10:00",
-                service: "menage",
-                status: "confirmed",
-                cost: 166.67,
-                notes: "Clés sous le paillasson"
-            },
-            {
-                id: 2,
-                clientId: 2,
-                date: "2024-11-22",
-                time: "14:00",
-                service: "vitres",
-                status: "confirmed",
-                cost: 166.67,
-                notes: ""
-            },
-            {
-                id: 3,
-                clientId: 1,
-                date: "2024-11-29",
-                time: "09:00",
-                service: "auto-complet",
-                status: "pending",
-                cost: 166.67,
-                notes: "Lavage complet véhicule"
-            }
-        ];
-
-        const serviceNames = {
+        var serviceNames = {
             'menage': '🏠 Entretien ménager',
             'vitres': '🪟 Lavage de vitres',
             'auto-ext': '🚗 Lavage auto extérieur',
@@ -929,16 +877,14 @@
             'sinistre': '🔧 Nettoyage après sinistre'
         };
 
-        // Fonctions de navigation principales
+        // Fonctions de navigation
         function showClientLogin() {
-            console.log("Affichage connexion client");
             hideAll();
             document.getElementById('client-login').classList.remove('hidden');
             showNotification('Interface client activée', 'info');
         }
 
         function showAdminLogin() {
-            console.log("Affichage connexion admin");
             hideAll();
             document.getElementById('admin-login').classList.remove('hidden');
             showNotification('Interface admin activée', 'info');
@@ -951,7 +897,7 @@
         }
 
         function hideAll() {
-            const elements = [
+            var elements = [
                 'role-selection',
                 'client-login',
                 'admin-login', 
@@ -959,12 +905,12 @@
                 'admin-dashboard'
             ];
             
-            elements.forEach(elementId => {
-                const element = document.getElementById(elementId);
+            for (var i = 0; i < elements.length; i++) {
+                var element = document.getElementById(elements[i]);
                 if (element) {
                     element.classList.add('hidden');
                 }
-            });
+            }
         }
 
         function logout() {
@@ -976,19 +922,25 @@
         }
 
         function clearForms() {
-            const forms = ['client-email', 'client-password', 'admin-email', 'admin-password'];
-            forms.forEach(id => {
-                const element = document.getElementById(id);
+            var forms = ['client-email', 'client-password', 'admin-email', 'admin-password'];
+            for (var i = 0; i < forms.length; i++) {
+                var element = document.getElementById(forms[i]);
                 if (element) element.value = '';
-            });
+            }
         }
 
         // Fonctions de connexion
         function loginClient() {
-            const email = document.getElementById('client-email').value;
-            const password = document.getElementById('client-password').value;
+            var email = document.getElementById('client-email').value;
+            var password = document.getElementById('client-password').value;
 
-            const client = clients.find(c => c.email === email && c.password === password);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email && clients[i].password === password) {
+                    client = clients[i];
+                    break;
+                }
+            }
 
             if (client) {
                 currentUser = client;
@@ -998,13 +950,13 @@
                 document.getElementById('client-info').textContent = 'Contrat: ' + client.contractAmount + '$ (' + client.totalVisits + ' passages)';
                 showNotification('Connexion client réussie !', 'success');
             } else {
-                showError('client-login-error', 'Identifiants incorrects. Utilisez: marie@email.com / DR2025!');
+                showError('client-login-error', 'Identifiants incorrects ou client inexistant');
             }
         }
 
         function loginAdmin() {
-            const email = document.getElementById('admin-email').value;
-            const password = document.getElementById('admin-password').value;
+            var email = document.getElementById('admin-email').value;
+            var password = document.getElementById('admin-password').value;
 
             if (email === 'admin@docshine.net' && password === 'DrShine2025!') {
                 hideAll();
@@ -1019,21 +971,26 @@
 
         // Fonctions des onglets admin
         function showAdminTab(tabName) {
-            const tabs = document.querySelectorAll('#admin-dashboard .tab');
-            const contents = document.querySelectorAll('#admin-dashboard .tab-content');
+            var tabs = document.querySelectorAll('#admin-dashboard .tab');
+            var contents = document.querySelectorAll('#admin-dashboard .tab-content');
             
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            for (var j = 0; j < contents.length; j++) {
+                contents[j].classList.remove('active');
+            }
             
-            const targetContent = document.getElementById('admin-' + tabName + '-content');
+            var targetContent = document.getElementById('admin-' + tabName + '-content');
             if (targetContent) {
                 targetContent.classList.add('active');
                 
-                tabs.forEach(tab => {
-                    if (tab.onclick && tab.onclick.toString().includes(tabName)) {
-                        tab.classList.add('active');
+                for (var k = 0; k < tabs.length; k++) {
+                    if (tabs[k].onclick && tabs[k].onclick.toString().indexOf(tabName) > -1) {
+                        tabs[k].classList.add('active');
+                        break;
                     }
-                });
+                }
                 
                 showNotification('Onglet ' + tabName + ' activé', 'info');
             }
@@ -1048,28 +1005,62 @@
         }
 
         function updateStats() {
+            var totalRevenue = 0;
+            for (var i = 0; i < clients.length; i++) {
+                totalRevenue += clients[i].amountPaid;
+            }
+            
+            var pendingAppointments = 0;
+            for (var j = 0; j < appointments.length; j++) {
+                if (appointments[j].status === 'pending') {
+                    pendingAppointments++;
+                }
+            }
+            
+            var pendingAmount = 0;
+            for (var k = 0; k < clients.length; k++) {
+                var amountDue = (clients[k].usedVisits * (clients[k].contractAmount / clients[k].totalVisits)) - clients[k].amountPaid;
+                if (amountDue > 0) {
+                    pendingAmount += amountDue;
+                }
+            }
+            
+            document.getElementById('admin-revenue').textContent = totalRevenue + '$';
             document.getElementById('admin-total-clients').textContent = clients.length;
             document.getElementById('admin-total-appointments').textContent = appointments.length;
+            document.getElementById('admin-pending').textContent = pendingAppointments;
+            
+            var financeRevenue = document.getElementById('finance-total-revenue');
+            var financePending = document.getElementById('finance-pending-amount');
+            if (financeRevenue) financeRevenue.textContent = totalRevenue + '$';
+            if (financePending) financePending.textContent = Math.round(pendingAmount) + '$';
         }
 
         function updateRecentAppointments() {
-            const container = document.getElementById('recent-appointments');
-            let html = '';
+            var container = document.getElementById('recent-appointments');
+            var html = '';
             
-            const recent = appointments.slice(-2);
-            recent.forEach(apt => {
-                const client = clients.find(c => c.id === apt.clientId);
-                const clientName = client ? client.name : 'Client inconnu';
-                const statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
-                
-                html += '<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">';
-                html += '<div><strong>' + apt.time + '</strong> - ' + clientName + '<br><small>' + serviceNames[apt.service] + '</small></div>';
-                html += '<span class="status-chip status-' + apt.status + '">' + statusText + '</span>';
-                html += '</div>';
-            });
-            
-            if (html === '') {
-                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous récent</p>';
+            if (appointments.length === 0) {
+                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous pour le moment.<br>Créez votre premier client pour commencer !</p>';
+            } else {
+                var recent = appointments.slice(-2);
+                for (var i = 0; i < recent.length; i++) {
+                    var apt = recent[i];
+                    var client = null;
+                    for (var j = 0; j < clients.length; j++) {
+                        if (clients[j].id === apt.clientId) {
+                            client = clients[j];
+                            break;
+                        }
+                    }
+                    var clientName = client ? client.name : 'Client inconnu';
+                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
+                    
+                    html += '<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">';
+                    html += '<div><strong>' + apt.time + '</strong> - ' + clientName + '<br><small>' + serviceNames[apt.service] + '</small></div>';
+                    html += '<span class="status-chip status-' + apt.status + '">' + statusText + '</span>';
+                    html += '</div>';
+                }
             }
             
             container.innerHTML = html;
@@ -1082,24 +1073,26 @@
                 return;
             }
 
-            const name = document.getElementById('new-client-name').value;
-            const email = document.getElementById('new-client-email').value;
-            const phone = document.getElementById('new-client-phone').value;
-            const contractAmount = parseFloat(document.getElementById('contract-amount').value);
-            const totalVisits = parseInt(document.getElementById('total-visits').value);
-            const initialPayment = parseFloat(document.getElementById('initial-payment').value) || 0;
+            var name = document.getElementById('new-client-name').value;
+            var email = document.getElementById('new-client-email').value;
+            var phone = document.getElementById('new-client-phone').value;
+            var contractAmount = parseFloat(document.getElementById('contract-amount').value);
+            var totalVisits = parseInt(document.getElementById('total-visits').value);
+            var initialPayment = parseFloat(document.getElementById('initial-payment').value) || 0;
 
             if (!name || !email || !phone || !contractAmount || !totalVisits) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
                 return;
             }
 
-            if (clients.find(c => c.email === email)) {
-                showNotification('Un client avec cet email existe déjà', 'error');
-                return;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email) {
+                    showNotification('Un client avec cet email existe déjà', 'error');
+                    return;
+                }
             }
 
-            const newClient = {
+            var newClient = {
                 id: nextClientId++,
                 name: name,
                 email: email,
@@ -1120,7 +1113,14 @@
         }
 
         function editClient(id) {
-            const client = clients.find(c => c.id === id);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === id) {
+                    client = clients[i];
+                    break;
+                }
+            }
+            
             if (!client) {
                 showNotification('Client introuvable', 'error');
                 return;
@@ -1139,8 +1139,8 @@
             document.getElementById('total-visits').value = client.totalVisits;
             document.getElementById('initial-payment').value = client.amountPaid;
 
-            const submitBtn = document.getElementById('client-submit-btn');
-            const cancelBtn = document.getElementById('client-cancel-btn');
+            var submitBtn = document.getElementById('client-submit-btn');
+            var cancelBtn = document.getElementById('client-cancel-btn');
             
             submitBtn.textContent = '✏️ Modifier le client';
             submitBtn.className = 'btn btn-warning btn-large';
@@ -1151,29 +1151,37 @@
         }
 
         function updateClient(id) {
-            const client = clients.find(c => c.id === id);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === id) {
+                    client = clients[i];
+                    break;
+                }
+            }
+            
             if (!client) {
                 showNotification('Client introuvable', 'error');
                 return;
             }
 
-            const name = document.getElementById('new-client-name').value;
-            const email = document.getElementById('new-client-email').value;
-            const phone = document.getElementById('new-client-phone').value;
-            const password = document.getElementById('new-client-password').value;
-            const contractAmount = parseFloat(document.getElementById('contract-amount').value);
-            const totalVisits = parseInt(document.getElementById('total-visits').value);
-            const amountPaid = parseFloat(document.getElementById('initial-payment').value) || 0;
+            var name = document.getElementById('new-client-name').value;
+            var email = document.getElementById('new-client-email').value;
+            var phone = document.getElementById('new-client-phone').value;
+            var password = document.getElementById('new-client-password').value;
+            var contractAmount = parseFloat(document.getElementById('contract-amount').value);
+            var totalVisits = parseInt(document.getElementById('total-visits').value);
+            var amountPaid = parseFloat(document.getElementById('initial-payment').value) || 0;
 
             if (!name || !email || !phone || !contractAmount || !totalVisits) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
                 return;
             }
 
-            const existingClient = clients.find(c => c.email === email && c.id !== id);
-            if (existingClient) {
-                showNotification('Un autre client avec cet email existe déjà', 'error');
-                return;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email && clients[i].id !== id) {
+                    showNotification('Un autre client avec cet email existe déjà', 'error');
+                    return;
+                }
             }
 
             client.name = name;
@@ -1187,30 +1195,57 @@
             clearClientForm();
             updateClientsTable();
             updateClientSelects();
+            updateStats();
             showNotification('Client modifié avec succès !', 'success');
         }
 
         function deleteClient(id) {
-            const client = clients.find(c => c.id === id);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === id) {
+                    client = clients[i];
+                    break;
+                }
+            }
+            
             if (!client) {
                 showNotification('Client introuvable', 'error');
                 return;
             }
 
-            const clientAppointments = appointments.filter(apt => apt.clientId === id);
-            const confirmMessage = 'SUPPRESSION DÉFINITIVE\n\nÊtes-vous sûr de vouloir supprimer le client "' + client.name + '" ?\n\nCette action supprimera également :\n- ' + clientAppointments.length + ' rendez-vous\n- Tout son historique\n\nCette action est IRRÉVERSIBLE !';
+            var clientAppointments = [];
+            for (var j = 0; j < appointments.length; j++) {
+                if (appointments[j].clientId === id) {
+                    clientAppointments.push(appointments[j]);
+                }
+            }
+            
+            var confirmMessage = 'SUPPRESSION DÉFINITIVE\n\nÊtes-vous sûr de vouloir supprimer le client "' + client.name + '" ?\n\nCette action supprimera également :\n- ' + clientAppointments.length + ' rendez-vous\n- Tout son historique\n\nCette action est IRRÉVERSIBLE !';
 
             if (confirm(confirmMessage)) {
-                appointments = appointments.filter(apt => apt.clientId !== id);
-                const clientIndex = clients.findIndex(c => c.id === id);
-                if (clientIndex > -1) {
-                    clients.splice(clientIndex, 1);
+                // Supprimer les rendez-vous
+                var newAppointments = [];
+                for (var k = 0; k < appointments.length; k++) {
+                    if (appointments[k].clientId !== id) {
+                        newAppointments.push(appointments[k]);
+                    }
                 }
+                appointments = newAppointments;
+                
+                // Supprimer le client
+                var newClients = [];
+                for (var l = 0; l < clients.length; l++) {
+                    if (clients[l].id !== id) {
+                        newClients.push(clients[l]);
+                    }
+                }
+                clients = newClients;
 
                 updateClientsTable();
                 updateClientSelects();
                 updateAppointmentsTable();
                 updateStats();
+                updateRecentAppointments();
                 showNotification('Client "' + client.name + '" supprimé définitivement', 'success');
             }
         }
@@ -1229,8 +1264,8 @@
             document.getElementById('total-visits').value = '';
             document.getElementById('initial-payment').value = '';
 
-            const submitBtn = document.getElementById('client-submit-btn');
-            const cancelBtn = document.getElementById('client-cancel-btn');
+            var submitBtn = document.getElementById('client-submit-btn');
+            var cancelBtn = document.getElementById('client-cancel-btn');
             
             submitBtn.textContent = '✅ Créer le client';
             submitBtn.className = 'btn btn-success btn-large';
@@ -1238,29 +1273,30 @@
         }
 
         function updateClientsTable() {
-            const tbody = document.getElementById('clients-table');
+            var tbody = document.getElementById('clients-table');
             if (!tbody) return;
 
-            let html = '';
-            clients.forEach(client => {
-                const remaining = client.totalVisits - client.usedVisits;
-                const balance = (client.usedVisits * (client.contractAmount / client.totalVisits)) - client.amountPaid;
-                
-                html += '<tr>';
-                html += '<td><strong>' + client.name + '</strong></td>';
-                html += '<td>' + client.email + '<br><small>' + client.phone + '</small></td>';
-                html += '<td>' + client.contractAmount + '$<br><small>Payé: ' + client.amountPaid + '$</small></td>';
-                html += '<td><strong>' + client.usedVisits + '/' + client.totalVisits + '</strong><br><small>' + remaining + ' restants</small></td>';
-                html += '<td><span class="status-chip status-' + (balance <= 0 ? 'completed' : 'pending') + '">' + (balance <= 0 ? 'Payé' : 'Dû: ' + balance.toFixed(0) + '$') + '</span></td>';
-                html += '<td>';
-                html += '<button class="btn btn-info btn-small" onclick="editClient(' + client.id + ')" style="margin: 2px;">✏️ Modifier</button>';
-                html += '<button class="btn btn-danger btn-small" onclick="deleteClient(' + client.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
-                html += '</td>';
-                html += '</tr>';
-            });
-            
+            var html = '';
             if (clients.length === 0) {
-                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client enregistré</td></tr>';
+                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client pour le moment. Créez votre premier client !</td></tr>';
+            } else {
+                for (var i = 0; i < clients.length; i++) {
+                    var client = clients[i];
+                    var remaining = client.totalVisits - client.usedVisits;
+                    var balance = (client.usedVisits * (client.contractAmount / client.totalVisits)) - client.amountPaid;
+                    
+                    html += '<tr>';
+                    html += '<td><strong>' + client.name + '</strong></td>';
+                    html += '<td>' + client.email + '<br><small>' + client.phone + '</small></td>';
+                    html += '<td>' + client.contractAmount + '$<br><small>Payé: ' + client.amountPaid + '$</small></td>';
+                    html += '<td><strong>' + client.usedVisits + '/' + client.totalVisits + '</strong><br><small>' + remaining + ' restants</small></td>';
+                    html += '<td><span class="status-chip status-' + (balance <= 0 ? 'completed' : 'pending') + '">' + (balance <= 0 ? 'Payé' : 'Dû: ' + balance.toFixed(0) + '$') + '</span></td>';
+                    html += '<td>';
+                    html += '<button class="btn btn-info btn-small" onclick="editClient(' + client.id + ')" style="margin: 2px;">✏️ Modifier</button>';
+                    html += '<button class="btn btn-danger btn-small" onclick="deleteClient(' + client.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
+                    html += '</td>';
+                    html += '</tr>';
+                }
             }
             
             tbody.innerHTML = html;
@@ -1268,30 +1304,37 @@
 
         // Gestion des rendez-vous
         function createAppointment() {
-            const clientId = parseInt(document.getElementById('admin-client-select').value);
-            const service = document.getElementById('admin-apt-service').value;
-            const date = document.getElementById('admin-apt-date').value;
-            const time = document.getElementById('admin-apt-time').value;
-            const notes = document.getElementById('admin-apt-notes').value;
+            var clientId = parseInt(document.getElementById('admin-client-select').value);
+            var service = document.getElementById('admin-apt-service').value;
+            var date = document.getElementById('admin-apt-date').value;
+            var time = document.getElementById('admin-apt-time').value;
+            var notes = document.getElementById('admin-apt-notes').value;
 
             if (!clientId || !service || !date || !time) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
                 return;
             }
 
-            const client = clients.find(c => c.id === clientId);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === clientId) {
+                    client = clients[i];
+                    break;
+                }
+            }
+            
             if (!client) {
                 showNotification('Client introuvable', 'error');
                 return;
             }
 
-            const remaining = client.totalVisits - client.usedVisits;
+            var remaining = client.totalVisits - client.usedVisits;
             if (remaining <= 0) {
                 showNotification('Ce client n\'a plus de passages restants', 'error');
                 return;
             }
 
-            const newAppointment = {
+            var newAppointment = {
                 id: nextAppointmentId++,
                 clientId: clientId,
                 date: date,
@@ -1319,14 +1362,30 @@
         }
 
         function deleteAppointment(id) {
-            const appointment = appointments.find(apt => apt.id === id);
+            var appointment = null;
+            var aptIndex = -1;
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].id === id) {
+                    appointment = appointments[i];
+                    aptIndex = i;
+                    break;
+                }
+            }
+            
             if (!appointment) {
                 showNotification('Rendez-vous introuvable', 'error');
                 return;
             }
 
-            const client = clients.find(c => c.id === appointment.clientId);
-            const clientName = client ? client.name : 'Client inconnu';
+            var client = null;
+            for (var j = 0; j < clients.length; j++) {
+                if (clients[j].id === appointment.clientId) {
+                    client = clients[j];
+                    break;
+                }
+            }
+            
+            var clientName = client ? client.name : 'Client inconnu';
 
             if (confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?\n\nClient: ' + clientName + '\nDate: ' + new Date(appointment.date).toLocaleDateString('fr-FR') + '\nHeure: ' + appointment.time)) {
                 
@@ -1334,10 +1393,7 @@
                     client.usedVisits--;
                 }
                 
-                const aptIndex = appointments.findIndex(apt => apt.id === id);
-                if (aptIndex > -1) {
-                    appointments.splice(aptIndex, 1);
-                }
+                appointments.splice(aptIndex, 1);
                 
                 updateAppointmentsTable();
                 updateClientsTable();
@@ -1348,68 +1404,84 @@
         }
 
         function updateAppointmentsTable() {
-            const tbody = document.getElementById('appointments-table');
+            var tbody = document.getElementById('appointments-table');
             if (!tbody) return;
 
-            let html = '';
-            appointments.forEach(apt => {
-                const client = clients.find(c => c.id === apt.clientId);
-                const clientName = client ? client.name : 'Client supprimé';
-                const statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
-                
-                html += '<tr>';
-                html += '<td>' + new Date(apt.date).toLocaleDateString('fr-FR') + '<br>' + apt.time + '</td>';
-                html += '<td>' + clientName + '</td>';
-                html += '<td>' + serviceNames[apt.service] + '</td>';
-                html += '<td><span class="status-chip status-' + apt.status + '">' + statusText + '</span></td>';
-                html += '<td>' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</td>';
-                html += '<td>';
-                html += '<button class="btn btn-danger btn-small" onclick="deleteAppointment(' + apt.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
-                html += '</td>';
-                html += '</tr>';
-            });
-            
+            var html = '';
             if (appointments.length === 0) {
-                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous programmé</td></tr>';
+                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous pour le moment.</td></tr>';
+            } else {
+                for (var i = 0; i < appointments.length; i++) {
+                    var apt = appointments[i];
+                    var client = null;
+                    for (var j = 0; j < clients.length; j++) {
+                        if (clients[j].id === apt.clientId) {
+                            client = clients[j];
+                            break;
+                        }
+                    }
+                    var clientName = client ? client.name : 'Client supprimé';
+                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
+                    
+                    html += '<tr>';
+                    html += '<td>' + new Date(apt.date).toLocaleDateString('fr-FR') + '<br>' + apt.time + '</td>';
+                    html += '<td>' + clientName + '</td>';
+                    html += '<td>' + serviceNames[apt.service] + '</td>';
+                    html += '<td><span class="status-chip status-' + apt.status + '">' + statusText + '</span></td>';
+                    html += '<td>' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</td>';
+                    html += '<td>';
+                    html += '<button class="btn btn-danger btn-small" onclick="deleteAppointment(' + apt.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
+                    html += '</td>';
+                    html += '</tr>';
+                }
             }
             
             tbody.innerHTML = html;
         }
 
         function updateClientSelects() {
-            const selects = ['admin-client-select', 'payment-client-select'];
+            var selects = ['admin-client-select', 'payment-client-select'];
             
-            selects.forEach(selectId => {
-                const select = document.getElementById(selectId);
+            for (var s = 0; s < selects.length; s++) {
+                var selectId = selects[s];
+                var select = document.getElementById(selectId);
                 if (select) {
-                    const currentValue = select.value;
+                    var currentValue = select.value;
                     select.innerHTML = '<option value="">Choisir un client</option>';
                     
-                    clients.forEach(client => {
-                        const option = document.createElement('option');
-                        option.value = client.id;
-                        option.textContent = client.name;
-                        if (currentValue == client.id) option.selected = true;
+                    for (var i = 0; i < clients.length; i++) {
+                        var option = document.createElement('option');
+                        option.value = clients[i].id;
+                        option.textContent = clients[i].name;
+                        if (currentValue == clients[i].id) option.selected = true;
                         select.appendChild(option);
-                    });
+                    }
                 }
-            });
+            }
         }
 
         // Gestion des paiements
         function recordPayment() {
-            const clientId = parseInt(document.getElementById('payment-client-select').value);
-            const amount = parseFloat(document.getElementById('payment-amount').value);
+            var clientId = parseInt(document.getElementById('payment-client-select').value);
+            var amount = parseFloat(document.getElementById('payment-amount').value);
 
             if (!clientId || !amount || amount <= 0) {
                 showNotification('Veuillez sélectionner un client et saisir un montant valide', 'error');
                 return;
             }
 
-            const client = clients.find(c => c.id === clientId);
+            var client = null;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === clientId) {
+                    client = clients[i];
+                    break;
+                }
+            }
+            
             if (client) {
                 client.amountPaid += amount;
                 updateClientsTable();
+                updateStats();
                 
                 document.getElementById('payment-client-select').value = '';
                 document.getElementById('payment-amount').value = '';
@@ -1425,14 +1497,14 @@
 
         function exportData() {
             showNotification('Export des données en cours...', 'info');
-            setTimeout(() => {
+            setTimeout(function() {
                 showNotification('Données exportées avec succès !', 'success');
             }, 2000);
         }
 
         function backupData() {
             showNotification('Création de la sauvegarde...', 'info');
-            setTimeout(() => {
+            setTimeout(function() {
                 showNotification('Sauvegarde créée avec succès !', 'success');
             }, 1500);
         }
@@ -1461,27 +1533,36 @@
         function showNotification(message, type) {
             type = type || 'info';
             
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notif => notif.remove());
+            var existingNotifications = document.querySelectorAll('.notification');
+            for (var i = 0; i < existingNotifications.length; i++) {
+                existingNotifications[i].remove();
+            }
 
-            const notification = document.createElement('div');
+            var notification = document.createElement('div');
             notification.className = 'notification ' + type;
             notification.textContent = message;
             document.body.appendChild(notification);
 
-            setTimeout(() => notification.classList.add('show'), 100);
-            setTimeout(() => {
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(function() {
                 notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
+                setTimeout(function() {
+                    notification.remove();
+                }, 300);
             }, 3000);
         }
 
         function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
+            var errorElement = document.getElementById(elementId);
             if (errorElement) {
                 errorElement.textContent = message;
                 errorElement.classList.remove('hidden');
-                setTimeout(() => errorElement.classList.add('hidden'), 5000);
+                setTimeout(function() {
+                    errorElement.classList.add('hidden');
+                }, 5000);
             }
         }
 
