@@ -481,15 +481,15 @@
             </div>
             <div class="card-content">
                 <div class="role-selector">
-                    <div class="role-card" onclick="showClientLogin()">
+                    <div class="role-card" onclick="showClientLogin()" style="cursor: pointer;">
                         <div class="role-icon">👤</div>
                         <div class="role-title">Espace Client</div>
-                        <div class="role-description">Gérez vos contrats et réservations</div>
+                        <div class="role-description">Gerez vos contrats et reservations</div>
                     </div>
-                    <div class="role-card" onclick="showAdminLogin()">
+                    <div class="role-card" onclick="showAdminLogin()" style="cursor: pointer;">
                         <div class="role-icon">🔧</div>
                         <div class="role-title">Administration</div>
-                        <div class="role-description">Gestion complète Dr. Shine</div>
+                        <div class="role-description">Gestion complete Dr. Shine</div>
                     </div>
                 </div>
             </div>
@@ -516,8 +516,8 @@
                     </div>
                     <div id="client-login-error" class="error-message hidden"></div>
                     <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.9rem; color: #856404;">
-                        <strong>📝 Pour commencer :</strong><br>
-                        1. Un administrateur doit d'abord créer votre compte<br>
+                        <strong>Pour commencer :</strong><br>
+                        1. Un administrateur doit d'abord creer votre compte<br>
                         2. Vous recevrez vos identifiants de connexion<br>
                         3. Revenez ici avec vos identifiants personnels
                     </div>
@@ -1018,10 +1018,16 @@
         }
 
         function hideAll() {
+            console.log('Masquage de toutes les interfaces');
             var elements = ['role-selection', 'client-login', 'admin-login', 'client-dashboard', 'admin-dashboard'];
             for (var i = 0; i < elements.length; i++) {
                 var element = document.getElementById(elements[i]);
-                if (element) element.classList.add('hidden');
+                if (element) {
+                    element.classList.add('hidden');
+                    console.log('Element masque:', elements[i]);
+                } else {
+                    console.log('ERREUR: Element non trouve:', elements[i]);
+                }
             }
         }
 
@@ -2121,6 +2127,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DEMARRAGE SYSTEME DR. SHINE ===");
             
+            // Test de navigation au démarrage
+            testNavigation();
+            
+            // Attacher les événements de navigation
+            setupNavigationEvents();
+            
+            // Réparation forcée après un délai pour s'assurer que tout est chargé
+            setTimeout(function() {
+                forceNavigationFix();
+                console.log('NAVIGATION: Reparation forcee terminee');
+            }, 500);
+            
             var totalVisitsField = document.getElementById('total-visits');
             var usedVisitsField = document.getElementById('used-visits');
             
@@ -2142,6 +2160,65 @@
             
             console.log("=== SYSTEME PRET ===");
         });
+
+        function setupNavigationEvents() {
+            // S'assurer que les fonctions sont disponibles globalement
+            window.showClientLogin = showClientLogin;
+            window.showAdminLogin = showAdminLogin;
+            window.backToHome = backToHome;
+            window.loginClient = loginClient;
+            window.loginAdmin = loginAdmin;
+            window.logout = logout;
+            window.selectTimeSlot = selectTimeSlot;
+            window.confirmClientBooking = confirmClientBooking;
+            
+            console.log('Fonctions de navigation exposees globalement');
+            
+            // Vérifier que les éléments de navigation existent
+            var roleSelection = document.getElementById('role-selection');
+            var clientLogin = document.getElementById('client-login');
+            var adminLogin = document.getElementById('admin-login');
+            
+            console.log('Elements de navigation:', {
+                roleSelection: !!roleSelection,
+                clientLogin: !!clientLogin,
+                adminLogin: !!adminLogin
+            });
+            
+            // Attacher aussi des event listeners comme backup
+            var clientCard = document.querySelector('.role-card:first-child');
+            var adminCard = document.querySelector('.role-card:last-child');
+            
+            if (clientCard) {
+                clientCard.addEventListener('click', function(e) {
+                    console.log('Click detect sur carte client via addEventListener');
+                    e.preventDefault();
+                    showClientLogin();
+                });
+                console.log('Event listener attache sur carte client');
+            } else {
+                console.log('ERREUR: Carte client non trouvee');
+            }
+            
+            if (adminCard) {
+                adminCard.addEventListener('click', function(e) {
+                    console.log('Click detect sur carte admin via addEventListener');
+                    e.preventDefault();
+                    showAdminLogin();
+                });
+                console.log('Event listener attache sur carte admin');
+            } else {
+                console.log('ERREUR: Carte admin non trouvee');
+            }
+            
+            console.log('Event listeners navigation attaches');
+            
+            // Test des fonctions de navigation
+            console.log('Test des fonctions de navigation:');
+            console.log('- showClientLogin disponible:', typeof showClientLogin === 'function');
+            console.log('- showAdminLogin disponible:', typeof showAdminLogin === 'function');
+            console.log('- backToHome disponible:', typeof backToHome === 'function');
+        }
     </script>
 </body>
 </html> : '-') + '</small>';
