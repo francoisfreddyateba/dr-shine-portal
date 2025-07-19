@@ -1127,6 +1127,13 @@
             detailsHTML += '</div>';
             detailsHTML += '<p style="margin-top: 15px;"><strong>💰 Coût par passage :</strong> ' + costPerVisit.toFixed(2) + '$</p>';
             
+            // Ajouter un bouton de navigation vers la réservation si des passages restent
+            if (passagesRestants > 0) {
+                detailsHTML += '<div style="text-align: center; margin-top: 20px;">';
+                detailsHTML += '<button class="btn btn-success" onclick="scrollToBooking()" style="width: 100%;">🎯 Réserver un rendez-vous</button>';
+                detailsHTML += '</div>';
+            }
+            
             contractDetails.innerHTML = detailsHTML;
             
             updateClientBookingSection();
@@ -1896,6 +1903,22 @@
                 document.getElementById('payment-amount').value = '';
                 
                 showNotification('Paiement enregistré avec succès ! (Sauvegardé)', 'success');
+            }
+        }
+
+        function scrollToBooking() {
+            var bookingSection = document.getElementById('client-booking-section');
+            if (bookingSection) {
+                bookingSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                // Mettre en évidence la section brièvement
+                bookingSection.style.boxShadow = '0 0 20px rgba(212, 175, 55, 0.5)';
+                setTimeout(function() {
+                    bookingSection.style.boxShadow = '';
+                }, 2000);
+                showNotification('Section de réservation mise en évidence', 'info');
             }
         }
 
