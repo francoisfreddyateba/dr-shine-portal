@@ -659,26 +659,13 @@
                                 <input type="number" id="contract-amount" placeholder="4000" step="100">
                             </div>
                             <div class="form-group">
-                                <label for="total-visits">Passages totaux :</label>
+                                <label for="total-visits">Passages inclus :</label>
                                 <input type="number" id="total-visits" placeholder="24">
                             </div>
                             <div class="form-group">
                                 <label for="initial-payment">Paiement initial ($) :</label>
                                 <input type="number" id="initial-payment" placeholder="2000" step="0.01">
                             </div>
-                        </div>
-                        <div class="form-row" style="margin-top: 15px;">
-                            <div class="form-group">
-                                <label for="used-visits">Passages consommés :</label>
-                                <input type="number" id="used-visits" placeholder="0" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="remaining-visits">Passages restants :</label>
-                                <input type="number" id="remaining-visits" placeholder="24" min="0" readonly style="background-color: #f8f9fa;">
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin: 10px 0; padding: 10px; background: #e8f4f8; border-radius: 8px; font-size: 0.9rem;">
-                            <strong>💡 Astuce :</strong> Les passages restants se calculent automatiquement (Total - Consommés)
                         </div>
                         <div style="text-align: center;">
                             <button class="btn btn-success btn-large" id="client-submit-btn" onclick="createClient()" style="margin: 5px;">✅ Créer le client</button>
@@ -1192,13 +1179,6 @@
                 }
             }
 
-            var usedVisits = parseInt(document.getElementById('used-visits').value) || 0;
-
-            if (usedVisits > totalVisits) {
-                showNotification('Les passages consommés ne peuvent pas dépasser le total', 'error');
-                return;
-            }
-
             var newClient = {
                 id: nextClientId++,
                 name: name,
@@ -1207,7 +1187,7 @@
                 phone: phone,
                 contractAmount: contractAmount,
                 totalVisits: totalVisits,
-                usedVisits: usedVisits,
+                usedVisits: 0,
                 amountPaid: initialPayment
             };
 
@@ -1246,11 +1226,7 @@
             document.getElementById('new-client-password').value = client.password;
             document.getElementById('contract-amount').value = client.contractAmount;
             document.getElementById('total-visits').value = client.totalVisits;
-            document.getElementById('used-visits').value = client.usedVisits;
             document.getElementById('initial-payment').value = client.amountPaid;
-
-            // Calculer et afficher les passages restants
-            updateRemainingVisits();
 
             var submitBtn = document.getElementById('client-submit-btn');
             var cancelBtn = document.getElementById('client-cancel-btn');
@@ -1283,16 +1259,10 @@
             var password = document.getElementById('new-client-password').value;
             var contractAmount = parseFloat(document.getElementById('contract-amount').value);
             var totalVisits = parseInt(document.getElementById('total-visits').value);
-            var usedVisits = parseInt(document.getElementById('used-visits').value) || 0;
             var amountPaid = parseFloat(document.getElementById('initial-payment').value) || 0;
 
             if (!name || !email || !phone || !contractAmount || !totalVisits) {
                 showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-                return;
-            }
-
-            if (usedVisits > totalVisits) {
-                showNotification('Les passages consommés ne peuvent pas dépasser le total', 'error');
                 return;
             }
 
@@ -1309,7 +1279,6 @@
             client.password = password;
             client.contractAmount = contractAmount;
             client.totalVisits = totalVisits;
-            client.usedVisits = usedVisits;
             client.amountPaid = amountPaid;
 
             Storage.save();
@@ -1384,8 +1353,6 @@
             document.getElementById('new-client-password').value = 'DR2025!';
             document.getElementById('contract-amount').value = '';
             document.getElementById('total-visits').value = '';
-            document.getElementById('used-visits').value = '';
-            document.getElementById('remaining-visits').value = '';
             document.getElementById('initial-payment').value = '';
 
             var submitBtn = document.getElementById('client-submit-btn');
@@ -1644,27 +1611,6 @@
             }
         }
 
-        // Calcul automatique des passages restants
-        function updateRemainingVisits() {
-            var totalVisits = parseInt(document.getElementById('total-visits').value) || 0;
-            var usedVisits = parseInt(document.getElementById('used-visits').value) || 0;
-            var remaining = Math.max(0, totalVisits - usedVisits);
-            document.getElementById('remaining-visits').value = remaining;
-            
-            // Changer la couleur selon les passages restants
-            var remainingField = document.getElementById('remaining-visits');
-            if (remaining <= 2) {
-                remainingField.style.color = '#dc3545';
-                remainingField.style.fontWeight = 'bold';
-            } else if (remaining <= 5) {
-                remainingField.style.color = '#ffc107';
-                remainingField.style.fontWeight = 'bold';
-            } else {
-                remainingField.style.color = '#28a745';
-                remainingField.style.fontWeight = 'bold';
-            }
-        }
-
         // Utilitaires
         function simulateBooking() {
             showNotification('Réservation simulée créée !', 'success');
@@ -1764,15 +1710,6 @@
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Chargement du système Dr. Shine...");
-            
-            // Ajouter les listeners pour le calcul automatique des passages restants
-            var totalVisitsField = document.getElementById('total-visits');
-            var usedVisitsField = document.getElementById('used-visits');
-            
-            if (totalVisitsField && usedVisitsField) {
-                totalVisitsField.addEventListener('input', updateRemainingVisits);
-                usedVisitsField.addEventListener('input', updateRemainingVisits);
-            }
             
             var dataLoaded = Storage.load();
             
