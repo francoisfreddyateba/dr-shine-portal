@@ -211,6 +211,17 @@
             background: linear-gradient(135deg, var(--info) 0%, #138496 100%);
         }
 
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--dark-gray) 0%, #9ca3af 100%);
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
         .btn-large {
             padding: 20px 40px;
             font-size: 1.2rem;
@@ -541,6 +552,60 @@
                 <div class="section-card" id="client-contract-details">
                     <h3 class="section-title">📊 Détail de votre Contrat</h3>
                     <p>Chargement des informations...</p>
+                </div>
+
+                <div class="section-card" id="client-booking-section">
+                    <h3 class="section-title">📅 Réserver un Rendez-vous</h3>
+                    <div id="client-booking-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="client-service-select">Service désiré :</label>
+                                <select id="client-service-select">
+                                    <option value="">Choisir un service</option>
+                                    <option value="menage">🏠 Entretien ménager</option>
+                                    <option value="vitres">🪟 Lavage de vitres</option>
+                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
+                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
+                                    <option value="auto-complet">✨ Lavage auto complet</option>
+                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
+                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
+                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-booking-date">Date souhaitée :</label>
+                                <input type="date" id="client-booking-date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="client-time-slots">Créneaux disponibles :</label>
+                            <div id="client-time-slots" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
+                                <p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez une date</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="client-booking-notes">Instructions particulières (optionnel) :</label>
+                            <textarea id="client-booking-notes" rows="2" placeholder="Précisions sur le service, accès, etc..."></textarea>
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">✅ Confirmer la réservation</button>
+                        </div>
+                    </div>
+                    <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
+                        <h4 style="margin-bottom: 15px;">😔 Aucun passage restant</h4>
+                        <p>Vous avez utilisé tous vos passages prévus au contrat. Contactez-nous pour renouveler ou étendre votre contrat.</p>
+                        <div style="margin-top: 20px;">
+                            <strong>📞 Contact :</strong> 819-555-0000<br>
+                            <strong>📧 Email :</strong> contact@drshine.com
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 class="section-title">📋 Mes Prochains Rendez-vous</h3>
+                    <div id="client-appointments-list">
+                        <p style="text-align: center; color: var(--dark-gray);">Chargement de vos rendez-vous...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -900,6 +965,7 @@
         var nextAppointmentId = 1;
         var clients = [];
         var appointments = [];
+        var selectedTimeSlot = null;
 
         var serviceNames = {
             'menage': '🏠 Entretien ménager',
@@ -942,6 +1008,7 @@
         function logout() {
             currentUser = null;
             editingClientId = null;
+            selectedTimeSlot = null;
             clearForms();
             backToHome();
             showNotification('Déconnexion réussie', 'info');
@@ -997,6 +1064,14 @@
         function updateClientDashboard() {
             if (!currentUser) return;
             
+            // Rafraîchir les données du client depuis la base
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === currentUser.id) {
+                    currentUser = clients[i];
+                    break;
+                }
+            }
+            
             document.getElementById('client-welcome').textContent = 'Bienvenue, ' + currentUser.name;
             document.getElementById('client-info').textContent = 'Contrat: ' + currentUser.contractAmount + '$ (' + currentUser.totalVisits + ' passages)';
             
@@ -1051,9 +1126,222 @@
             detailsHTML += '<p style="text-align: center; margin-top: 5px; font-size: 0.9rem; color: var(--dark-gray);">' + progressPercent.toFixed(1) + '% utilisé</p>';
             detailsHTML += '</div>';
             detailsHTML += '<p style="margin-top: 15px;"><strong>💰 Coût par passage :</strong> ' + costPerVisit.toFixed(2) + '$</p>';
-            detailsHTML += '<button class="btn btn-success" onclick="simulateBooking()">🎯 Réserver un service</button>';
             
             contractDetails.innerHTML = detailsHTML;
+            
+            updateClientBookingSection();
+            updateClientAppointmentsList();
+        }
+
+        function updateClientBookingSection() {
+            if (!currentUser) return;
+            
+            var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
+            var bookingForm = document.getElementById('client-booking-form');
+            var noVisitsMessage = document.getElementById('client-no-visits');
+            
+            if (passagesRestants > 0) {
+                bookingForm.classList.remove('hidden');
+                noVisitsMessage.classList.add('hidden');
+                
+                var today = new Date().toISOString().split('T')[0];
+                document.getElementById('client-booking-date').setAttribute('min', today);
+                
+                var dateField = document.getElementById('client-booking-date');
+                dateField.removeEventListener('change', updateAvailableTimeSlots);
+                dateField.addEventListener('change', updateAvailableTimeSlots);
+            } else {
+                bookingForm.classList.add('hidden');
+                noVisitsMessage.classList.remove('hidden');
+            }
+        }
+
+        function updateAvailableTimeSlots() {
+            var selectedDate = document.getElementById('client-booking-date').value;
+            var timeSlotsContainer = document.getElementById('client-time-slots');
+            
+            if (!selectedDate) {
+                timeSlotsContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez une date</p>';
+                document.getElementById('client-confirm-booking').disabled = true;
+                return;
+            }
+            
+            var availableSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+            var takenSlots = [];
+            
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === selectedDate) {
+                    takenSlots.push(appointments[i].time);
+                }
+            }
+            
+            var slotsHTML = '';
+            for (var j = 0; j < availableSlots.length; j++) {
+                var slot = availableSlots[j];
+                var isAvailable = takenSlots.indexOf(slot) === -1;
+                
+                if (isAvailable) {
+                    slotsHTML += '<button class="btn btn-info btn-small" onclick="selectTimeSlot(\'' + slot + '\')" style="margin: 2px;">' + slot + '</button>';
+                } else {
+                    slotsHTML += '<button class="btn btn-secondary btn-small" disabled style="margin: 2px;">' + slot + ' (Pris)</button>';
+                }
+            }
+            
+            if (availableSlots.length === takenSlots.length) {
+                slotsHTML = '<p style="text-align: center; color: var(--danger); grid-column: 1 / -1;">Tous les créneaux sont pris</p>';
+            }
+            
+            timeSlotsContainer.innerHTML = slotsHTML;
+            document.getElementById('client-confirm-booking').disabled = true;
+        }
+
+        function selectTimeSlot(time) {
+            var allSlots = document.querySelectorAll('#client-time-slots .btn');
+            for (var i = 0; i < allSlots.length; i++) {
+                allSlots[i].classList.remove('btn-warning');
+                allSlots[i].classList.add('btn-info');
+            }
+            
+            var clickedSlot = null;
+            for (var j = 0; j < allSlots.length; j++) {
+                if (allSlots[j].textContent.indexOf(time) === 0) {
+                    clickedSlot = allSlots[j];
+                    break;
+                }
+            }
+            
+            if (clickedSlot) {
+                clickedSlot.classList.remove('btn-info');
+                clickedSlot.classList.add('btn-warning');
+            }
+            
+            selectedTimeSlot = time;
+            document.getElementById('client-confirm-booking').disabled = false;
+        }
+
+        function confirmClientBooking() {
+            var service = document.getElementById('client-service-select').value;
+            var date = document.getElementById('client-booking-date').value;
+            var time = selectedTimeSlot;
+            var notes = document.getElementById('client-booking-notes').value;
+            
+            if (!service || !date || !time) {
+                showNotification('Veuillez sélectionner un service, une date et un créneau horaire', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                showNotification('Erreur de session utilisateur', 'error');
+                return;
+            }
+            
+            var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
+            if (passagesRestants <= 0) {
+                showNotification('Aucun passage restant disponible', 'error');
+                return;
+            }
+            
+            // Vérifier si le créneau est toujours disponible
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === date && appointments[i].time === time) {
+                    showNotification('Ce créneau vient d\'être pris. Veuillez en choisir un autre.', 'error');
+                    updateAvailableTimeSlots();
+                    return;
+                }
+            }
+            
+            // Créer le nouveau rendez-vous
+            var newAppointment = {
+                id: nextAppointmentId++,
+                clientId: currentUser.id,
+                date: date,
+                time: time,
+                service: service,
+                notes: notes,
+                status: 'confirmed',
+                cost: currentUser.contractAmount / currentUser.totalVisits
+            };
+            
+            // Ajouter le rendez-vous et mettre à jour le client
+            appointments.push(newAppointment);
+            currentUser.usedVisits++;
+            
+            // Sauvegarder immédiatement
+            Storage.save();
+            
+            // Réinitialiser le formulaire
+            document.getElementById('client-service-select').value = '';
+            document.getElementById('client-booking-date').value = '';
+            document.getElementById('client-booking-notes').value = '';
+            document.getElementById('client-time-slots').innerHTML = '<p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez une date</p>';
+            document.getElementById('client-confirm-booking').disabled = true;
+            selectedTimeSlot = null;
+            
+            // Mettre à jour toute l'interface client
+            updateClientDashboard();
+            
+            // Notification de succès avec détails
+            var serviceName = serviceNames[service] || service;
+            var dateFormatted = new Date(date).toLocaleDateString('fr-FR');
+            showNotification('Rendez-vous confirmé pour le ' + dateFormatted + ' à ' + time + ' (' + serviceName + ')', 'success');
+        }
+
+        function updateClientAppointmentsList() {
+            if (!currentUser) return;
+            
+            var container = document.getElementById('client-appointments-list');
+            var clientAppointments = [];
+            
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].clientId === currentUser.id) {
+                    clientAppointments.push(appointments[i]);
+                }
+            }
+            
+            clientAppointments.sort(function(a, b) {
+                var dateA = new Date(a.date + ' ' + a.time);
+                var dateB = new Date(b.date + ' ' + b.time);
+                return dateB - dateA;
+            });
+            
+            var html = '';
+            if (clientAppointments.length === 0) {
+                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous programmé pour le moment.</p>';
+            } else {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                for (var j = 0; j < clientAppointments.length; j++) {
+                    var apt = clientAppointments[j];
+                    var aptDate = new Date(apt.date);
+                    var isUpcoming = aptDate >= today;
+                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
+                    var statusClass = apt.status === 'confirmed' ? 'status-confirmed' : apt.status === 'completed' ? 'status-completed' : 'status-pending';
+                    
+                    var borderColor = isUpcoming ? 'var(--info)' : 'var(--border-gray)';
+                    var bgColor = isUpcoming ? '#e8f4f8' : '#f8f9fa';
+                    
+                    html += '<div style="border: 2px solid ' + borderColor + '; border-radius: 10px; padding: 15px; margin-bottom: 10px; background: ' + bgColor + ';">';
+                    html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">';
+                    html += '<div>';
+                    html += '<div style="font-size: 1.1rem; font-weight: bold; color: var(--primary-blue);">';
+                    html += new Date(apt.date).toLocaleDateString('fr-FR') + ' à ' + apt.time;
+                    html += '</div>';
+                    html += '<div style="margin: 5px 0;">' + serviceNames[apt.service] + '</div>';
+                    if (apt.notes) {
+                        html += '<div style="font-size: 0.9rem; color: var(--dark-gray);">' + apt.notes + '</div>';
+                    }
+                    html += '</div>';
+                    html += '<div style="text-align: right;">';
+                    html += '<span class="status-chip ' + statusClass + '">' + statusText + '</span><br>';
+                    html += '<small style="color: var(--dark-gray);">Coût: ' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</small>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+            }
+            
+            container.innerHTML = html;
         }
 
         // Onglets admin
@@ -1612,10 +1900,6 @@
         }
 
         // Utilitaires
-        function simulateBooking() {
-            showNotification('Réservation simulée créée !', 'success');
-        }
-
         function exportData() {
             showNotification('Export des données en cours...', 'info');
             
