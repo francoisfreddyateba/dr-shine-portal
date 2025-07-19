@@ -99,7 +99,6 @@
             min-width: 280px;
             max-width: 350px;
             flex: 1;
-            user-select: none;
         }
 
         .role-card:hover {
@@ -482,12 +481,12 @@
             </div>
             <div class="card-content">
                 <div class="role-selector">
-                    <div class="role-card" onclick="showClientLogin()">
+                    <div class="role-card" id="client-card">
                         <div class="role-icon">👤</div>
                         <div class="role-title">Espace Client</div>
                         <div class="role-description">Gerez vos contrats et reservations</div>
                     </div>
-                    <div class="role-card" onclick="showAdminLogin()">
+                    <div class="role-card" id="admin-card">
                         <div class="role-icon">🔧</div>
                         <div class="role-title">Administration</div>
                         <div class="role-description">Gestion complete Dr. Shine</div>
@@ -499,7 +498,7 @@
         <!-- Connexion Client -->
         <div id="client-login" class="main-card hidden">
             <div class="card-header">
-                <h2 style="margin: 0;">Connexion Client</h2>
+                <h2 style="margin: 0;">🔐 Connexion Client</h2>
             </div>
             <div class="card-content">
                 <div class="login-form">
@@ -512,13 +511,13 @@
                         <input type="password" id="client-password" placeholder="Votre mot de passe">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
+                        <button class="btn btn-gold btn-large" id="client-login-btn">Se connecter</button>
+                        <button class="btn" id="client-back-btn">Retour</button>
                     </div>
                     <div id="client-login-error" class="error-message hidden"></div>
                     <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.9rem; color: #856404;">
-                        <strong>Pour commencer :</strong><br>
-                        1. Un administrateur doit d'abord creer votre compte<br>
+                        <strong>📝 Pour commencer :</strong><br>
+                        1. Un administrateur doit d'abord créer votre compte<br>
                         2. Vous recevrez vos identifiants de connexion<br>
                         3. Revenez ici avec vos identifiants personnels
                     </div>
@@ -567,41 +566,41 @@
                     <div id="client-booking-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="client-service-select">Service desire :</label>
+                                <label for="client-service-select">Service désiré :</label>
                                 <select id="client-service-select">
                                     <option value="">Choisir un service</option>
-                                    <option value="menage">Entretien menager</option>
-                                    <option value="vitres">Lavage de vitres</option>
-                                    <option value="auto-ext">Lavage auto exterieur</option>
-                                    <option value="auto-int">Lavage auto interieur</option>
-                                    <option value="auto-complet">Lavage auto complet</option>
-                                    <option value="bacs">Lavage bacs a ordures</option>
-                                    <option value="goutieres">Nettoyage goutieres</option>
-                                    <option value="sinistre">Nettoyage apres sinistre</option>
+                                    <option value="menage">🏠 Entretien ménager</option>
+                                    <option value="vitres">🪟 Lavage de vitres</option>
+                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
+                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
+                                    <option value="auto-complet">✨ Lavage auto complet</option>
+                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
+                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
+                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="client-booking-date">Date souhaitee :</label>
+                                <label for="client-booking-date">Date souhaitée :</label>
                                 <input type="date" id="client-booking-date">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="client-time-slots">Creneaux disponibles :</label>
+                            <label for="client-time-slots">Créneaux disponibles :</label>
                             <div id="client-time-slots" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
                                 <p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Selectionnez une date</p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="client-booking-notes">Instructions particulieres (optionnel) :</label>
-                            <textarea id="client-booking-notes" rows="2" placeholder="Precisions sur le service, acces, etc..."></textarea>
+                            <label for="client-booking-notes">Instructions particulières (optionnel) :</label>
+                            <textarea id="client-booking-notes" rows="2" placeholder="Précisions sur le service, accès, etc..."></textarea>
                         </div>
                         <div style="text-align: center;">
-                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">Confirmer la reservation</button>
+                            <button class="btn btn-success btn-large" id="client-confirm-booking" disabled style="width: 100%;">Confirmer la reservation</button>
                         </div>
                     </div>
                     <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
-                        <h4 style="margin-bottom: 15px;">Aucun passage restant</h4>
-                        <p>Vous avez utilise tous vos passages prevus au contrat. Contactez-nous pour renouveler ou etendre votre contrat.</p>
+                        <h4 style="margin-bottom: 15px;">😔 Aucun passage restant</h4>
+                        <p>Vous avez utilisé tous vos passages prévus au contrat. Contactez-nous pour renouveler ou étendre votre contrat.</p>
                         <div style="margin-top: 20px;">
                             <strong>📞 Contact :</strong> 819-555-0000<br>
                             <strong>📧 Email :</strong> contact@drshine.com
@@ -610,7 +609,7 @@
                 </div>
 
                 <div class="section-card">
-                    <h3 class="section-title">Mes Prochains Rendez-vous</h3>
+                    <h3 class="section-title">📋 Mes Prochains Rendez-vous</h3>
                     <div id="client-appointments-list">
                         <p style="text-align: center; color: var(--dark-gray);">Chargement de vos rendez-vous...</p>
                     </div>
@@ -621,7 +620,7 @@
         <!-- Connexion Admin -->
         <div id="admin-login" class="main-card hidden">
             <div class="card-header">
-                <h2 style="margin: 0;">Connexion Administration</h2>
+                <h2 style="margin: 0;">🔐 Connexion Administration</h2>
             </div>
             <div class="card-content">
                 <div class="login-form">
@@ -634,8 +633,8 @@
                         <input type="password" id="admin-password" placeholder="Mot de passe administrateur">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Se connecter</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
+                        <button class="btn btn-gold btn-large" id="admin-login-btn">Se connecter</button>
+                        <button class="btn" id="admin-back-btn">Retour</button>
                     </div>
                     <div id="admin-login-error" class="error-message hidden"></div>
                 </div>
@@ -647,8 +646,8 @@
             <div class="card-header">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                     <div>
-                        <h2 style="margin: 0;">Administration Dr. Shine</h2>
-                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complete et analytiques</p>
+                        <h2 style="margin: 0;">🔧 Administration Dr. Shine</h2>
+                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complète et analytiques</p>
                     </div>
                     <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
                 </div>
@@ -656,11 +655,11 @@
             <div class="card-content">
                 <!-- Onglets Admin -->
                 <div class="tabs">
-                    <button class="tab active" onclick="showAdminTab('dashboard')">Tableau de bord</button>
-                    <button class="tab" onclick="showAdminTab('clients')">Clients</button>
-                    <button class="tab" onclick="showAdminTab('appointments')">Rendez-vous</button>
-                    <button class="tab" onclick="showAdminTab('finances')">Finances</button>
-                    <button class="tab" onclick="showAdminTab('settings')">Parametres</button>
+                    <button class="tab active" onclick="showAdminTab('dashboard')">📊 Tableau de bord</button>
+                    <button class="tab" onclick="showAdminTab('clients')">👥 Clients</button>
+                    <button class="tab" onclick="showAdminTab('appointments')">📅 Rendez-vous</button>
+                    <button class="tab" onclick="showAdminTab('finances')">💰 Finances</button>
+                    <button class="tab" onclick="showAdminTab('settings')">⚙️ Paramètres</button>
                 </div>
 
                 <!-- Tableau de bord -->
@@ -686,15 +685,15 @@
 
                     <div class="admin-section">
                         <div class="section-card">
-                            <h3 class="section-title">Actions Rapides</h3>
-                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">Creer votre premier client</button>
-                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">Programmer un RDV</button>
-                            <button class="btn btn-warning" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">Exporter Donnees</button>
-                            <button class="btn btn-gold" onclick="backupData()" style="width: 100%;">Sauvegarder</button>
+                            <h3 class="section-title">⚡ Actions Rapides</h3>
+                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Créer votre premier client</button>
+                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Programmer un RDV</button>
+                            <button class="btn btn-warning" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📊 Exporter Données</button>
+                            <button class="btn btn-gold" onclick="backupData()" style="width: 100%;">💾 Sauvegarder</button>
                         </div>
 
                         <div class="section-card">
-                            <h3 class="section-title">Rendez-vous Recents</h3>
+                            <h3 class="section-title">📅 Rendez-vous Récents</h3>
                             <div id="recent-appointments">
                                 <p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous pour le moment.<br>Créez votre premier client pour commencer !</p>
                             </div>
@@ -705,7 +704,7 @@
                 <!-- Clients -->
                 <div id="admin-clients-content" class="tab-content">
                     <div class="section-card">
-                        <h3 class="section-title" id="client-form-title">Creer un Nouveau Client</h3>
+                        <h3 class="section-title" id="client-form-title">➕ Créer un Nouveau Client</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="new-client-name">Nom complet :</label>
@@ -754,13 +753,13 @@
                             <strong>💡 Astuce :</strong> Les passages restants se calculent automatiquement (Total - Consommés)
                         </div>
                         <div style="text-align: center;">
-                            <button class="btn btn-success btn-large" id="client-submit-btn" onclick="createClient()" style="margin: 5px;">Creer le client</button>
-                            <button class="btn btn-warning" id="client-cancel-btn" onclick="clearClientForm()" style="margin: 5px; display: none;">Annuler</button>
+                            <button class="btn btn-success btn-large" id="client-submit-btn" onclick="createClient()" style="margin: 5px;">✅ Créer le client</button>
+                            <button class="btn btn-warning" id="client-cancel-btn" onclick="clearClientForm()" style="margin: 5px; display: none;">❌ Annuler</button>
                         </div>
                     </div>
 
                     <div class="data-table">
-                        <h3 class="section-title">Liste des Clients</h3>
+                        <h3 class="section-title">👥 Liste des Clients</h3>
                         <div style="overflow-x: auto;">
                             <table class="table">
                                 <thead>
@@ -784,7 +783,7 @@
                 <!-- Rendez-vous -->
                 <div id="admin-appointments-content" class="tab-content">
                     <div class="section-card">
-                        <h3 class="section-title">Creer un Nouveau Rendez-vous</h3>
+                        <h3 class="section-title">📅 Créer un Nouveau Rendez-vous</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="admin-client-select">Client :</label>
@@ -795,15 +794,15 @@
                             <div class="form-group">
                                 <label for="admin-apt-service">Service :</label>
                                 <select id="admin-apt-service">
-                                    <option value="">Selectionner un service</option>
-                                    <option value="menage">Entretien menager</option>
-                                    <option value="vitres">Lavage de vitres</option>
-                                    <option value="auto-ext">Lavage auto exterieur</option>
-                                    <option value="auto-int">Lavage auto interieur</option>
-                                    <option value="auto-complet">Lavage auto complet</option>
-                                    <option value="bacs">Lavage bacs a ordures</option>
-                                    <option value="goutieres">Nettoyage goutieres</option>
-                                    <option value="sinistre">Nettoyage apres sinistre</option>
+                                    <option value="">Sélectionner un service</option>
+                                    <option value="menage">🏠 Entretien ménager</option>
+                                    <option value="vitres">🪟 Lavage de vitres</option>
+                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
+                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
+                                    <option value="auto-complet">✨ Lavage auto complet</option>
+                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
+                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
+                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
                                 </select>
                             </div>
                         </div>
@@ -815,7 +814,7 @@
                             <div class="form-group">
                                 <label for="admin-apt-time">Heure :</label>
                                 <select id="admin-apt-time">
-                                    <option value="">Selectionner</option>
+                                    <option value="">Sélectionner</option>
                                     <option value="08:00">08:00</option>
                                     <option value="09:00">09:00</option>
                                     <option value="10:00">10:00</option>
@@ -829,13 +828,13 @@
                         </div>
                         <div class="form-group">
                             <label for="admin-apt-notes">Notes :</label>
-                            <textarea id="admin-apt-notes" rows="2" placeholder="Instructions particulieres..."></textarea>
+                            <textarea id="admin-apt-notes" rows="2" placeholder="Instructions particulières..."></textarea>
                         </div>
-                        <button class="btn btn-success btn-large" onclick="createAppointment()" style="width: 100%;">Creer le rendez-vous</button>
+                        <button class="btn btn-success btn-large" onclick="createAppointment()" style="width: 100%;">✅ Créer le rendez-vous</button>
                     </div>
 
                     <div class="data-table">
-                        <h3 class="section-title">Tous les Rendez-vous</h3>
+                        <h3 class="section-title">📅 Tous les Rendez-vous</h3>
                         <div style="overflow-x: auto;">
                             <table class="table">
                                 <thead>
@@ -860,7 +859,7 @@
                 <div id="admin-finances-content" class="tab-content">
                     <div class="admin-section">
                         <div class="section-card">
-                            <h3 class="section-title">Enregistrer un Paiement</h3>
+                            <h3 class="section-title">💰 Enregistrer un Paiement</h3>
                             <div class="form-group">
                                 <label for="payment-client-select">Client :</label>
                                 <select id="payment-client-select">
@@ -882,11 +881,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <button class="btn btn-success btn-large" onclick="recordPayment()" style="width: 100%;">Enregistrer le paiement</button>
+                            <button class="btn btn-success btn-large" onclick="recordPayment()" style="width: 100%;">💰 Enregistrer le paiement</button>
                         </div>
 
                         <div class="section-card">
-                            <h3 class="section-title">Resume Financier</h3>
+                            <h3 class="section-title">💰 Résumé Financier</h3>
                             <div class="dashboard-stats">
                                 <div class="stat-card" style="background: var(--success);">
                                     <div class="stat-number" id="finance-total-revenue">0$</div>
@@ -904,7 +903,7 @@
                 <!-- Paramètres -->
                 <div id="admin-settings-content" class="tab-content">
                     <div class="section-card">
-                        <h3 class="section-title">Parametres de l'Entreprise</h3>
+                        <h3 class="section-title">⚙️ Paramètres de l'Entreprise</h3>
                         <div class="form-group">
                             <label for="company-name">Nom de l'entreprise :</label>
                             <input type="text" id="company-name" value="Dr. Shine">
@@ -917,18 +916,18 @@
                             <label for="company-phone">Téléphone :</label>
                             <input type="tel" id="company-phone" value="819-555-0000">
                         </div>
-                        <button class="btn btn-success btn-large" onclick="saveSettings()" style="width: 100%;">Sauvegarder</button>
+                        <button class="btn btn-success btn-large" onclick="saveSettings()" style="width: 100%;">💾 Sauvegarder</button>
                     </div>
 
                     <div class="section-card">
-                        <h3 class="section-title">Outils de Maintenance</h3>
-                        <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">Creer une sauvegarde</button>
-                        <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">Exporter les donnees</button>
+                        <h3 class="section-title">🔧 Outils de Maintenance</h3>
+                        <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">💾 Créer une sauvegarde</button>
+                        <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">📊 Exporter les données</button>
                         <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
-                            <h4 style="color: #dc3545; margin-bottom: 10px;">ZONE DANGEREUSE</h4>
-                            <p style="margin-bottom: 0;">Reinitialiser toutes les donnees</p>
+                            <h4 style="color: #dc3545; margin-bottom: 10px;">⚠️ ZONE DANGEREUSE ⚠️</h4>
+                            <p style="margin-bottom: 0;">Réinitialiser toutes les données</p>
                         </div>
-                        <button class="btn btn-danger" onclick="resetDatabase()" style="width: 100%;">REINITIALISER</button>
+                        <button class="btn btn-danger" onclick="resetDatabase()" style="width: 100%;">🗑️ RÉINITIALISER</button>
                     </div>
                 </div>
             </div>
@@ -989,14 +988,14 @@
         var selectedTimeSlot = null;
 
         var serviceNames = {
-            'menage': 'Entretien menager',
-            'vitres': 'Lavage de vitres',
-            'auto-ext': 'Lavage auto exterieur',
-            'auto-int': 'Lavage auto interieur',
-            'auto-complet': 'Lavage auto complet',
-            'bacs': 'Lavage bacs a ordures',
-            'goutieres': 'Nettoyage goutieres',
-            'sinistre': 'Nettoyage apres sinistre'
+            'menage': '🏠 Entretien ménager',
+            'vitres': '🪟 Lavage de vitres',
+            'auto-ext': '🚗 Lavage auto extérieur',
+            'auto-int': '🚙 Lavage auto intérieur',
+            'auto-complet': '✨ Lavage auto complet',
+            'bacs': '🗑️ Lavage bacs à ordures',
+            'goutieres': '🏘️ Nettoyage gouttières',
+            'sinistre': '🔧 Nettoyage après sinistre'
         };
 
         // Navigation
@@ -1019,16 +1018,10 @@
         }
 
         function hideAll() {
-            console.log("Masquage de toutes les interfaces");
             var elements = ['role-selection', 'client-login', 'admin-login', 'client-dashboard', 'admin-dashboard'];
             for (var i = 0; i < elements.length; i++) {
                 var element = document.getElementById(elements[i]);
-                if (element) {
-                    element.classList.add('hidden');
-                    console.log("Element masque:", elements[i]);
-                } else {
-                    console.log("Element non trouve:", elements[i]);
-                }
+                if (element) element.classList.add('hidden');
             }
         }
 
@@ -1051,8 +1044,13 @@
 
         // Connexion
         function loginClient() {
+            console.log('Tentative de connexion client');
+            
             var email = document.getElementById('client-email').value;
             var password = document.getElementById('client-password').value;
+            
+            console.log('Email:', email);
+            console.log('Mot de passe fourni:', password ? 'Oui' : 'Non');
 
             var client = null;
             for (var i = 0; i < clients.length; i++) {
@@ -1063,35 +1061,47 @@
             }
 
             if (client) {
+                console.log('Client trouve:', client.name);
                 currentUser = client;
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
                 
                 // Initialiser le dashboard client
+                console.log('Mise a jour du dashboard client');
                 updateClientDashboard();
                 
                 // Attacher les événements pour la réservation
+                console.log('Configuration des evenements de reservation');
                 setupClientBookingEvents();
                 
                 showNotification('Connexion client reussie !', 'success');
+                console.log('Connexion client terminee avec succes');
             } else {
+                console.log('Echec de connexion - Client non trouve');
+                console.log('Clients disponibles:', clients.length);
                 showError('client-login-error', 'Identifiants incorrects ou client inexistant');
             }
         }
 
         function setupClientBookingEvents() {
+            console.log('Configuration des evenements de reservation client');
+            
             var dateField = document.getElementById('client-booking-date');
             var confirmBtn = document.getElementById('client-confirm-booking');
             
             if (dateField) {
                 dateField.removeEventListener('change', updateAvailableTimeSlots);
                 dateField.addEventListener('change', updateAvailableTimeSlots);
+                console.log('Event listener ajoute pour selection de date');
             }
             
             if (confirmBtn) {
                 confirmBtn.removeEventListener('click', confirmClientBooking);
                 confirmBtn.addEventListener('click', confirmClientBooking);
+                console.log('Event listener ajoute pour bouton confirmation');
             }
+            
+            console.log('Configuration des evenements de reservation terminee');
         }
 
         function loginAdmin() {
@@ -1264,10 +1274,14 @@
         }
 
         function confirmClientBooking() {
+            console.log('Confirmation de reservation client');
+            
             var service = document.getElementById('client-service-select').value;
             var date = document.getElementById('client-booking-date').value;
             var time = selectedTimeSlot;
             var notes = document.getElementById('client-booking-notes').value;
+            
+            console.log('Donnees de reservation:', {service: service, date: date, time: time, notes: notes});
             
             if (!service || !date || !time) {
                 showNotification('Veuillez selectionner un service, une date et un creneau horaire', 'error');
@@ -1280,12 +1294,14 @@
             }
             
             var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
+            console.log('Passages restants avant reservation:', passagesRestants);
+            
             if (passagesRestants <= 0) {
                 showNotification('Aucun passage restant disponible', 'error');
                 return;
             }
             
-            // Verifier si le creneau est encore disponible
+            // Vérifier si le créneau est encore disponible
             for (var i = 0; i < appointments.length; i++) {
                 if (appointments[i].date === date && appointments[i].time === time) {
                     showNotification('Ce creneau n\'est plus disponible', 'error');
@@ -1294,6 +1310,7 @@
                 }
             }
             
+            // Créer le nouveau rendez-vous
             var newAppointment = {
                 id: nextAppointmentId++,
                 clientId: currentUser.id,
@@ -1305,9 +1322,17 @@
                 cost: currentUser.contractAmount / currentUser.totalVisits
             };
             
+            console.log('Nouveau rendez-vous cree:', newAppointment);
+            
+            // Ajouter le rendez-vous et décrémenter les passages
             appointments.push(newAppointment);
             currentUser.usedVisits++;
+            
+            console.log('Passages restants apres reservation:', currentUser.totalVisits - currentUser.usedVisits);
+            
+            // Sauvegarder
             Storage.save();
+            console.log('Donnees sauvegardees');
             
             // Reset du formulaire
             document.getElementById('client-service-select').value = '';
@@ -1317,10 +1342,11 @@
             document.getElementById('client-confirm-booking').disabled = true;
             selectedTimeSlot = null;
             
-            // Mise a jour de l'interface
+            // Mise à jour de l'interface
             updateClientDashboard();
             
-            showNotification('Rendez-vous confirme avec succes ! Votre passage a ete comptabilise.', 'success');
+            showNotification('Rendez-vous confirme avec succes ! Passage comptabilise.', 'success');
+            console.log('Reservation terminee avec succes');
         }
 
         function updateClientAppointmentsList() {
@@ -1544,7 +1570,7 @@
 
             editingClientId = id;
             
-            document.getElementById('client-form-title').textContent = 'Modifier le Client';
+            document.getElementById('client-form-title').textContent = '✏️ Modifier le Client';
             document.getElementById('client-form-title').style.color = '#fd7e14';
             
             document.getElementById('new-client-name').value = client.name;
@@ -1562,7 +1588,7 @@
             var submitBtn = document.getElementById('client-submit-btn');
             var cancelBtn = document.getElementById('client-cancel-btn');
             
-            submitBtn.textContent = 'Modifier le client';
+            submitBtn.textContent = '✏️ Modifier le client';
             submitBtn.className = 'btn btn-warning btn-large';
             cancelBtn.style.display = 'inline-block';
 
@@ -1687,7 +1713,7 @@
         function clearClientForm() {
             editingClientId = null;
             
-            document.getElementById('client-form-title').textContent = 'Creer un Nouveau Client';
+            document.getElementById('client-form-title').textContent = '➕ Créer un Nouveau Client';
             document.getElementById('client-form-title').style.color = '';
             
             document.getElementById('new-client-name').value = '';
@@ -1703,7 +1729,7 @@
             var submitBtn = document.getElementById('client-submit-btn');
             var cancelBtn = document.getElementById('client-cancel-btn');
             
-            submitBtn.textContent = 'Creer le client';
+            submitBtn.textContent = '✅ Créer le client';
             submitBtn.className = 'btn btn-success btn-large';
             cancelBtn.style.display = 'none';
         }
@@ -1751,8 +1777,8 @@
                     
                     html += '<td><span class="status-chip status-' + (balance <= 0 ? 'completed' : 'pending') + '" style="background-color: ' + balanceColor + '; color: white;">' + (balance <= 0 ? 'Payé ✓' : 'Dû: ' + balance.toFixed(0) + '$') + '</span></td>';
                     html += '<td>';
-                    html += '<button class="btn btn-info btn-small" onclick="editClient(' + client.id + ')" style="margin: 2px;">Modifier</button>';
-                    html += '<button class="btn btn-danger btn-small" onclick="deleteClient(' + client.id + ')" style="margin: 2px;">Supprimer</button>';
+                    html += '<button class="btn btn-info btn-small" onclick="editClient(' + client.id + ')" style="margin: 2px;">✏️ Modifier</button>';
+                    html += '<button class="btn btn-danger btn-small" onclick="deleteClient(' + client.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
                     html += '</td>';
                     html += '</tr>';
                 }
@@ -1893,7 +1919,7 @@
                     html += '<td><span class="status-chip status-' + apt.status + '">' + statusText + '</span></td>';
                     html += '<td>' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</td>';
                     html += '<td>';
-                    html += '<button class="btn btn-danger btn-small" onclick="deleteAppointment(' + apt.id + ')" style="margin: 2px;">Supprimer</button>';
+                    html += '<button class="btn btn-danger btn-small" onclick="deleteAppointment(' + apt.id + ')" style="margin: 2px;">🗑️ Supprimer</button>';
                     html += '</td>';
                     html += '</tr>';
                 }
@@ -1956,38 +1982,13 @@
             }
         }
 
-        // Fonctions globales pour debug
-        window.showClientLogin = showClientLogin;
-        window.showAdminLogin = showAdminLogin;
-        window.backToHome = backToHome;
-        window.confirmClientBooking = confirmClientBooking;
-        window.selectTimeSlot = selectTimeSlot;
-
-        function testNavigation() {
-            console.log("=== TEST DE NAVIGATION ===");
-            console.log("Test fonction showClientLogin...");
-            showClientLogin();
-            
-            setTimeout(function() {
-                console.log("Test fonction showAdminLogin...");
-                showAdminLogin();
-                
-                setTimeout(function() {
-                    console.log("Test fonction backToHome...");
-                    backToHome();
-                }, 2000);
-            }, 2000);
-        }
-
-        // Ajouter un bouton de test (temporaire)
-        window.testNav = testNavigation;
+        // Calcul automatique des passages restants
         function updateRemainingVisits() {
             var totalVisits = parseInt(document.getElementById('total-visits').value) || 0;
             var usedVisits = parseInt(document.getElementById('used-visits').value) || 0;
             var remaining = Math.max(0, totalVisits - usedVisits);
             document.getElementById('remaining-visits').value = remaining;
             
-            // Changer la couleur selon les passages restants
             var remainingField = document.getElementById('remaining-visits');
             if (remaining <= 2) {
                 remainingField.style.color = '#dc3545';
@@ -2023,12 +2024,7 @@
             }
         }
 
-        function clearAllErrors() {
-            var errorElements = document.querySelectorAll('.error-message');
-            for (var i = 0; i < errorElements.length; i++) {
-                errorElements[i].classList.add('hidden');
-            }
-        }
+        // Calcul automatique des passages restants
             showNotification('Export des donnees en cours...', 'info');
             
             var exportData = {
@@ -2123,49 +2119,22 @@
             }
         }
 
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("=== INITIALISATION SYSTEME DR. SHINE ===");
             console.log("Chargement du systeme Dr. Shine...");
             
-            // Vérifier que les éléments existent
-            var roleSelection = document.getElementById('role-selection');
-            var clientLogin = document.getElementById('client-login');
-            var adminLogin = document.getElementById('admin-login');
+            // Ajouter les listeners pour la navigation
+            setupNavigationEvents();
             
-            console.log("Element role-selection:", roleSelection ? "OK" : "MANQUANT");
-            console.log("Element client-login:", clientLogin ? "OK" : "MANQUANT");
-            console.log("Element admin-login:", adminLogin ? "OK" : "MANQUANT");
-            
-            // Vérifier les boutons de rôle et ajouter des événements
-            var roleCards = document.querySelectorAll('.role-card');
-            console.log("Nombre de cartes de role trouvees:", roleCards.length);
-            
-            // Ajouter les événements manuellement au cas où onclick ne fonctionne pas
-            if (roleCards.length >= 2) {
-                roleCards[0].addEventListener('click', function() {
-                    console.log("Clic sur carte client detecte");
-                    showClientLogin();
-                });
-                
-                roleCards[1].addEventListener('click', function() {
-                    console.log("Clic sur carte admin detecte");
-                    showAdminLogin();
-                });
-                
-                console.log("Event listeners ajoutes aux cartes de role");
-            }
-            
-            // Ajouter les listeners pour les champs de calcul
+            // Ajouter les listeners pour le calcul automatique des passages restants
             var totalVisitsField = document.getElementById('total-visits');
             var usedVisitsField = document.getElementById('used-visits');
             
             if (totalVisitsField && usedVisitsField) {
                 totalVisitsField.addEventListener('input', updateRemainingVisits);
                 usedVisitsField.addEventListener('input', updateRemainingVisits);
-                console.log("Listeners pour calcul passages ajoutes");
             }
             
-            // Charger les données sauvegardées
             var dataLoaded = Storage.load();
             
             if (dataLoaded) {
@@ -2175,9 +2144,69 @@
                 console.log("Aucune donnee sauvegardee - demarrage avec base vierge");
                 showNotification('Systeme Dr. Shine pret ! (Base de donnees vierge)', 'success');
             }
-            
-            console.log("=== INITIALISATION TERMINEE ===");
         });
+
+        function setupNavigationEvents() {
+            console.log('Configuration des evenements de navigation');
+            
+            // Navigation des cartes de rôle
+            var clientCard = document.getElementById('client-card');
+            var adminCard = document.getElementById('admin-card');
+            
+            if (clientCard) {
+                clientCard.addEventListener('click', function() {
+                    console.log('Clic sur carte client');
+                    showClientLogin();
+                });
+                console.log('Event listener ajoute pour carte client');
+            }
+            
+            if (adminCard) {
+                adminCard.addEventListener('click', function() {
+                    console.log('Clic sur carte admin');
+                    showAdminLogin();
+                });
+                console.log('Event listener ajoute pour carte admin');
+            }
+            
+            // Boutons de connexion client
+            var clientLoginBtn = document.getElementById('client-login-btn');
+            var clientBackBtn = document.getElementById('client-back-btn');
+            
+            if (clientLoginBtn) {
+                clientLoginBtn.addEventListener('click', function() {
+                    console.log('Clic sur bouton connexion client');
+                    loginClient();
+                });
+            }
+            
+            if (clientBackBtn) {
+                clientBackBtn.addEventListener('click', function() {
+                    console.log('Clic sur bouton retour client');
+                    backToHome();
+                });
+            }
+            
+            // Boutons de connexion admin
+            var adminLoginBtn = document.getElementById('admin-login-btn');
+            var adminBackBtn = document.getElementById('admin-back-btn');
+            
+            if (adminLoginBtn) {
+                adminLoginBtn.addEventListener('click', function() {
+                    console.log('Clic sur bouton connexion admin');
+                    loginAdmin();
+                });
+            }
+            
+            if (adminBackBtn) {
+                adminBackBtn.addEventListener('click', function() {
+                    console.log('Clic sur bouton retour admin');
+                    backToHome();
+                });
+            }
+            
+            console.log('Configuration des evenements terminee');
+        }
     </script>
 </body>
 </html> : '-') + '</small>';
