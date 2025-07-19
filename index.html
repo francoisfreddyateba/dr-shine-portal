@@ -481,12 +481,12 @@
             </div>
             <div class="card-content">
                 <div class="role-selector">
-                    <div class="role-card" onclick="window.showClientLogin()" style="cursor: pointer;">
+                    <div class="role-card" id="client-card" style="cursor: pointer;">
                         <div class="role-icon">👤</div>
                         <div class="role-title">Espace Client</div>
                         <div class="role-description">Gerez vos contrats et reservations</div>
                     </div>
-                    <div class="role-card" onclick="window.showAdminLogin()" style="cursor: pointer;">
+                    <div class="role-card" id="admin-card" style="cursor: pointer;">
                         <div class="role-icon">🔧</div>
                         <div class="role-title">Administration</div>
                         <div class="role-description">Gestion complete Dr. Shine</div>
@@ -2127,17 +2127,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DEMARRAGE SYSTEME DR. SHINE ===");
             
-            // Test de navigation au démarrage
-            testNavigation();
+            // Attacher les événements de navigation directement
+            var clientCard = document.getElementById('client-card');
+            var adminCard = document.getElementById('admin-card');
             
-            // Attacher les événements de navigation
-            setupNavigationEvents();
+            if (clientCard) {
+                clientCard.addEventListener('click', function() {
+                    console.log('Clic sur carte client détecté');
+                    hideAll();
+                    document.getElementById('client-login').classList.remove('hidden');
+                    showNotification('Interface client activee', 'info');
+                });
+                console.log('Event listener client attaché');
+            }
             
-            // Réparation forcée après un délai pour s'assurer que tout est chargé
-            setTimeout(function() {
-                forceNavigationFix();
-                console.log('NAVIGATION: Reparation forcee terminee');
-            }, 500);
+            if (adminCard) {
+                adminCard.addEventListener('click', function() {
+                    console.log('Clic sur carte admin détecté');
+                    hideAll();
+                    document.getElementById('admin-login').classList.remove('hidden');
+                    showNotification('Interface admin activee', 'info');
+                });
+                console.log('Event listener admin attaché');
+            }
             
             var totalVisitsField = document.getElementById('total-visits');
             var usedVisitsField = document.getElementById('used-visits');
