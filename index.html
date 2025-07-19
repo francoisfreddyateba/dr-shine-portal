@@ -481,15 +481,15 @@
             </div>
             <div class="card-content">
                 <div class="role-selector">
-                    <div class="role-card" id="client-card">
+                    <div class="role-card" onclick="showClientLogin()">
                         <div class="role-icon">👤</div>
                         <div class="role-title">Espace Client</div>
-                        <div class="role-description">Gerez vos contrats et reservations</div>
+                        <div class="role-description">Gérez vos contrats et réservations</div>
                     </div>
-                    <div class="role-card" id="admin-card">
+                    <div class="role-card" onclick="showAdminLogin()">
                         <div class="role-icon">🔧</div>
                         <div class="role-title">Administration</div>
-                        <div class="role-description">Gestion complete Dr. Shine</div>
+                        <div class="role-description">Gestion complète Dr. Shine</div>
                     </div>
                 </div>
             </div>
@@ -511,8 +511,8 @@
                         <input type="password" id="client-password" placeholder="Votre mot de passe">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" id="client-login-btn">Se connecter</button>
-                        <button class="btn" id="client-back-btn">Retour</button>
+                        <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
+                        <button class="btn" onclick="backToHome()">Retour</button>
                     </div>
                     <div id="client-login-error" class="error-message hidden"></div>
                     <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.9rem; color: #856404;">
@@ -595,7 +595,7 @@
                             <textarea id="client-booking-notes" rows="2" placeholder="Précisions sur le service, accès, etc..."></textarea>
                         </div>
                         <div style="text-align: center;">
-                            <button class="btn btn-success btn-large" id="client-confirm-booking" disabled style="width: 100%;">Confirmer la reservation</button>
+                            <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">Confirmer la reservation</button>
                         </div>
                     </div>
                     <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
@@ -633,8 +633,8 @@
                         <input type="password" id="admin-password" placeholder="Mot de passe administrateur">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" id="admin-login-btn">Se connecter</button>
-                        <button class="btn" id="admin-back-btn">Retour</button>
+                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Se connecter</button>
+                        <button class="btn" onclick="backToHome()">Retour</button>
                     </div>
                     <div id="admin-login-error" class="error-message hidden"></div>
                 </div>
@@ -1044,13 +1044,8 @@
 
         // Connexion
         function loginClient() {
-            console.log('Tentative de connexion client');
-            
             var email = document.getElementById('client-email').value;
             var password = document.getElementById('client-password').value;
-            
-            console.log('Email:', email);
-            console.log('Mot de passe fourni:', password ? 'Oui' : 'Non');
 
             var client = null;
             for (var i = 0; i < clients.length; i++) {
@@ -1061,47 +1056,14 @@
             }
 
             if (client) {
-                console.log('Client trouve:', client.name);
                 currentUser = client;
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
-                
-                // Initialiser le dashboard client
-                console.log('Mise a jour du dashboard client');
                 updateClientDashboard();
-                
-                // Attacher les événements pour la réservation
-                console.log('Configuration des evenements de reservation');
-                setupClientBookingEvents();
-                
                 showNotification('Connexion client reussie !', 'success');
-                console.log('Connexion client terminee avec succes');
             } else {
-                console.log('Echec de connexion - Client non trouve');
-                console.log('Clients disponibles:', clients.length);
                 showError('client-login-error', 'Identifiants incorrects ou client inexistant');
             }
-        }
-
-        function setupClientBookingEvents() {
-            console.log('Configuration des evenements de reservation client');
-            
-            var dateField = document.getElementById('client-booking-date');
-            var confirmBtn = document.getElementById('client-confirm-booking');
-            
-            if (dateField) {
-                dateField.removeEventListener('change', updateAvailableTimeSlots);
-                dateField.addEventListener('change', updateAvailableTimeSlots);
-                console.log('Event listener ajoute pour selection de date');
-            }
-            
-            if (confirmBtn) {
-                confirmBtn.removeEventListener('click', confirmClientBooking);
-                confirmBtn.addEventListener('click', confirmClientBooking);
-                console.log('Event listener ajoute pour bouton confirmation');
-            }
-            
-            console.log('Configuration des evenements de reservation terminee');
         }
 
         function loginAdmin() {
@@ -1196,12 +1158,11 @@
                 noVisitsMessage.classList.add('hidden');
                 
                 var today = new Date().toISOString().split('T')[0];
+                document.getElementById('client-booking-date').setAttribute('min', today);
+                
                 var dateField = document.getElementById('client-booking-date');
-                if (dateField) {
-                    dateField.setAttribute('min', today);
-                    dateField.removeEventListener('change', updateAvailableTimeSlots);
-                    dateField.addEventListener('change', updateAvailableTimeSlots);
-                }
+                dateField.removeEventListener('change', updateAvailableTimeSlots);
+                dateField.addEventListener('change', updateAvailableTimeSlots);
             } else {
                 bookingForm.classList.add('hidden');
                 noVisitsMessage.classList.remove('hidden');
@@ -1248,40 +1209,37 @@
         }
 
         function selectTimeSlot(time) {
+            // Désélectionner tous les autres créneaux
             var allSlots = document.querySelectorAll('#client-time-slots .btn');
             for (var i = 0; i < allSlots.length; i++) {
-                if (allSlots[i].classList.contains('btn-warning')) {
-                    allSlots[i].classList.remove('btn-warning');
-                    allSlots[i].classList.add('btn-info');
-                }
+                allSlots[i].classList.remove('btn-warning');
+                allSlots[i].classList.add('btn-info');
             }
             
+            // Sélectionner le créneau cliqué
             var clickedSlot = null;
             for (var j = 0; j < allSlots.length; j++) {
-                if (allSlots[j].textContent.trim() === time) {
+                if (allSlots[j].textContent.indexOf(time) === 0) {
                     clickedSlot = allSlots[j];
                     break;
                 }
             }
             
-            if (clickedSlot && !clickedSlot.disabled) {
+            if (clickedSlot) {
                 clickedSlot.classList.remove('btn-info');
                 clickedSlot.classList.add('btn-warning');
-                selectedTimeSlot = time;
-                document.getElementById('client-confirm-booking').disabled = false;
-                showNotification('Creneau ' + time + ' selectionne', 'info');
             }
+            
+            // Stocker le créneau sélectionné et activer le bouton de confirmation
+            selectedTimeSlot = time;
+            document.getElementById('client-confirm-booking').disabled = false;
         }
 
         function confirmClientBooking() {
-            console.log('Confirmation de reservation client');
-            
             var service = document.getElementById('client-service-select').value;
             var date = document.getElementById('client-booking-date').value;
             var time = selectedTimeSlot;
             var notes = document.getElementById('client-booking-notes').value;
-            
-            console.log('Donnees de reservation:', {service: service, date: date, time: time, notes: notes});
             
             if (!service || !date || !time) {
                 showNotification('Veuillez selectionner un service, une date et un creneau horaire', 'error');
@@ -1294,17 +1252,15 @@
             }
             
             var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
-            console.log('Passages restants avant reservation:', passagesRestants);
-            
             if (passagesRestants <= 0) {
                 showNotification('Aucun passage restant disponible', 'error');
                 return;
             }
             
-            // Vérifier si le créneau est encore disponible
+            // Vérifier si le créneau est toujours disponible
             for (var i = 0; i < appointments.length; i++) {
                 if (appointments[i].date === date && appointments[i].time === time) {
-                    showNotification('Ce creneau n\'est plus disponible', 'error');
+                    showNotification('Ce creneau vient d\'etre pris. Veuillez en choisir un autre.', 'error');
                     updateAvailableTimeSlots();
                     return;
                 }
@@ -1322,19 +1278,14 @@
                 cost: currentUser.contractAmount / currentUser.totalVisits
             };
             
-            console.log('Nouveau rendez-vous cree:', newAppointment);
-            
-            // Ajouter le rendez-vous et décrémenter les passages
+            // Ajouter le rendez-vous et mettre à jour le client
             appointments.push(newAppointment);
             currentUser.usedVisits++;
             
-            console.log('Passages restants apres reservation:', currentUser.totalVisits - currentUser.usedVisits);
-            
-            // Sauvegarder
+            // Sauvegarder immédiatement
             Storage.save();
-            console.log('Donnees sauvegardees');
             
-            // Reset du formulaire
+            // Réinitialiser le formulaire
             document.getElementById('client-service-select').value = '';
             document.getElementById('client-booking-date').value = '';
             document.getElementById('client-booking-notes').value = '';
@@ -1342,11 +1293,13 @@
             document.getElementById('client-confirm-booking').disabled = true;
             selectedTimeSlot = null;
             
-            // Mise à jour de l'interface
+            // Mettre à jour toute l'interface client
             updateClientDashboard();
             
-            showNotification('Rendez-vous confirme avec succes ! Passage comptabilise.', 'success');
-            console.log('Reservation terminee avec succes');
+            // Notification de succès avec détails
+            var serviceName = serviceNames[service] || service;
+            var dateFormatted = new Date(date).toLocaleDateString('fr-FR');
+            showNotification('Rendez-vous confirme pour le ' + dateFormatted + ' a ' + time + ' (' + serviceName + ')', 'success');
         }
 
         function updateClientAppointmentsList() {
@@ -2119,14 +2072,9 @@
             }
         }
 
-        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Chargement du systeme Dr. Shine...");
             
-            // Ajouter les listeners pour la navigation
-            setupNavigationEvents();
-            
-            // Ajouter les listeners pour le calcul automatique des passages restants
             var totalVisitsField = document.getElementById('total-visits');
             var usedVisitsField = document.getElementById('used-visits');
             
@@ -2145,68 +2093,6 @@
                 showNotification('Systeme Dr. Shine pret ! (Base de donnees vierge)', 'success');
             }
         });
-
-        function setupNavigationEvents() {
-            console.log('Configuration des evenements de navigation');
-            
-            // Navigation des cartes de rôle
-            var clientCard = document.getElementById('client-card');
-            var adminCard = document.getElementById('admin-card');
-            
-            if (clientCard) {
-                clientCard.addEventListener('click', function() {
-                    console.log('Clic sur carte client');
-                    showClientLogin();
-                });
-                console.log('Event listener ajoute pour carte client');
-            }
-            
-            if (adminCard) {
-                adminCard.addEventListener('click', function() {
-                    console.log('Clic sur carte admin');
-                    showAdminLogin();
-                });
-                console.log('Event listener ajoute pour carte admin');
-            }
-            
-            // Boutons de connexion client
-            var clientLoginBtn = document.getElementById('client-login-btn');
-            var clientBackBtn = document.getElementById('client-back-btn');
-            
-            if (clientLoginBtn) {
-                clientLoginBtn.addEventListener('click', function() {
-                    console.log('Clic sur bouton connexion client');
-                    loginClient();
-                });
-            }
-            
-            if (clientBackBtn) {
-                clientBackBtn.addEventListener('click', function() {
-                    console.log('Clic sur bouton retour client');
-                    backToHome();
-                });
-            }
-            
-            // Boutons de connexion admin
-            var adminLoginBtn = document.getElementById('admin-login-btn');
-            var adminBackBtn = document.getElementById('admin-back-btn');
-            
-            if (adminLoginBtn) {
-                adminLoginBtn.addEventListener('click', function() {
-                    console.log('Clic sur bouton connexion admin');
-                    loginAdmin();
-                });
-            }
-            
-            if (adminBackBtn) {
-                adminBackBtn.addEventListener('click', function() {
-                    console.log('Clic sur bouton retour admin');
-                    backToHome();
-                });
-            }
-            
-            console.log('Configuration des evenements terminee');
-        }
     </script>
 </body>
 </html> : '-') + '</small>';
