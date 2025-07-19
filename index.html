@@ -99,12 +99,18 @@
             min-width: 280px;
             max-width: 350px;
             flex: 1;
+            user-select: none;
         }
 
         .role-card:hover {
             transform: translateY(-10px);
             border-color: var(--gold);
             box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .role-card:active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.5);
         }
 
         .role-icon {
@@ -481,13 +487,13 @@
             </div>
             <div class="card-content">
                 <div class="role-selector">
-                    <div class="role-card" id="client-card" style="cursor: pointer;">
-                        <div class="role-icon">👤</div>
+                    <div class="role-card" id="client-card">
+                        <div class="role-icon">USER</div>
                         <div class="role-title">Espace Client</div>
                         <div class="role-description">Gerez vos contrats et reservations</div>
                     </div>
-                    <div class="role-card" id="admin-card" style="cursor: pointer;">
-                        <div class="role-icon">🔧</div>
+                    <div class="role-card" id="admin-card">
+                        <div class="role-icon">ADMIN</div>
                         <div class="role-title">Administration</div>
                         <div class="role-description">Gestion complete Dr. Shine</div>
                     </div>
@@ -511,8 +517,8 @@
                         <input type="password" id="client-password" placeholder="Votre mot de passe">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
+                        <button class="btn btn-gold btn-large" id="client-login-btn">Se connecter</button>
+                        <button class="btn" id="client-back-btn">Retour</button>
                     </div>
                     <div id="client-login-error" class="error-message hidden"></div>
                     <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.9rem; color: #856404;">
@@ -533,7 +539,7 @@
                         <h2 id="client-welcome" style="margin: 0;">Bienvenue Client</h2>
                         <p id="client-info" style="margin: 5px 0 0 0; opacity: 0.9;">Interface client</p>
                     </div>
-                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
+                    <button class="btn btn-warning" id="client-logout-btn">Deconnexion</button>
                 </div>
             </div>
             <div class="card-content">
@@ -633,8 +639,8 @@
                         <input type="password" id="admin-password" placeholder="Mot de passe administrateur">
                     </div>
                     <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Se connecter</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
+                        <button class="btn btn-gold btn-large" id="admin-login-btn">Se connecter</button>
+                        <button class="btn" id="admin-back-btn">Retour</button>
                     </div>
                     <div id="admin-login-error" class="error-message hidden"></div>
                 </div>
@@ -649,7 +655,7 @@
                         <h2 style="margin: 0;">🔧 Administration Dr. Shine</h2>
                         <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complète et analytiques</p>
                     </div>
-                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
+                    <button class="btn btn-warning" id="admin-logout-btn">Deconnexion</button>
                 </div>
             </div>
             <div class="card-content">
@@ -2125,111 +2131,132 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("=== DEMARRAGE SYSTEME DR. SHINE ===");
+            console.log('=== DEMARRAGE DR. SHINE ===');
             
-            // Attacher les événements de navigation directement
+            // Attendre que tout soit bien charge puis attacher les events
+            setTimeout(function() {
+                console.log('INIT: Attachement des event listeners');
+                attachAllEventListeners();
+                
+                // Attacher les événements pour les champs admin
+                var totalVisitsField = document.getElementById('total-visits');
+                var usedVisitsField = document.getElementById('used-visits');
+                
+                if (totalVisitsField && usedVisitsField) {
+                    totalVisitsField.addEventListener('input', updateRemainingVisits);
+                    usedVisitsField.addEventListener('input', updateRemainingVisits);
+                    console.log('EVENTS: Calcul passages attache');
+                }
+                
+                // Test simple de navigation
+                console.log('TEST: Verification elements principaux');
+                console.log('- role-selection:', !!document.getElementById('role-selection'));
+                console.log('- client-login:', !!document.getElementById('client-login'));
+                console.log('- admin-login:', !!document.getElementById('admin-login'));
+                console.log('- client-card:', !!document.getElementById('client-card'));
+                console.log('- admin-card:', !!document.getElementById('admin-card'));
+                
+            }, 100);
+            
+            // Charger les donnees
+            var dataLoaded = Storage.load();
+            if (dataLoaded) {
+                console.log('DONNEES: Chargees -', clients.length, 'clients,', appointments.length, 'RDV');
+            } else {
+                console.log('DONNEES: Base vierge');
+            }
+            
+            console.log('=== SYSTEME PRET ===');
+        });
+
+        function attachAllEventListeners() {
+            console.log('EVENTS: Debut attachement event listeners');
+            
+            // Navigation principale
             var clientCard = document.getElementById('client-card');
             var adminCard = document.getElementById('admin-card');
             
             if (clientCard) {
                 clientCard.addEventListener('click', function() {
-                    console.log('Clic sur carte client détecté');
-                    hideAll();
-                    document.getElementById('client-login').classList.remove('hidden');
-                    showNotification('Interface client activee', 'info');
+                    console.log('CLICK: Carte client cliquee');
+                    showClientLogin();
                 });
-                console.log('Event listener client attaché');
+                console.log('EVENT: Client card attache');
+            } else {
+                console.log('ERREUR: Client card non trouve');
             }
             
             if (adminCard) {
                 adminCard.addEventListener('click', function() {
-                    console.log('Clic sur carte admin détecté');
-                    hideAll();
-                    document.getElementById('admin-login').classList.remove('hidden');
-                    showNotification('Interface admin activee', 'info');
-                });
-                console.log('Event listener admin attaché');
-            }
-            
-            var totalVisitsField = document.getElementById('total-visits');
-            var usedVisitsField = document.getElementById('used-visits');
-            
-            if (totalVisitsField && usedVisitsField) {
-                totalVisitsField.addEventListener('input', updateRemainingVisits);
-                usedVisitsField.addEventListener('input', updateRemainingVisits);
-                console.log('Evenements calcul passages attaches');
-            }
-            
-            var dataLoaded = Storage.load();
-            
-            if (dataLoaded) {
-                console.log("DONNEES CHARGEES - Clients:", clients.length, "- Rendez-vous:", appointments.length);
-                showNotification('Donnees precedentes chargees ! (' + clients.length + ' clients, ' + appointments.length + ' RDV)', 'success');
-            } else {
-                console.log("AUCUNE DONNEE - Demarrage avec base vierge");
-                showNotification('Systeme Dr. Shine pret ! (Base de donnees vierge)', 'success');
-            }
-            
-            console.log("=== SYSTEME PRET ===");
-        });
-
-        function setupNavigationEvents() {
-            // S'assurer que les fonctions sont disponibles globalement
-            window.showClientLogin = showClientLogin;
-            window.showAdminLogin = showAdminLogin;
-            window.backToHome = backToHome;
-            window.loginClient = loginClient;
-            window.loginAdmin = loginAdmin;
-            window.logout = logout;
-            window.selectTimeSlot = selectTimeSlot;
-            window.confirmClientBooking = confirmClientBooking;
-            
-            console.log('Fonctions de navigation exposees globalement');
-            
-            // Vérifier que les éléments de navigation existent
-            var roleSelection = document.getElementById('role-selection');
-            var clientLogin = document.getElementById('client-login');
-            var adminLogin = document.getElementById('admin-login');
-            
-            console.log('Elements de navigation:', {
-                roleSelection: !!roleSelection,
-                clientLogin: !!clientLogin,
-                adminLogin: !!adminLogin
-            });
-            
-            // Attacher aussi des event listeners comme backup
-            var clientCard = document.querySelector('.role-card:first-child');
-            var adminCard = document.querySelector('.role-card:last-child');
-            
-            if (clientCard) {
-                clientCard.addEventListener('click', function(e) {
-                    console.log('Click detect sur carte client via addEventListener');
-                    e.preventDefault();
-                    showClientLogin();
-                });
-                console.log('Event listener attache sur carte client');
-            } else {
-                console.log('ERREUR: Carte client non trouvee');
-            }
-            
-            if (adminCard) {
-                adminCard.addEventListener('click', function(e) {
-                    console.log('Click detect sur carte admin via addEventListener');
-                    e.preventDefault();
+                    console.log('CLICK: Carte admin cliquee');
                     showAdminLogin();
                 });
-                console.log('Event listener attache sur carte admin');
+                console.log('EVENT: Admin card attache');
             } else {
-                console.log('ERREUR: Carte admin non trouvee');
+                console.log('ERREUR: Admin card non trouve');
             }
             
-            console.log('Event listeners navigation attaches');
+            // Boutons de connexion
+            var clientLoginBtn = document.getElementById('client-login-btn');
+            var adminLoginBtn = document.getElementById('admin-login-btn');
             
-            // Test des fonctions de navigation
-            console.log('Test des fonctions de navigation:');
-            console.log('- showClientLogin disponible:', typeof showClientLogin === 'function');
-            console.log('- showAdminLogin disponible:', typeof showAdminLogin === 'function');
-            console.log('- backToHome disponible:', typeof backToHome === 'function');
+            if (clientLoginBtn) {
+                clientLoginBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton login client clique');
+                    loginClient();
+                });
+                console.log('EVENT: Bouton login client attache');
+            }
+            
+            if (adminLoginBtn) {
+                adminLoginBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton login admin clique');
+                    loginAdmin();
+                });
+                console.log('EVENT: Bouton login admin attache');
+            }
+            
+            // Boutons retour
+            var clientBackBtn = document.getElementById('client-back-btn');
+            var adminBackBtn = document.getElementById('admin-back-btn');
+            
+            if (clientBackBtn) {
+                clientBackBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton retour client clique');
+                    backToHome();
+                });
+                console.log('EVENT: Bouton retour client attache');
+            }
+            
+            if (adminBackBtn) {
+                adminBackBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton retour admin clique');
+                    backToHome();
+                });
+                console.log('EVENT: Bouton retour admin attache');
+            }
+            
+            // Boutons deconnexion
+            var clientLogoutBtn = document.getElementById('client-logout-btn');
+            var adminLogoutBtn = document.getElementById('admin-logout-btn');
+            
+            if (clientLogoutBtn) {
+                clientLogoutBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton logout client clique');
+                    logout();
+                });
+                console.log('EVENT: Bouton logout client attache');
+            }
+            
+            if (adminLogoutBtn) {
+                adminLogoutBtn.addEventListener('click', function() {
+                    console.log('CLICK: Bouton logout admin clique');
+                    logout();
+                });
+                console.log('EVENT: Bouton logout admin attache');
+            }
+            
+            console.log('EVENTS: Fin attachement event listeners');
         }
     </script>
 </body>
