@@ -2030,23 +2030,17 @@
         });
 
 // ========================================
-// 🔧 SYSTÈME QR CODE COMPLET POUR DR. SHINE - VERSION CORRIGÉE
-// INTÉGRATION DIRECTE DANS LE HTML EXISTANT
-// URL: https://francoisfreddyateba.github.io/dr-shine-portal/
+// 🔧 SYSTÈME QR SIMPLE POUR DR. SHINE
+// VERSION MINIMALISTE - SANS SUPERFLU
 // ========================================
 
-// Configuration système QR
 var DR_SHINE_CONFIG = {
     baseURL: 'https://francoisfreddyateba.github.io/dr-shine-portal/',
-    qrExpireDays: 7,
-    version: '1.0'
+    qrExpireDays: 7
 };
 
-var qrSystemActive = false;
-var currentQRData = null;
-
 // ========================================
-// 1. DÉTECTION ET CONNEXION QR AUTOMATIQUE
+// 1. DÉTECTION CONNEXION QR
 // ========================================
 
 function detectQRLogin() {
@@ -2056,18 +2050,11 @@ function detectQRLogin() {
     if (loginData) {
         try {
             var decodedData = JSON.parse(atob(loginData));
-            
-            if (decodedData.type === 'drshine_client_login') {
-                if (decodedData.expires > Date.now()) {
-                    return decodedData;
-                } else {
-                    showNotification('⚠️ Ce QR code a expiré. Contactez Dr. Shine pour un nouveau code.', 'error');
-                    return null;
-                }
+            if (decodedData.type === 'drshine_client_login' && decodedData.expires > Date.now()) {
+                return decodedData;
             }
         } catch (e) {
-            showNotification('❌ QR code invalide', 'error');
-            return null;
+            showNotification('QR code invalide', 'error');
         }
     }
     return null;
@@ -2079,17 +2066,11 @@ function performQRLogin(qrData) {
     currentUser = qrData.client;
     if (qrData.appointments) appointments = qrData.appointments;
     
-    localStorage.setItem('drshine_qr_session', JSON.stringify({
-        client: currentUser,
-        appointments: appointments,
-        loginTime: Date.now()
-    }));
-    
     hideAll();
     document.getElementById('client-dashboard').classList.remove('hidden');
     updateClientDashboard();
     
-    showNotification('✅ Connexion automatique réussie ! Bienvenue ' + currentUser.name, 'success');
+    showNotification('Connexion réussie ! Bienvenue ' + currentUser.name, 'success');
     
     if (window.history && window.history.replaceState) {
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -2099,7 +2080,7 @@ function performQRLogin(qrData) {
 }
 
 // ========================================
-// 2. GÉNÉRATION DE QR CODES INDIVIDUELS
+// 2. GÉNÉRATION QR SIMPLE
 // ========================================
 
 function generateQRForClient(clientId) {
@@ -2112,7 +2093,7 @@ function generateQRForClient(clientId) {
     }
     
     if (!client) {
-        showNotification('❌ Client introuvable', 'error');
+        showNotification('Client introuvable', 'error');
         return;
     }
     
@@ -2134,94 +2115,45 @@ function generateQRForClient(clientId) {
     var encodedData = btoa(JSON.stringify(loginData));
     var qrUrl = DR_SHINE_CONFIG.baseURL + '?login=' + encodedData;
     
-    var qrWindow = window.open('', '_blank', 'width=700,height=800');
-    
-    var remaining = client.totalVisits - client.usedVisits;
-    var expiryDate = new Date(Date.now() + DR_SHINE_CONFIG.qrExpireDays*24*60*60*1000);
+    var qrWindow = window.open('', '_blank', 'width=500,height=600');
     
     var htmlContent = '<!DOCTYPE html>';
-    htmlContent += '<html lang="fr">';
+    htmlContent += '<html>';
     htmlContent += '<head>';
     htmlContent += '<meta charset="UTF-8">';
-    htmlContent += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-    htmlContent += '<title>QR Code - ' + client.name + ' - Dr. Shine</title>';
+    htmlContent += '<title>QR Code - ' + client.name + '</title>';
     htmlContent += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>';
     htmlContent += '<style>';
-    htmlContent += 'body { font-family: "Segoe UI", Arial, sans-serif; text-align: center; padding: 20px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; margin: 0; }';
-    htmlContent += '.container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); max-width: 600px; margin: 0 auto; border: 3px solid #D4AF37; }';
-    htmlContent += '.header { color: #1e3c72; margin-bottom: 30px; }';
-    htmlContent += '.header h1 { font-size: 2.5rem; margin-bottom: 10px; color: #D4AF37; }';
-    htmlContent += '.btn { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; margin: 8px; text-decoration: none; display: inline-block; font-weight: 600; transition: all 0.3s; }';
-    htmlContent += '.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4); }';
-    htmlContent += '.btn-success { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }';
-    htmlContent += '.info-box { background: linear-gradient(135deg, #f0f4ff 0%, white 100%); padding: 25px; border-radius: 15px; margin: 25px 0; border: 2px solid #e9ecef; }';
-    htmlContent += '.qr-container { background: #f8f9fa; padding: 30px; border-radius: 20px; margin: 30px 0; border: 3px solid #D4AF37; }';
-    htmlContent += '#qr-canvas { border: 3px solid #1e3c72; border-radius: 15px; margin: 20px 0; }';
-    htmlContent += '.instructions { background: #fff3cd; border: 2px solid #ffc107; border-radius: 15px; padding: 25px; margin: 25px 0; }';
-    htmlContent += '.instructions h4 { color: #856404; margin-top: 0; }';
-    htmlContent += '.instructions ol { text-align: left; color: #856404; font-weight: 500; }';
-    htmlContent += '.client-info { background: #e8f5e8; border: 2px solid #28a745; border-radius: 15px; padding: 20px; margin: 20px 0; }';
-    htmlContent += '.expiry-info { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; padding: 15px; border-radius: 10px; font-weight: bold; margin: 20px 0; }';
-    htmlContent += '@media print { body { background: white; } .btn { display: none; } }';
+    htmlContent += 'body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background: #f5f5f5; margin: 0; }';
+    htmlContent += '.container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }';
+    htmlContent += 'h1 { color: #1e3c72; margin-bottom: 30px; font-size: 1.8rem; }';
+    htmlContent += '#qr-canvas { border: 2px solid #1e3c72; border-radius: 10px; margin: 20px 0; }';
+    htmlContent += '.btn { background: #1e3c72; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin: 8px; text-decoration: none; display: inline-block; font-weight: 500; }';
+    htmlContent += '.btn:hover { background: #2a5298; }';
+    htmlContent += '@media print { .btn { display: none; } }';
     htmlContent += '</style>';
     htmlContent += '</head>';
     htmlContent += '<body>';
     htmlContent += '<div class="container">';
-    htmlContent += '<div class="header">';
     htmlContent += '<h1>Dr. Shine</h1>';
-    htmlContent += '<h2>QR Code de Connexion</h2>';
-    htmlContent += '<h3>' + client.name + '</h3>';
-    htmlContent += '</div>';
-    htmlContent += '<div class="qr-container">';
+    htmlContent += '<h2>' + client.name + '</h2>';
     htmlContent += '<canvas id="qr-canvas"></canvas>';
-    htmlContent += '<p style="color: #1e3c72; font-weight: bold; margin-top: 15px;">Scannez ce code avec votre téléphone</p>';
-    htmlContent += '</div>';
-    htmlContent += '<div class="client-info">';
-    htmlContent += '<h3 style="margin-top: 0; color: #28a745;">📋 Vos informations de connexion</h3>';
-    htmlContent += '<p><strong>📧 Email :</strong> ' + client.email + '</p>';
-    htmlContent += '<p><strong>🔑 Mot de passe :</strong> ' + client.password + '</p>';
-    htmlContent += '<p><strong>💰 Contrat :</strong> ' + client.contractAmount + '$ (' + client.totalVisits + ' passages)</p>';
-    htmlContent += '<p><strong>📊 Restant :</strong> ' + remaining + ' passages</p>';
-    htmlContent += '</div>';
-    htmlContent += '<div class="instructions">';
-    htmlContent += '<h4>📱 Comment utiliser ce QR code :</h4>';
-    htmlContent += '<ol>';
-    htmlContent += '<li><strong>Ouvrez l\'appareil photo</strong> de votre téléphone</li>';
-    htmlContent += '<li><strong>Pointez vers le QR code</strong> ci-dessus</li>';
-    htmlContent += '<li><strong>Tapez sur le lien</strong> qui apparaît à l\'écran</li>';
-    htmlContent += '<li><strong>Vous serez connecté automatiquement</strong> à votre espace !</li>';
-    htmlContent += '</ol>';
-    htmlContent += '<p style="margin-bottom: 0;"><strong>💡 Astuce :</strong> Sauvegardez ce QR code dans vos photos pour un accès rapide !</p>';
-    htmlContent += '</div>';
-    htmlContent += '<div class="expiry-info">';
-    htmlContent += '⚠️ <strong>Attention :</strong> Ce QR code expire le ' + expiryDate.toLocaleDateString('fr-FR') + ' à ' + expiryDate.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
-    htmlContent += '</div>';
-    htmlContent += '<div style="margin-top: 40px;">';
-    htmlContent += '<button class="btn" onclick="window.print()">🖨️ Imprimer</button>';
-    htmlContent += '<button class="btn" onclick="downloadQR()">💾 Télécharger QR</button>';
-    
-    var emailSubject = encodeURIComponent('Votre QR code Dr. Shine');
-    var emailBody = encodeURIComponent('Bonjour ' + client.name + ',\n\nBonjour ! Voici votre QR code personnel pour accéder à votre espace client Dr. Shine.\n\n🔗 Lien direct : ' + qrUrl + '\n\n📱 Ou scannez le QR code en pièce jointe avec votre téléphone.\n\n✅ Vous serez connecté automatiquement !\n\nCordialement,\nL\'équipe Dr. Shine');
-    
-    htmlContent += '<a class="btn btn-success" href="mailto:' + client.email + '?subject=' + emailSubject + '&body=' + emailBody + '">📧 Envoyer par Email</a>';
-    htmlContent += '</div>';
+    htmlContent += '<p>Scannez avec votre téléphone</p>';
+    htmlContent += '<button class="btn" onclick="window.print()">Imprimer</button>';
+    htmlContent += '<button class="btn" onclick="downloadQR()">Télécharger</button>';
     htmlContent += '</div>';
     htmlContent += '<script>';
-    htmlContent += 'var qr;';
     htmlContent += 'window.onload = function() {';
-    htmlContent += 'qr = new QRious({';
+    htmlContent += 'new QRious({';
     htmlContent += 'element: document.getElementById("qr-canvas"),';
     htmlContent += 'value: "' + qrUrl + '",';
-    htmlContent += 'size: 350,';
-    htmlContent += 'level: "M",';
-    htmlContent += 'background: "white",';
-    htmlContent += 'foreground: "#1e3c72"';
+    htmlContent += 'size: 300';
     htmlContent += '});';
     htmlContent += '};';
     htmlContent += 'function downloadQR() {';
     htmlContent += 'var canvas = document.getElementById("qr-canvas");';
     htmlContent += 'var link = document.createElement("a");';
-    htmlContent += 'link.download = "QR_' + client.name.replace(/[^a-z0-9]/gi, '_') + '_DrShine.png";';
+    htmlContent += 'link.download = "QR_' + client.name.replace(/[^a-z0-9]/gi, '_') + '.png";';
     htmlContent += 'link.href = canvas.toDataURL();';
     htmlContent += 'link.click();';
     htmlContent += '}';
@@ -2232,260 +2164,81 @@ function generateQRForClient(clientId) {
     qrWindow.document.write(htmlContent);
     qrWindow.document.close();
     
-    showNotification('✅ QR code généré pour ' + client.name, 'success');
+    showNotification('QR code généré pour ' + client.name, 'success');
 }
 
 // ========================================
-// 3. INTERFACE DE GESTION QR DANS L'ADMIN
+// 3. INTERFACE QR SIMPLE
 // ========================================
 
 function showQRManagement() {
     if (clients.length === 0) {
-        showNotification('❌ Aucun client disponible. Créez d\'abord des clients.', 'error');
+        showNotification('Aucun client disponible', 'error');
         return;
     }
     
     var overlay = document.createElement('div');
-    overlay.id = 'qr-management-overlay';
+    overlay.id = 'qr-overlay';
     overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px;';
     
-    var activeClients = 0;
-    for (var i = 0; i < clients.length; i++) {
-        if ((clients[i].totalVisits - clients[i].usedVisits) > 0) {
-            activeClients++;
-        }
-    }
+    var html = '<div class="main-card" style="max-width: 800px; margin: 20px auto;">';
+    html += '<div class="card-header">';
+    html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
+    html += '<h2 style="margin: 0;">QR Codes Clients</h2>';
+    html += '<button class="btn btn-warning" onclick="closeQROverlay()">Fermer</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="card-content">';
     
-    var overlayHTML = '<div class="main-card" style="max-width: 1000px; margin: 20px auto;">';
-    overlayHTML += '<div class="card-header">';
-    overlayHTML += '<div style="display: flex; justify-content: space-between; align-items: center;">';
-    overlayHTML += '<h2 style="margin: 0;">📱 Gestion des QR Codes</h2>';
-    overlayHTML += '<button class="btn btn-warning" onclick="closeQRManagement()">❌ Fermer</button>';
-    overlayHTML += '</div>';
-    overlayHTML += '</div>';
-    overlayHTML += '<div class="card-content">';
+    html += '<div style="text-align: center; margin: 20px 0;">';
+    html += '<button class="btn btn-success" onclick="generateAllQRs()">Générer tous les QR codes</button>';
+    html += '</div>';
     
-    // Statistiques
-    overlayHTML += '<div class="dashboard-stats" style="margin-bottom: 30px;">';
-    overlayHTML += '<div class="stat-card">';
-    overlayHTML += '<div class="stat-number">' + clients.length + '</div>';
-    overlayHTML += '<div class="stat-label">Clients Total</div>';
-    overlayHTML += '</div>';
-    overlayHTML += '<div class="stat-card" style="background: var(--success);">';
-    overlayHTML += '<div class="stat-number">' + activeClients + '</div>';
-    overlayHTML += '<div class="stat-label">Clients Actifs</div>';
-    overlayHTML += '</div>';
-    overlayHTML += '<div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">';
-    overlayHTML += '<div class="stat-number">' + DR_SHINE_CONFIG.qrExpireDays + 'j</div>';
-    overlayHTML += '<div class="stat-label">Durée QR</div>';
-    overlayHTML += '</div>';
-    overlayHTML += '</div>';
-    
-    // Instructions
-    overlayHTML += '<div style="background: #e7f3ff; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 2px solid var(--info);">';
-    overlayHTML += '<h3 style="color: var(--primary-blue); margin-bottom: 15px;">📋 Comment utiliser les QR codes :</h3>';
-    overlayHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">';
-    overlayHTML += '<div><h4 style="color: var(--primary-blue);">1️⃣ Génération</h4><p>Créez un QR code personnalisé pour chaque client</p></div>';
-    overlayHTML += '<div><h4 style="color: var(--primary-blue);">2️⃣ Envoi</h4><p>Envoyez le QR par email, SMS ou imprimez-le</p></div>';
-    overlayHTML += '<div><h4 style="color: var(--primary-blue);">3️⃣ Scan</h4><p>Le client scanne avec son téléphone</p></div>';
-    overlayHTML += '<div><h4 style="color: var(--primary-blue);">4️⃣ Connexion</h4><p>Accès automatique à son espace client</p></div>';
-    overlayHTML += '</div>';
-    overlayHTML += '</div>';
-    
-    // Actions rapides
-    overlayHTML += '<div style="text-align: center; margin: 30px 0;">';
-    overlayHTML += '<button class="btn btn-success btn-large" onclick="generateAllQRCodes()" style="margin: 10px;">📦 Générer TOUS les QR codes</button>';
-    overlayHTML += '<button class="btn btn-info btn-large" onclick="testQRSystem()" style="margin: 10px;">🔍 Tester le système QR</button>';
-    overlayHTML += '</div>';
-    
-    // Liste des clients
-    overlayHTML += '<div class="data-table">';
-    overlayHTML += '<h3 class="section-title">👥 Clients et QR Codes</h3>';
-    overlayHTML += generateQRClientsTable();
-    overlayHTML += '</div>';
-    
-    overlayHTML += '</div>';
-    overlayHTML += '</div>';
-    
-    overlay.innerHTML = overlayHTML;
-    document.body.appendChild(overlay);
-}
-
-function generateQRClientsTable() {
-    var html = '<div style="overflow-x: auto;"><table class="table"><thead><tr><th>Client</th><th>Contrat</th><th>Statut</th><th>Actions QR</th></tr></thead><tbody>';
+    html += '<div class="data-table">';
+    html += '<table class="table">';
+    html += '<thead><tr><th>Client</th><th>Email</th><th>Action</th></tr></thead>';
+    html += '<tbody>';
     
     for (var i = 0; i < clients.length; i++) {
         var client = clients[i];
-        var remaining = client.totalVisits - client.usedVisits;
-        var progress = ((client.usedVisits / client.totalVisits) * 100).toFixed(0);
-        var statusClass = remaining <= 0 ? 'status-pending' : remaining <= 2 ? 'status-confirmed' : 'status-completed';
-        var statusText = remaining <= 0 ? 'Terminé' : remaining <= 2 ? 'Critique' : 'Actif';
-        var progressColor = remaining <= 2 ? '#dc3545' : remaining <= 5 ? '#ffc107' : '#28a745';
-        
         html += '<tr>';
-        html += '<td>';
-        html += '<strong>' + client.name + '</strong><br>';
-        html += '<small style="color: var(--dark-gray);">' + client.email + '</small><br>';
-        html += '<small style="color: var(--dark-gray);">' + client.phone + '</small>';
-        html += '</td>';
-        html += '<td>';
-        html += '<strong>' + client.contractAmount + '$</strong><br>';
-        html += '<small>' + client.usedVisits + '/' + client.totalVisits + ' passages</small><br>';
-        html += '<div style="width: 100%; height: 6px; background: var(--light-gray); border-radius: 3px; margin-top: 5px;">';
-        html += '<div style="height: 100%; background: ' + progressColor + '; width: ' + progress + '%; border-radius: 3px;"></div>';
-        html += '</div>';
-        html += '</td>';
-        html += '<td>';
-        html += '<span class="status-chip ' + statusClass + '">' + statusText + '</span><br>';
-        html += '<small style="color: var(--dark-gray);">' + remaining + ' restants</small>';
-        html += '</td>';
-        html += '<td>';
-        html += '<button class="btn btn-success btn-small" onclick="generateQRForClient(' + client.id + ')" style="margin: 2px; width: 100%;">📱 Générer QR</button>';
-        html += '<button class="btn btn-info btn-small" onclick="sendQREmail(' + client.id + ')" style="margin: 2px; width: 100%;">📧 Envoyer Email</button>';
-        html += '</td>';
+        html += '<td><strong>' + client.name + '</strong></td>';
+        html += '<td>' + client.email + '</td>';
+        html += '<td><button class="btn btn-success btn-small" onclick="generateQRForClient(' + client.id + ')">Générer QR</button></td>';
         html += '</tr>';
     }
     
-    html += '</tbody></table></div>';
-    return html;
+    html += '</tbody></table>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
 }
 
-function sendQREmail(clientId) {
-    var client = null;
-    for (var i = 0; i < clients.length; i++) {
-        if (clients[i].id === clientId) {
-            client = clients[i];
-            break;
-        }
-    }
-    if (!client) return;
-    
-    var clientAppointments = [];
-    for (var j = 0; j < appointments.length; j++) {
-        if (appointments[j].clientId === clientId) {
-            clientAppointments.push(appointments[j]);
-        }
-    }
-    
-    var loginData = {
-        type: 'drshine_client_login',
-        client: client,
-        appointments: clientAppointments,
-        timestamp: Date.now(),
-        expires: Date.now() + (DR_SHINE_CONFIG.qrExpireDays * 24 * 60 * 60 * 1000)
-    };
-    
-    var encodedData = btoa(JSON.stringify(loginData));
-    var qrUrl = DR_SHINE_CONFIG.baseURL + '?login=' + encodedData;
-    var expiryDate = new Date(Date.now() + DR_SHINE_CONFIG.qrExpireDays*24*60*60*1000);
-    
-    var subject = encodeURIComponent('Votre accès client Dr. Shine - ' + client.name);
-    var body = encodeURIComponent('Bonjour ' + client.name + ',\n\nVoici votre lien d\'accès personnel à votre espace client Dr. Shine :\n\n🔗 LIEN DIRECT : ' + qrUrl + '\n\n📱 AVEC QR CODE :\n1. Demandez votre QR code personnalisé\n2. Scannez-le avec votre téléphone\n3. Connexion automatique !\n\n📋 VOS INFORMATIONS :\n• Email : ' + client.email + '\n• Mot de passe : ' + client.password + '\n• Contrat : ' + client.contractAmount + '$ (' + client.totalVisits + ' passages)\n• Passages restants : ' + (client.totalVisits - client.usedVisits) + '\n\n⚠️ IMPORTANT :\n• Ce lien expire le ' + expiryDate.toLocaleDateString('fr-FR') + '\n• Ne partagez pas ce lien avec d\'autres personnes\n• Pour tout problème, contactez-nous\n\nCordialement,\nL\'équipe Dr. Shine\n\n---\nDr. Shine - Service de nettoyage professionnel\nWeb: ' + DR_SHINE_CONFIG.baseURL + '\nEmail: contact@drshine.com\nTéléphone: 819-555-0000');
-    
-    var mailtoLink = 'mailto:' + client.email + '?subject=' + subject + '&body=' + body;
-    window.open(mailtoLink);
-    
-    showNotification('📧 Email préparé pour ' + client.name, 'success');
-}
-
-function testQRSystem() {
-    var testUrl = DR_SHINE_CONFIG.baseURL + '?test=qr_system';
-    
-    var testWindow = window.open('', '_blank', 'width=600,height=400');
-    var testHTML = '<html>';
-    testHTML += '<head><title>Test Système QR - Dr. Shine</title></head>';
-    testHTML += '<body style="font-family: Arial, sans-serif; padding: 30px; text-align: center; background: #f5f5f5;">';
-    testHTML += '<div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; margin: 0 auto;">';
-    testHTML += '<h2 style="color: #1e3c72;">🔍 Test du Système QR</h2>';
-    testHTML += '<div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0;">';
-    testHTML += '<h3 style="color: #28a745; margin-top: 0;">✅ Configuration Système</h3>';
-    testHTML += '<p><strong>URL de base :</strong><br>' + DR_SHINE_CONFIG.baseURL + '</p>';
-    testHTML += '<p><strong>Durée QR :</strong> ' + DR_SHINE_CONFIG.qrExpireDays + ' jours</p>';
-    testHTML += '<p><strong>Version :</strong> ' + DR_SHINE_CONFIG.version + '</p>';
-    testHTML += '</div>';
-    testHTML += '<div style="background: #e7f3ff; padding: 20px; border-radius: 10px; margin: 20px 0;">';
-    testHTML += '<h3 style="color: #007bff; margin-top: 0;">📊 Statistiques</h3>';
-    testHTML += '<p><strong>Clients total :</strong> ' + clients.length + '</p>';
-    
-    var activeClients = 0;
-    for (var i = 0; i < clients.length; i++) {
-        if ((clients[i].totalVisits - clients[i].usedVisits) > 0) {
-            activeClients++;
-        }
-    }
-    
-    testHTML += '<p><strong>Clients actifs :</strong> ' + activeClients + '</p>';
-    testHTML += '<p><strong>Rendez-vous :</strong> ' + appointments.length + '</p>';
-    testHTML += '</div>';
-    testHTML += '<div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0;">';
-    testHTML += '<h3 style="color: #856404; margin-top: 0;">🎯 URL de Test</h3>';
-    testHTML += '<p style="font-family: monospace; background: #f8f9fa; padding: 10px; border-radius: 5px; word-break: break-all;">' + testUrl + '</p>';
-    testHTML += '</div>';
-    testHTML += '<button onclick="window.close()" style="background: #007bff; color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer;">✅ Test Réussi - Fermer</button>';
-    testHTML += '</div>';
-    testHTML += '</body>';
-    testHTML += '</html>';
-    
-    testWindow.document.write(testHTML);
-    testWindow.document.close();
-    
-    showNotification('🔍 Système QR testé - Configuration OK !', 'success');
-}
-
-function closeQRManagement() {
-    var overlay = document.getElementById('qr-management-overlay');
+function closeQROverlay() {
+    var overlay = document.getElementById('qr-overlay');
     if (overlay) overlay.remove();
 }
 
-// ========================================
-// 4. GÉNÉRATION DE TOUS LES QR CODES
-// ========================================
-
-function generateAllQRCodes() {
-    if (clients.length === 0) {
-        showNotification('❌ Aucun client à traiter', 'error');
-        return;
-    }
+function generateAllQRs() {
+    if (clients.length === 0) return;
     
-    showNotification('🔄 Génération de ' + clients.length + ' QR codes...', 'info');
+    var allWindow = window.open('', '_blank', 'width=800,height=600');
     
-    var allQRWindow = window.open('', '_blank', 'width=900,height=700');
+    var html = '<!DOCTYPE html>';
+    html += '<html><head><title>QR Codes - Dr. Shine</title>';
+    html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>';
+    html += '<style>';
+    html += 'body { font-family: Arial, sans-serif; padding: 20px; }';
+    html += '.qr-item { text-align: center; margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 10px; page-break-after: always; }';
+    html += 'canvas { border: 2px solid #333; border-radius: 5px; }';
+    html += '</style>';
+    html += '</head><body>';
+    html += '<h1 style="text-align: center;">QR Codes Dr. Shine</h1>';
     
-    var htmlContent = '<!DOCTYPE html>';
-    htmlContent += '<html lang="fr">';
-    htmlContent += '<head>';
-    htmlContent += '<meta charset="UTF-8">';
-    htmlContent += '<title>Tous les QR Codes - Dr. Shine</title>';
-    htmlContent += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>';
-    htmlContent += '<style>';
-    htmlContent += 'body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }';
-    htmlContent += '.header { text-align: center; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; }';
-    htmlContent += '.header h1 { font-size: 2.5rem; margin: 0; color: #D4AF37; }';
-    htmlContent += '.qr-page { background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 2px solid #D4AF37; page-break-after: always; }';
-    htmlContent += '.client-header { text-align: center; margin-bottom: 25px; color: #1e3c72; }';
-    htmlContent += '.client-header h2 { font-size: 2rem; margin: 0 0 5px 0; }';
-    htmlContent += '.qr-section { text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 15px; }';
-    htmlContent += 'canvas { border: 3px solid #1e3c72; border-radius: 10px; }';
-    htmlContent += '.client-info { background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #28a745; }';
-    htmlContent += '.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }';
-    htmlContent += '.info-item { display: flex; justify-content: space-between; padding: 8px 0; }';
-    htmlContent += '.label { font-weight: bold; color: #28a745; }';
-    htmlContent += '.value { color: #333; }';
-    htmlContent += '.instructions { background: #fff3cd; padding: 20px; border-radius: 10px; border: 2px solid #ffc107; }';
-    htmlContent += '.instructions h4 { color: #856404; margin-top: 0; }';
-    htmlContent += '.instructions ol { color: #856404; margin: 0; }';
-    htmlContent += '@media print { body { background: white; } .qr-page { page-break-after: always; box-shadow: none; } }';
-    htmlContent += '</style>';
-    htmlContent += '</head>';
-    htmlContent += '<body>';
-    htmlContent += '<div class="header">';
-    htmlContent += '<h1>Dr. Shine</h1>';
-    htmlContent += '<p>QR Codes de Connexion Clients</p>';
-    htmlContent += '<p>Générés le ' + new Date().toLocaleDateString('fr-FR') + ' à ' + new Date().toLocaleTimeString('fr-FR') + '</p>';
-    htmlContent += '<p>Total : ' + clients.length + ' clients</p>';
-    htmlContent += '</div>';
-    
-    var qrScripts = 'window.onload = function() {';
+    var scripts = 'window.onload = function() {';
     
     for (var i = 0; i < clients.length; i++) {
         var client = clients[i];
@@ -2506,158 +2259,66 @@ function generateAllQRCodes() {
         
         var encodedData = btoa(JSON.stringify(loginData));
         var qrUrl = DR_SHINE_CONFIG.baseURL + '?login=' + encodedData;
-        var expiryDate = new Date(Date.now() + DR_SHINE_CONFIG.qrExpireDays*24*60*60*1000);
-        var remaining = client.totalVisits - client.usedVisits;
         
-        htmlContent += '<div class="qr-page">';
-        htmlContent += '<div class="client-header">';
-        htmlContent += '<h2>' + client.name + '</h2>';
-        htmlContent += '<p>Client Dr. Shine - QR Code Personnel</p>';
-        htmlContent += '</div>';
-        htmlContent += '<div class="qr-section">';
-        htmlContent += '<canvas id="qr-' + client.id + '" width="300" height="300"></canvas>';
-        htmlContent += '</div>';
-        htmlContent += '<div class="client-info">';
-        htmlContent += '<div class="info-grid">';
-        htmlContent += '<div class="info-item"><span class="label">📧 Email :</span><span class="value">' + client.email + '</span></div>';
-        htmlContent += '<div class="info-item"><span class="label">🔑 Mot de passe :</span><span class="value">' + client.password + '</span></div>';
-        htmlContent += '<div class="info-item"><span class="label">📞 Téléphone :</span><span class="value">' + client.phone + '</span></div>';
-        htmlContent += '<div class="info-item"><span class="label">💰 Contrat :</span><span class="value">' + client.contractAmount + '$ (' + client.totalVisits + ' passages)</span></div>';
-        htmlContent += '<div class="info-item"><span class="label">📊 Restants :</span><span class="value">' + remaining + ' passages</span></div>';
-        htmlContent += '<div class="info-item"><span class="label">⏰ Expire le :</span><span class="value">' + expiryDate.toLocaleDateString('fr-FR') + '</span></div>';
-        htmlContent += '</div>';
-        htmlContent += '</div>';
-        htmlContent += '<div class="instructions">';
-        htmlContent += '<h4>📱 Instructions d\'utilisation</h4>';
-        htmlContent += '<ol>';
-        htmlContent += '<li>Ouvrez l\'appareil photo de votre téléphone</li>';
-        htmlContent += '<li>Pointez vers le QR code ci-dessus</li>';
-        htmlContent += '<li>Tapez sur le lien qui apparaît</li>';
-        htmlContent += '<li>Vous serez connecté automatiquement !</li>';
-        htmlContent += '</ol>';
-        htmlContent += '</div>';
-        htmlContent += '</div>';
+        html += '<div class="qr-item">';
+        html += '<h2>' + client.name + '</h2>';
+        html += '<canvas id="qr-' + client.id + '" width="250" height="250"></canvas>';
+        html += '<p>' + client.email + '</p>';
+        html += '</div>';
         
-        qrScripts += 'new QRious({ element: document.getElementById("qr-' + client.id + '"), value: "' + qrUrl + '", size: 300, level: "M", background: "white", foreground: "#1e3c72" });';
+        scripts += 'new QRious({ element: document.getElementById("qr-' + client.id + '"), value: "' + qrUrl + '", size: 250 });';
     }
     
-    qrScripts += 'setTimeout(function() { if(confirm("Tous les QR codes ont été générés !\\n\\nVoulez-vous imprimer maintenant ?")) { window.print(); } }, 2000); };';
+    scripts += 'setTimeout(function() { window.print(); }, 1000); };';
     
-    htmlContent += '<script>' + qrScripts + '</script>';
-    htmlContent += '</body>';
-    htmlContent += '</html>';
+    html += '<script>' + scripts + '</script>';
+    html += '</body></html>';
     
-    allQRWindow.document.write(htmlContent);
-    allQRWindow.document.close();
+    allWindow.document.write(html);
+    allWindow.document.close();
     
-    setTimeout(function() {
-        showNotification('✅ ' + clients.length + ' QR codes générés avec succès !', 'success');
-    }, 1000);
+    showNotification('QR codes générés', 'success');
 }
 
 // ========================================
-// 5. INTÉGRATION DANS LE SYSTÈME EXISTANT
+// 4. INTÉGRATION
 // ========================================
 
-// Améliorer l'initialisation existante
-var originalDOMContentLoaded = document.addEventListener('DOMContentLoaded', function() {});
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("🚀 Démarrage Dr. Shine avec système QR...");
-    
-    // Vérifier connexion QR en premier
-    var qrLoginData = detectQRLogin();
-    if (qrLoginData) {
-        console.log("🔍 Connexion QR détectée pour:", qrLoginData.client.name);
+    // Vérifier connexion QR
+    var qrData = detectQRLogin();
+    if (qrData) {
         setTimeout(function() {
-            performQRLogin(qrLoginData);
+            performQRLogin(qrData);
         }, 1000);
         return;
     }
     
-    // Chargement normal des données
-    var dataLoaded = Storage.load();
-    
-    if (dataLoaded) {
-        console.log("📂 Données chargées:", clients.length + " clients, " + appointments.length + " RDV");
-        showNotification('Données chargées ! (' + clients.length + ' clients, ' + appointments.length + ' RDV)', 'success');
-    } else {
-        console.log("🆕 Nouvelle installation - Base vierge");
-        showNotification('Système Dr. Shine prêt ! QR Code activé ✅', 'success');
-    }
-    
-    // Ajouter les boutons QR après chargement
+    // Ajouter boutons après chargement
     setTimeout(function() {
         addQRButtons();
-        qrSystemActive = true;
-        console.log("✅ Système QR activé - URL:", DR_SHINE_CONFIG.baseURL);
     }, 2000);
 });
 
-// Ajouter les boutons QR dans l'interface admin
 function addQRButtons() {
-    // Bouton dans le dashboard admin
-    var dashboardActions = document.querySelector('#admin-dashboard-content .section-card');
-    if (dashboardActions && !document.getElementById('qr-dashboard-btn')) {
-        var qrButton = '<button id="qr-dashboard-btn" class="btn btn-gold" onclick="showQRManagement()" style="width: 100%; margin-bottom: 10px;">📱 Gestion QR Codes</button>';
-        var firstButton = dashboardActions.querySelector('button');
-        if (firstButton) {
-            firstButton.insertAdjacentHTML('beforebegin', qrButton);
-        }
+    // Bouton dashboard
+    var dashboard = document.querySelector('#admin-dashboard-content .section-card');
+    if (dashboard && !document.getElementById('qr-btn-dashboard')) {
+        var btn = '<button id="qr-btn-dashboard" class="btn btn-gold" onclick="showQRManagement()" style="width: 100%; margin-bottom: 10px;">QR Codes</button>';
+        var firstBtn = dashboard.querySelector('button');
+        if (firstBtn) firstBtn.insertAdjacentHTML('beforebegin', btn);
     }
     
-    // Bouton dans l'onglet clients
-    var clientsActions = document.querySelector('#admin-clients-content .section-card');
-    if (clientsActions && !document.getElementById('qr-clients-btn')) {
-        var qrButton = '<button id="qr-clients-btn" class="btn btn-info" onclick="showQRManagement()" style="margin: 5px;">📱 QR Codes</button>';
-        var submitButton = clientsActions.querySelector('#client-submit-btn');
-        if (submitButton) {
-            submitButton.insertAdjacentHTML('afterend', qrButton);
-        }
-    }
-    
-    // Bouton dans les paramètres
-    var settingsSection = document.querySelector('#admin-settings-content .section-card');
-    if (settingsSection && !document.getElementById('qr-settings-btn')) {
-        var qrButton = '<button id="qr-settings-btn" class="btn btn-warning" onclick="testQRSystem()" style="width: 100%; margin-bottom: 15px;">🔍 Tester Système QR</button>';
-        settingsSection.insertAdjacentHTML('afterbegin', qrButton);
+    // Bouton clients
+    var clients = document.querySelector('#admin-clients-content .section-card');
+    if (clients && !document.getElementById('qr-btn-clients')) {
+        var btn = '<button id="qr-btn-clients" class="btn btn-info" onclick="showQRManagement()" style="margin: 5px;">QR Codes</button>';
+        var submitBtn = clients.querySelector('#client-submit-btn');
+        if (submitBtn) submitBtn.insertAdjacentHTML('afterend', btn);
     }
 }
 
-// Améliorer la fonction logout pour nettoyer les sessions QR
-var originalLogout = logout;
-function logout() {
-    // Nettoyer les sessions QR
-    localStorage.removeItem('drshine_qr_session');
-    currentQRData = null;
-    
-    // Logout normal
-    if (originalLogout) {
-        originalLogout();
-    } else {
-        currentUser = null;
-        hideAll();
-        document.getElementById('role-selection').classList.remove('hidden');
-        showNotification('Déconnexion réussie', 'info');
-    }
-}
-
-// ========================================
-// 6. SYSTÈME DE DEBUG ET LOGS
-// ========================================
-
-console.log("🔧 Système QR Dr. Shine v" + DR_SHINE_CONFIG.version + " chargé");
-console.log("🌐 URL configurée:", DR_SHINE_CONFIG.baseURL);
-console.log("⏰ Durée QR:", DR_SHINE_CONFIG.qrExpireDays + " jours");
-
-// Test automatique au chargement
-setTimeout(function() {
-    if (typeof clients !== 'undefined' && clients.length > 0) {
-        console.log("✅ QR System Ready - " + clients.length + " clients disponibles");
-    } else {
-        console.log("ℹ️ QR System Ready - Aucun client encore créé");
-    }
-}, 3000);
+console.log("✅ Système QR Simple activé");
     </script>
 </body>
 </html>
