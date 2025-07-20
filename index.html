@@ -4,18 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Shine - Système de Gestion</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <style>
-        /* Vos styles CSS ici */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .interface-choice {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .interface-button {
+            display: block;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .interface-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+        }
+        
+        .form-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
+            padding: 15px 25px;
+            border-radius: 10px;
             color: white;
             z-index: 1000;
             transform: translateX(400px);
-            transition: transform 0.3s ease;
+            transition: transform 0.5s ease;
+            font-weight: 600;
         }
         
         .notification.show {
@@ -23,165 +144,361 @@
         }
         
         .notification.success {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
         }
         
         .notification.error {
-            background-color: #f44336;
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
         }
         
         .notification.info {
-            background-color: #2196F3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        .hidden {
-            display: none;
+        .dashboard {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
         }
         
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+        .client-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .info-card {
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .interface-choice {
+        .info-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .qr-container {
             text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .qr-container canvas {
+            margin: 20px 0;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+        }
+        
+        .admin-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 20px 0;
         }
         
-        .interface-button {
-            display: inline-block;
-            margin: 10px;
-            padding: 20px 30px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
+        .client-list {
+            background: white;
+            padding: 20px;
             border-radius: 10px;
-            font-size: 18px;
-            transition: background 0.3s;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
-        .interface-button:hover {
-            background: #0056b3;
+        .client-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: #f8f9fa;
+        }
+        
+        .client-item:hover {
+            background: #e9ecef;
+        }
+        
+        @media (max-width: 768px) {
+            .interface-choice {
+                grid-template-columns: 1fr;
+            }
+            
+            .client-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-tools {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏥 Dr. Shine</h1>
-        <h2>Système de Gestion Professionnel</h2>
-        
-        <div class="interface-choice">
-            <h3>Choisissez votre interface</h3>
-            <a href="#" class="interface-button" onclick="showClientInterface()">
-                👤 Espace Client<br>
-                <small>Connectez-vous pour voir vos contrats et prendre rendez-vous</small>
-            </a>
-            <a href="#" class="interface-button" onclick="showAdminInterface()">
-                🔧 Administration<br>
-                <small>Gestion complète de l'entreprise Dr. Shine</small>
-            </a>
+        <!-- Écran d'accueil -->
+        <div id="home-screen">
+            <div class="header">
+                <h1>🏥 Dr. Shine</h1>
+                <h2>Système de Gestion Professionnel</h2>
+                <p>Choisissez votre interface pour commencer</p>
+            </div>
+            
+            <div class="interface-choice">
+                <button class="interface-button" onclick="showClientInterface()">
+                    👤 <strong>Espace Client</strong><br>
+                    <small>Connectez-vous pour voir vos contrats et prendre rendez-vous</small>
+                </button>
+                <button class="interface-button" onclick="showAdminInterface()">
+                    🔧 <strong>Administration</strong><br>
+                    <small>Gestion complète de l'entreprise Dr. Shine</small>
+                </button>
+            </div>
         </div>
-        
+
         <!-- Interface Client -->
         <div id="client-interface" class="hidden">
-            <h3>👤 Connexion Client</h3>
-            <form onsubmit="return loginClient()">
-                <input type="email" id="client-email" placeholder="Email" required>
-                <input type="password" id="client-password" placeholder="Mot de passe" required>
-                <button type="submit">Se connecter</button>
-            </form>
+            <div class="header">
+                <h2>👤 Connexion Client</h2>
+                <button onclick="showHome()" style="float: right; background: none; border: none; font-size: 24px; cursor: pointer;">❌</button>
+            </div>
+            <div class="form-container">
+                <form onsubmit="return loginClient()">
+                    <div class="form-group">
+                        <label for="client-email">📧 Email :</label>
+                        <input type="email" id="client-email" placeholder="votre@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-password">🔒 Mot de passe :</label>
+                        <input type="password" id="client-password" placeholder="Votre mot de passe" required>
+                    </div>
+                    <button type="submit" class="btn">🚀 Se connecter</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p><strong>Compte de démonstration :</strong></p>
+                    <p>Email: demo@client.com | Mot de passe: demo123</p>
+                </div>
+            </div>
         </div>
-        
-        <!-- Interface Admin -->
-        <div id="admin-interface" class="hidden">
-            <h3>🔧 Administration</h3>
-            <form onsubmit="return loginAdmin()">
-                <input type="text" id="admin-login" placeholder="Identifiant admin" required>
-                <input type="password" id="admin-password" placeholder="Mot de passe admin" required>
-                <button type="submit">Se connecter</button>
-            </form>
-        </div>
-        
+
         <!-- Dashboard Client -->
         <div id="client-dashboard" class="hidden">
-            <h3>Tableau de bord client</h3>
-            <div id="client-info"></div>
-            <button onclick="logout()">Déconnexion</button>
+            <div class="header">
+                <h2>🏠 Tableau de bord</h2>
+                <button onclick="logout()" style="float: right;" class="btn btn-danger">🚪 Déconnexion</button>
+            </div>
+            
+            <div class="dashboard">
+                <div id="client-welcome"></div>
+                
+                <div class="client-info">
+                    <div class="info-card">
+                        <h4>📋 Informations personnelles</h4>
+                        <div id="client-personal-info"></div>
+                    </div>
+                    <div class="info-card">
+                        <h4>💼 Détails du contrat</h4>
+                        <div id="client-contract-info"></div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>📊 Progression</h4>
+                    <div id="client-progress"></div>
+                </div>
+            </div>
         </div>
-        
+
+        <!-- Interface Admin -->
+        <div id="admin-interface" class="hidden">
+            <div class="header">
+                <h2>🔧 Connexion Administration</h2>
+                <button onclick="showHome()" style="float: right; background: none; border: none; font-size: 24px; cursor: pointer;">❌</button>
+            </div>
+            <div class="form-container">
+                <form onsubmit="return loginAdmin()">
+                    <div class="form-group">
+                        <label for="admin-login">👤 Identifiant admin :</label>
+                        <input type="text" id="admin-login" placeholder="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">🔒 Mot de passe :</label>
+                        <input type="password" id="admin-password" placeholder="Mot de passe admin" required>
+                    </div>
+                    <button type="submit" class="btn">🔑 Se connecter</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p><strong>Identifiants admin :</strong></p>
+                    <p>Identifiant: admin | Mot de passe: admin123</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Dashboard Admin -->
         <div id="admin-dashboard" class="hidden">
-            <h3>Tableau de bord administrateur</h3>
-            <div id="admin-info"></div>
-            <button onclick="exportData()">Exporter les données</button>
-            <button onclick="backupData()">Sauvegarder</button>
-            <button onclick="resetDatabase()" style="background: red;">Réinitialiser</button>
-            <button onclick="logout()">Déconnexion</button>
+            <div class="header">
+                <h2>🎛️ Administration Dr. Shine</h2>
+                <button onclick="logout()" style="float: right;" class="btn btn-danger">🚪 Déconnexion</button>
+            </div>
+            
+            <div class="dashboard">
+                <div class="admin-tools">
+                    <button onclick="showAddClient()" class="btn btn-success">➕ Ajouter Client</button>
+                    <button onclick="exportData()" class="btn">📤 Exporter Données</button>
+                    <button onclick="backupData()" class="btn">💾 Sauvegarder</button>
+                    <button onclick="resetDatabase()" class="btn btn-danger">🗑️ Réinitialiser</button>
+                </div>
+                
+                <div class="info-card">
+                    <h4>📊 Statistiques</h4>
+                    <div id="admin-stats"></div>
+                </div>
+                
+                <div class="client-list">
+                    <h4>👥 Liste des clients</h4>
+                    <div id="clients-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire d'ajout de client -->
+        <div id="add-client-form" class="hidden">
+            <div class="header">
+                <h2>➕ Nouveau Client</h2>
+                <button onclick="showAdminDashboard()" style="float: right; background: none; border: none; font-size: 24px; cursor: pointer;">❌</button>
+            </div>
+            <div class="form-container">
+                <form onsubmit="return addClient()">
+                    <div class="form-group">
+                        <label for="new-client-name">👤 Nom complet :</label>
+                        <input type="text" id="new-client-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-email">📧 Email :</label>
+                        <input type="email" id="new-client-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-password">🔒 Mot de passe :</label>
+                        <input type="text" id="new-client-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-phone">📱 Téléphone :</label>
+                        <input type="tel" id="new-client-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-contract">💰 Montant contrat (€) :</label>
+                        <input type="number" id="new-client-contract" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-visits">🔢 Nombre de visites :</label>
+                        <input type="number" id="new-client-visits" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-client-paid">💳 Montant payé (€) :</label>
+                        <input type="number" id="new-client-paid" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">✅ Créer le client</button>
+                    <button type="button" onclick="showAdminDashboard()" class="btn">❌ Annuler</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fenêtre QR Code -->
+        <div id="qr-window" class="hidden">
+            <div class="header">
+                <h2>📱 QR Code - Connexion Client</h2>
+                <button onclick="closeQR()" style="float: right; background: none; border: none; font-size: 24px; cursor: pointer;">❌</button>
+            </div>
+            <div class="qr-container">
+                <h3 id="qr-client-name"></h3>
+                <p><strong>Instructions pour le client :</strong></p>
+                <ol style="text-align: left; max-width: 300px; margin: 0 auto;">
+                    <li>📱 Ouvrez l'appareil photo de votre téléphone</li>
+                    <li>📷 Pointez vers le QR code ci-dessous</li>
+                    <li>🔗 Cliquez sur le lien qui apparaît</li>
+                    <li>✅ Vous serez connecté automatiquement !</li>
+                </ol>
+                
+                <canvas id="qr-canvas"></canvas>
+                
+                <div>
+                    <button onclick="printQR()" class="btn">🖨️ Imprimer</button>
+                    <button onclick="shareQR()" class="btn btn-success">📤 Partager le lien</button>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 12px; color: #666;">
+                    <p><strong>Lien direct :</strong></p>
+                    <p id="qr-link" style="word-break: break-all;"></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         // Variables globales
-        var clients = [];
-        var appointments = [];
-        var nextClientId = 1;
-        var nextAppointmentId = 1;
-        var currentUser = null;
+        let clients = [];
+        let appointments = [];
+        let nextClientId = 1;
+        let nextAppointmentId = 1;
+        let currentUser = null;
+        let currentQRClient = null;
         
-        // Stockage local
-        var Storage = {
-            save: function() {
+        // Stockage local amélioré
+        const Storage = {
+            save() {
                 try {
-                    localStorage.setItem('drshine_clients', JSON.stringify(clients));
-                    localStorage.setItem('drshine_appointments', JSON.stringify(appointments));
-                    localStorage.setItem('drshine_nextClientId', nextClientId);
-                    localStorage.setItem('drshine_nextAppointmentId', nextAppointmentId);
+                    localStorage.setItem('drshine_data', JSON.stringify({
+                        clients,
+                        appointments,
+                        nextClientId,
+                        nextAppointmentId
+                    }));
+                    console.log('✅ Données sauvegardées');
                 } catch (e) {
-                    console.error('Erreur de sauvegarde:', e);
+                    console.error('❌ Erreur de sauvegarde:', e);
+                    showNotification('Erreur de sauvegarde', 'error');
                 }
             },
             
-            load: function() {
+            load() {
                 try {
-                    var savedClients = localStorage.getItem('drshine_clients');
-                    var savedAppointments = localStorage.getItem('drshine_appointments');
-                    var savedNextClientId = localStorage.getItem('drshine_nextClientId');
-                    var savedNextAppointmentId = localStorage.getItem('drshine_nextAppointmentId');
-                    
-                    if (savedClients) clients = JSON.parse(savedClients);
-                    if (savedAppointments) appointments = JSON.parse(savedAppointments);
-                    if (savedNextClientId) nextClientId = parseInt(savedNextClientId);
-                    if (savedNextAppointmentId) nextAppointmentId = parseInt(savedNextAppointmentId);
+                    const saved = localStorage.getItem('drshine_data');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        clients = data.clients || [];
+                        appointments = data.appointments || [];
+                        nextClientId = data.nextClientId || 1;
+                        nextAppointmentId = data.nextAppointmentId || 1;
+                        console.log('✅ Données chargées:', clients.length, 'clients');
+                    }
                 } catch (e) {
-                    console.error('Erreur de chargement:', e);
+                    console.error('❌ Erreur de chargement:', e);
                 }
             },
             
-            clear: function() {
-                localStorage.removeItem('drshine_clients');
-                localStorage.removeItem('drshine_appointments');
-                localStorage.removeItem('drshine_nextClientId');
-                localStorage.removeItem('drshine_nextAppointmentId');
+            clear() {
+                localStorage.removeItem('drshine_data');
+                console.log('🗑️ Stockage effacé');
             }
         };
         
-        // Fonctions d'interface
+        // Navigation
         function hideAll() {
-            var elements = document.querySelectorAll('.container > div');
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].classList.add('hidden');
-            }
+            document.querySelectorAll('#home-screen, #client-interface, #admin-interface, #client-dashboard, #admin-dashboard, #add-client-form, #qr-window').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+        
+        function showHome() {
+            hideAll();
+            document.getElementById('home-screen').classList.remove('hidden');
         }
         
         function showClientInterface() {
@@ -194,38 +511,47 @@
             document.getElementById('admin-interface').classList.remove('hidden');
         }
         
+        function showAdminDashboard() {
+            hideAll();
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            updateAdminDashboard();
+        }
+        
+        function showAddClient() {
+            hideAll();
+            document.getElementById('add-client-form').classList.remove('hidden');
+        }
+        
+        // Connexions
         function loginClient() {
-            var email = document.getElementById('client-email').value;
-            var password = document.getElementById('client-password').value;
+            const email = document.getElementById('client-email').value;
+            const password = document.getElementById('client-password').value;
             
-            var client = clients.find(function(c) {
-                return c.email === email && c.password === password;
-            });
+            const client = clients.find(c => c.email === email && c.password === password);
             
             if (client) {
                 currentUser = client;
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
                 updateClientDashboard();
-                showNotification('Bienvenue ' + client.name, 'success');
+                showNotification(`Bienvenue ${client.name} ! 🎉`, 'success');
             } else {
-                showNotification('Identifiants incorrects', 'error');
+                showNotification('❌ Identifiants incorrects', 'error');
             }
             
-            return false; // Empêche le rechargement de la page
+            return false;
         }
         
         function loginAdmin() {
-            var login = document.getElementById('admin-login').value;
-            var password = document.getElementById('admin-password').value;
+            const login = document.getElementById('admin-login').value;
+            const password = document.getElementById('admin-password').value;
             
-            // Identifiants admin simples (à sécuriser en production)
             if (login === 'admin' && password === 'admin123') {
                 hideAll();
-                document.getElementById('admin-dashboard').classList.remove('hidden');
-                showNotification('Connexion admin réussie', 'success');
+                showAdminDashboard();
+                showNotification('🔑 Connexion admin réussie', 'success');
             } else {
-                showNotification('Identifiants admin incorrects', 'error');
+                showNotification('❌ Identifiants admin incorrects', 'error');
             }
             
             return false;
@@ -233,58 +559,251 @@
         
         function logout() {
             currentUser = null;
-            hideAll();
-            document.querySelector('.interface-choice').parentNode.querySelector('.interface-choice').style.display = 'block';
-            showNotification('Déconnexion réussie', 'info');
+            currentQRClient = null;
+            showHome();
+            showNotification('👋 À bientôt !', 'info');
         }
         
-        function updateClientDashboard() {
-            if (currentUser) {
-                var info = document.getElementById('client-info');
-                info.innerHTML = 
-                    '<h4>Informations du contrat</h4>' +
-                    '<p><strong>Nom:</strong> ' + currentUser.name + '</p>' +
-                    '<p><strong>Email:</strong> ' + currentUser.email + '</p>' +
-                    '<p><strong>Téléphone:</strong> ' + currentUser.phone + '</p>' +
-                    '<p><strong>Montant du contrat:</strong> ' + currentUser.contractAmount + '€</p>' +
-                    '<p><strong>Visites totales:</strong> ' + currentUser.totalVisits + '</p>' +
-                    '<p><strong>Visites utilisées:</strong> ' + currentUser.usedVisits + '</p>' +
-                    '<p><strong>Visites restantes:</strong> ' + (currentUser.totalVisits - currentUser.usedVisits) + '</p>' +
-                    '<p><strong>Montant payé:</strong> ' + currentUser.amountPaid + '€</p>';
+        // Gestion des clients
+        function addClient() {
+            const newClient = {
+                id: nextClientId++,
+                name: document.getElementById('new-client-name').value,
+                email: document.getElementById('new-client-email').value,
+                password: document.getElementById('new-client-password').value,
+                phone: document.getElementById('new-client-phone').value,
+                contractAmount: parseInt(document.getElementById('new-client-contract').value),
+                totalVisits: parseInt(document.getElementById('new-client-visits').value),
+                usedVisits: 0,
+                amountPaid: parseInt(document.getElementById('new-client-paid').value),
+                createdAt: new Date().toISOString()
+            };
+            
+            // Vérification email unique
+            if (clients.find(c => c.email === newClient.email)) {
+                showNotification('❌ Email déjà utilisé', 'error');
+                return false;
+            }
+            
+            clients.push(newClient);
+            Storage.save();
+            
+            showNotification(`✅ Client ${newClient.name} créé !`, 'success');
+            showAdminDashboard();
+            
+            // Proposer de générer le QR code
+            setTimeout(() => {
+                if (confirm(`Voulez-vous générer le QR code pour ${newClient.name} ?`)) {
+                    generateQRCode(newClient);
+                }
+            }, 1000);
+            
+            return false;
+        }
+        
+        // QR Code - FONCTIONNALITÉ PRINCIPALE
+        function generateQRCode(client) {
+            currentQRClient = client;
+            
+            // Construire l'URL de connexion automatique
+            const baseUrl = window.location.origin + window.location.pathname;
+            const loginUrl = `${baseUrl}?email=${encodeURIComponent(client.email)}&password=${encodeURIComponent(client.password)}&auto=1`;
+            
+            hideAll();
+            document.getElementById('qr-window').classList.remove('hidden');
+            document.getElementById('qr-client-name').textContent = `QR Code pour : ${client.name}`;
+            document.getElementById('qr-link').textContent = loginUrl;
+            
+            // Générer le QR code avec la bibliothèque
+            const canvas = document.getElementById('qr-canvas');
+            QRCode.toCanvas(canvas, loginUrl, {
+                width: 300,
+                margin: 2,
+                color: {
+                    dark: '#667eea',
+                    light: '#ffffff'
+                }
+            }, function(error) {
+                if (error) {
+                    console.error('Erreur QR:', error);
+                    showNotification('❌ Erreur génération QR', 'error');
+                } else {
+                    console.log('✅ QR code généré pour:', client.name);
+                    showNotification(`📱 QR code prêt pour ${client.name}`, 'success');
+                }
+            });
+        }
+        
+        function closeQR() {
+            showAdminDashboard();
+        }
+        
+        function printQR() {
+            const printContent = document.getElementById('qr-window').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>QR Code - ${currentQRClient.name}</title>
+                    <style>
+                        body { font-family: Arial; text-align: center; padding: 20px; }
+                        .no-print { display: none; }
+                    </style>
+                </head>
+                <body>${printContent}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.close();
+        }
+        
+        function shareQR() {
+            const loginUrl = document.getElementById('qr-link').textContent;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `Connexion Dr. Shine - ${currentQRClient.name}`,
+                    text: 'Cliquez sur ce lien pour vous connecter automatiquement',
+                    url: loginUrl
+                });
+            } else {
+                // Copier dans le presse-papier
+                navigator.clipboard.writeText(loginUrl).then(() => {
+                    showNotification('🔗 Lien copié dans le presse-papier', 'success');
+                }).catch(() => {
+                    // Fallback : sélection manuelle
+                    const textArea = document.createElement('textarea');
+                    textArea.value = loginUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('🔗 Lien copié (fallback)', 'success');
+                });
             }
         }
         
-        // Fonctions d'export et gestion
+        // Mise à jour des dashboards
+        function updateClientDashboard() {
+            if (!currentUser) return;
+            
+            document.getElementById('client-welcome').innerHTML = `
+                <h3>👋 Bonjour ${currentUser.name} !</h3>
+                <p>Bienvenue dans votre espace personnel Dr. Shine</p>
+            `;
+            
+            document.getElementById('client-personal-info').innerHTML = `
+                <p><strong>📧 Email:</strong> ${currentUser.email}</p>
+                <p><strong>📱 Téléphone:</strong> ${currentUser.phone}</p>
+                <p><strong>📅 Client depuis:</strong> ${new Date(currentUser.createdAt || Date.now()).toLocaleDateString()}</p>
+            `;
+            
+            document.getElementById('client-contract-info').innerHTML = `
+                <p><strong>💰 Montant total:</strong> ${currentUser.contractAmount}€</p>
+                <p><strong>💳 Montant payé:</strong> ${currentUser.amountPaid}€</p>
+                <p><strong>💸 Solde restant:</strong> ${currentUser.contractAmount - currentUser.amountPaid}€</p>
+            `;
+            
+            const remainingVisits = currentUser.totalVisits - currentUser.usedVisits;
+            const progressPercent = (currentUser.usedVisits / currentUser.totalVisits) * 100;
+            
+            document.getElementById('client-progress').innerHTML = `
+                <p><strong>🔢 Visites totales:</strong> ${currentUser.totalVisits}</p>
+                <p><strong>✅ Visites utilisées:</strong> ${currentUser.usedVisits}</p>
+                <p><strong>⏳ Visites restantes:</strong> ${remainingVisits}</p>
+                <div style="background: #e0e0e0; border-radius: 10px; overflow: hidden; margin: 10px 0;">
+                    <div style="background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%); height: 20px; width: ${progressPercent}%; transition: width 0.5s;"></div>
+                </div>
+                <p><small>${progressPercent.toFixed(1)}% du contrat utilisé</small></p>
+            `;
+        }
+        
+        function updateAdminDashboard() {
+            const totalClients = clients.length;
+            const totalRevenue = clients.reduce((sum, c) => sum + c.amountPaid, 0);
+            const totalVisits = clients.reduce((sum, c) => sum + c.usedVisits, 0);
+            
+            document.getElementById('admin-stats').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                    <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+                        <h3>${totalClients}</h3>
+                        <p>👥 Clients</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%); color: white; border-radius: 10px;">
+                        <h3>${totalRevenue}€</h3>
+                        <p>💰 Revenus</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; border-radius: 10px;">
+                        <h3>${totalVisits}</h3>
+                        <p>📊 Visites</p>
+                    </div>
+                </div>
+            `;
+            
+            const clientsList = document.getElementById('clients-list');
+            clientsList.innerHTML = clients.map(client => `
+                <div class="client-item">
+                    <div style="display: flex; justify-content: between; align-items: center;">
+                        <div style="flex: 1;">
+                            <strong>${client.name}</strong><br>
+                            <small>📧 ${client.email} | 📱 ${client.phone}</small><br>
+                            <small>💰 ${client.amountPaid}€/${client.contractAmount}€ | 🔢 ${client.usedVisits}/${client.totalVisits} visites</small>
+                        </div>
+                        <div>
+                            <button onclick="generateQRCode(clients.find(c => c.id === ${client.id}))" class="btn" style="margin: 2px;">📱 QR</button>
+                            <button onclick="editClient(${client.id})" class="btn" style="margin: 2px;">✏️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function editClient(clientId) {
+            // Fonctionnalité d'édition simplifiée
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+            
+            const newUsedVisits = prompt(`Nombre de visites utilisées pour ${client.name} (actuellement: ${client.usedVisits}):`);
+            if (newUsedVisits !== null && !isNaN(newUsedVisits)) {
+                client.usedVisits = parseInt(newUsedVisits);
+                Storage.save();
+                updateAdminDashboard();
+                showNotification(`✅ Visites mises à jour pour ${client.name}`, 'success');
+            }
+        }
+        
+        // Outils admin
         function exportData() {
             try {
-                var data = {
-                    clients: clients,
-                    appointments: appointments,
+                const data = {
+                    clients,
+                    appointments,
                     exportDate: new Date().toISOString(),
-                    version: '1.0'
+                    version: '2.0'
                 };
                 
-                var dataStr = JSON.stringify(data, null, 2);
-                var dataBlob = new Blob([dataStr], {type: 'application/json'});
-                var link = document.createElement('a');
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const link = document.createElement('a');
                 link.href = URL.createObjectURL(dataBlob);
-                link.download = 'drshine_export_' + new Date().toISOString().split('T')[0] + '.json';
+                link.download = `drshine_export_${new Date().toISOString().split('T')[0]}.json`;
                 link.click();
                 
-                showNotification('Données exportées', 'success');
+                showNotification('📤 Données exportées avec succès', 'success');
             } catch (e) {
-                showNotification('Erreur export', 'error');
+                showNotification('❌ Erreur lors de l\'export', 'error');
             }
         }
         
         function backupData() {
             Storage.save();
-            showNotification('Sauvegarde effectuée', 'success');
+            showNotification('💾 Sauvegarde effectuée', 'success');
         }
         
         function resetDatabase() {
-            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\nTapez "SUPPRIMER" pour confirmer :';
-            var userInput = prompt(confirmMessage);
+            const confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\nTapez "SUPPRIMER" pour confirmer la suppression de TOUTES les données :';
+            const userInput = prompt(confirmMessage);
             
             if (userInput === 'SUPPRIMER') {
                 clients = [];
@@ -293,88 +812,105 @@
                 nextAppointmentId = 1;
                 currentUser = null;
                 Storage.clear();
-                showNotification('Base réinitialisée', 'success');
+                updateAdminDashboard();
+                showNotification('🗑️ Base de données réinitialisée', 'success');
             } else {
-                showNotification('Annulé', 'info');
+                showNotification('❌ Réinitialisation annulée', 'info');
             }
         }
         
         // Notifications
-        function showNotification(message, type) {
-            var notification = document.createElement('div');
-            notification.className = 'notification ' + type;
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
             notification.textContent = message;
             document.body.appendChild(notification);
             
-            setTimeout(function() {
-                notification.classList.add('show');
-            }, 100);
+            setTimeout(() => notification.classList.add('show'), 100);
             
-            setTimeout(function() {
+            setTimeout(() => {
                 notification.classList.remove('show');
-                setTimeout(function() {
+                setTimeout(() => {
                     if (notification.parentNode) {
                         notification.parentNode.removeChild(notification);
                     }
                 }, 300);
-            }, 3000);
+            }, 4000);
         }
         
-        // Initialisation
-        window.onload = function() {
-            Storage.load();
+        // Connexion automatique par URL (QR code)
+        function checkAutoLogin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            const password = urlParams.get('password');
+            const auto = urlParams.get('auto');
             
-            // Client de démo
-            if (clients.length === 0) {
-                var demoClient = {
-                    id: nextClientId++,
-                    name: 'Client Démo',
-                    email: 'demo@client.com',
-                    password: 'demo123',
-                    phone: '819-555-0000',
-                    contractAmount: 2000,
-                    totalVisits: 12,
-                    usedVisits: 3,
-                    amountPaid: 1000
-                };
-                clients.push(demoClient);
-                Storage.save();
-            }
-            
-            // Connexion automatique par URL
-            var urlParams = new URLSearchParams(window.location.search);
-            var email = urlParams.get('email');
-            var password = urlParams.get('password');
-            
-            if (email && password) {
-                var client = clients.find(function(c) {
-                    return c.email === email && c.password === password;
-                });
+            if (email && password && auto) {
+                const client = clients.find(c => c.email === email && c.password === password);
                 
                 if (client) {
                     currentUser = client;
                     hideAll();
                     document.getElementById('client-dashboard').classList.remove('hidden');
                     updateClientDashboard();
-                    showNotification('Connexion QR réussie ! Bienvenue ' + currentUser.name, 'success');
+                    showNotification(`🎉 Connexion QR réussie ! Bienvenue ${client.name}`, 'success');
                     
+                    // Nettoyer l'URL
                     if (window.history && window.history.replaceState) {
                         window.history.replaceState({}, document.title, window.location.pathname);
                     }
-                    return;
+                    return true;
                 } else {
-                    showNotification('QR code invalide', 'error');
+                    showNotification('❌ QR code invalide ou expiré', 'error');
                 }
             }
+            return false;
+        }
+        
+        // Initialisation
+        window.onload = function() {
+            console.log('🚀 Initialisation Dr. Shine...');
             
-            showNotification('Système prêt ! (' + clients.length + ' clients)', 'success');
+            Storage.load();
             
-            // Dates minimales
-            var today = new Date().toISOString().split('T')[0];
-            var dateInputs = document.querySelectorAll('input[type="date"]');
-            for (var i = 0; i < dateInputs.length; i++) {
-                dateInputs[i].setAttribute('min', today);
+            // Ajouter des clients de démonstration
+            if (clients.length === 0) {
+                clients = [
+                    {
+                        id: nextClientId++,
+                        name: 'Client Démo',
+                        email: 'demo@client.com',
+                        password: 'demo123',
+                        phone: '819-555-0000',
+                        contractAmount: 2000,
+                        totalVisits: 12,
+                        usedVisits: 3,
+                        amountPaid: 1000,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: nextClientId++,
+                        name: 'Marie Dubois',
+                        email: 'marie@test.com',
+                        password: 'marie123',
+                        phone: '819-555-0001',
+                        contractAmount: 1500,
+                        totalVisits: 10,
+                        usedVisits: 7,
+                        amountPaid: 1500,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                Storage.save();
             }
+            
+            // Vérifier connexion automatique par QR
+            if (!checkAutoLogin()) {
+                showHome();
+                showNotification(`🏥 Dr. Shine prêt ! (${clients.length} clients)`, 'success');
+            }
+            
+            console.log('✅ Dr. Shine initialisé avec succès');
         };
     </script>
 </body>
