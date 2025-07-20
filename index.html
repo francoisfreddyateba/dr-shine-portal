@@ -829,7 +829,7 @@
             }
         }
         
-        // QR Code
+        // QR Code - SYSTÈME UNIFIÉ ET ROBUSTE
         function generateQRCode(client) {
             if (!client) return;
             
@@ -837,67 +837,222 @@
             var baseUrl = window.location.origin + window.location.pathname;
             var loginUrl = baseUrl + '?auto=1&email=' + encodeURIComponent(client.email) + '&password=' + encodeURIComponent(client.password);
             
+            console.log('Génération QR pour:', client.name);
+            console.log('URL:', loginUrl);
+            
             document.getElementById('qr-title').textContent = 'QR Code - ' + client.name;
             document.getElementById('qr-link').textContent = loginUrl;
             document.getElementById('qr-modal').classList.remove('hidden');
             
-            setTimeout(function() {
-                var canvas = document.getElementById('qr-canvas');
-                canvas.width = 300;
-                canvas.height = 300;
+            // Préparer le canvas
+            var canvas = document.getElementById('qr-canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            canvas.style.width = '300px';
+            canvas.style.height = '300px';
+            
+            // Affichage de chargement
+            drawLoadingMessage(canvas, client.name);
+            
+            // Méthode 1: Essayer la bibliothèque QRCode.js
+            if (typeof QRCode !== 'undefined') {
+                console.log('Tentative avec bibliothèque QRCode.js');
                 
-                if (typeof QRCode !== 'undefined') {
-                    QRCode.toCanvas(canvas, loginUrl, {
-                        width: 300,
-                        margin: 2,
-                        color: {
-                            dark: '#007bff',
-                            light: '#ffffff'
-                        }
-                    }, function(error) {
-                        if (error) {
-                            generateManualQR(canvas, client.name);
-                        } else {
-                            showNotification('QR code généré', 'success');
-                        }
-                    });
-                } else {
-                    generateManualQR(canvas, client.name);
-                }
-            }, 200);
+                QRCode.toCanvas(canvas, loginUrl, {
+                    width: 300,
+                    height: 300,
+                    margin: 2,
+                    color: {
+                        dark: '#007bff',
+                        light: '#ffffff'
+                    },
+                    errorCorrectionLevel: 'M'
+                }, function(error) {
+                    if (error) {
+                        console.log('Bibliothèque échouée, utilisation API...');
+                        generateQRFromAPI(canvas, loginUrl, client.name);
+                    } else {
+                        console.log('✅ QR généré avec bibliothèque');
+                        showNotification('QR code généré pour ' + client.name, 'success');
+                    }
+                });
+            } else {
+                console.log('Bibliothèque non disponible, utilisation API...');
+                generateQRFromAPI(canvas, loginUrl, client.name);
+            }
         }
         
-        function generateManualQR(canvas, clientName) {
+        function generateQRFromAPI(canvas, loginUrl, clientName) {
+            console.log('Génération QR avec API en ligne...');
+            
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            // API QR gratuite et fiable
+            var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&margin=10&data=' + encodeURIComponent(loginUrl);
+            
+            img.onload = function() {
+                try {
+                    // Fond blanc
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, 300, 300);
+                    
+                    // Dessiner le QR code de l'API
+                    ctx.drawImage(img, 0, 0, 300, 300);
+                    
+                    console.log('✅ QR généré avec API');
+                    showNotification('QR code généré pour ' + clientName, 'success');
+                } catch (e) {
+                    console.error('Erreur dessin API:', e);
+                    generateBackupQR(canvas, clientName, loginUrl);
+                }
+            };
+            
+            img.onerror = function() {
+                console.log('API échouée, génération de secours...');
+                generateBackupQR(canvas, clientName, loginUrl);
+            };
+            
+            // Charger l'image depuis l'API
+            img.src = apiUrl;
+            
+            // Timeout de sécurité
+            setTimeout(function() {
+                if (!img.complete) {
+                    console.log('Timeout API, génération de secours...');
+                    generateBackupQR(canvas, clientName, loginUrl);
+                }
+            }, 8000);
+        }
+        
+        function generateBackupQR(canvas, clientName, loginUrl) {
+            console.log('Génération QR de secours...');
+            
             var ctx = canvas.getContext('2d');
             
+            // Fond blanc
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, 300, 300);
             
+            // Bordure
             ctx.strokeStyle = '#007bff';
             ctx.lineWidth = 4;
             ctx.strokeRect(2, 2, 296, 296);
             
+            // Header
             ctx.fillStyle = '#007bff';
-            ctx.font = 'bold 18px Arial';
+            ctx.font = 'bold 24px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Dr. Shine', 150, 40);
+            
+            ctx.font = 'bold 18px Arial';
             ctx.fillText(clientName, 150, 70);
             
             ctx.font = '14px Arial';
-            ctx.fillText('QR Code de connexion', 150, 100);
+            ctx.fillText('Code de connexion', 150, 95);
             
-            // Motif QR simple
+            // QR Pattern simplifié mais plus réaliste
+            var qrSize = 140;
+            var startX = (300 - qrSize) / 2;
+            var startY = 110;
+            
+            // Fond du QR
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(startX, startY, qrSize, qrSize);
+            
+            // Bordure du QR
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(startX, startY, qrSize, qrSize);
+            
+            // Motif de QR basé sur l'URL (déterministe)
             ctx.fillStyle = '#007bff';
-            for (var i = 0; i < 15; i++) {
-                for (var j = 0; j < 15; j++) {
-                    if ((i + j) % 3 === 0) {
-                        ctx.fillRect(80 + i * 10, 120 + j * 8, 8, 6);
+            var cellSize = 4;
+            var cells = Math.floor(qrSize / cellSize);
+            
+            // Créer un hash de l'URL pour un motif unique
+            var hash = 0;
+            for (var i = 0; i < loginUrl.length; i++) {
+                hash = ((hash << 5) - hash + loginUrl.charCodeAt(i)) & 0xffffffff;
+            }
+            
+            // Générer le motif
+            for (var x = 0; x < cells; x++) {
+                for (var y = 0; y < cells; y++) {
+                    var cellHash = hash + x * 31 + y * 17;
+                    if (Math.abs(cellHash) % 3 === 0) {
+                        ctx.fillRect(
+                            startX + x * cellSize + 1,
+                            startY + y * cellSize + 1,
+                            cellSize - 1,
+                            cellSize - 1
+                        );
                     }
                 }
             }
             
-            ctx.fillText('Utilisez le lien direct ci-dessous', 150, 260);
-            showNotification('QR code créé', 'success');
+            // Coins de positionnement (caractéristique des QR codes)
+            var cornerSize = 20;
+            
+            // Coin supérieur gauche
+            drawQRCorner(ctx, startX + 5, startY + 5, cornerSize);
+            // Coin supérieur droit  
+            drawQRCorner(ctx, startX + qrSize - cornerSize - 5, startY + 5, cornerSize);
+            // Coin inférieur gauche
+            drawQRCorner(ctx, startX + 5, startY + qrSize - cornerSize - 5, cornerSize);
+            
+            // Instructions
+            ctx.font = '12px Arial';
+            ctx.fillText('⚠️ QR de secours - Utilisez le lien direct ci-dessous', 150, 270);
+            
+            showNotification('QR de secours généré - Utilisez le lien direct', 'info');
+        }
+        
+        function drawQRCorner(ctx, x, y, size) {
+            // Carré extérieur
+            ctx.fillStyle = '#007bff';
+            ctx.fillRect(x, y, size, size);
+            
+            // Carré intérieur blanc
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x + 3, y + 3, size - 6, size - 6);
+            
+            // Point central
+            ctx.fillStyle = '#007bff';
+            ctx.fillRect(x + 7, y + 7, size - 14, size - 14);
+        }
+        
+        function drawLoadingMessage(canvas, clientName) {
+            var ctx = canvas.getContext('2d');
+            
+            // Fond blanc
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 300, 300);
+            
+            // Bordure
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(5, 5, 290, 290);
+            
+            // Message de chargement
+            ctx.fillStyle = '#007bff';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Dr. Shine', 150, 80);
+            
+            ctx.font = '16px Arial';
+            ctx.fillText(clientName, 150, 110);
+            
+            ctx.font = '14px Arial';
+            ctx.fillText('Génération du QR code...', 150, 150);
+            
+            // Animation simple
+            ctx.fillStyle = '#28a745';
+            ctx.fillRect(100, 180, 100, 20);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('En cours', 150, 194);
         }
         
         function closeQR() {
