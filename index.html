@@ -5,1642 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Shine - Système de Gestion</title>
     <style>
-        :root {
-            --primary-blue: #1e3c72;
-            --secondary-blue: #2a5298;
-            --gold: #D4AF37;
-            --light-gold: #FFD700;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --light-gray: #f8f9fa;
-            --border-gray: #e9ecef;
-            --dark-gray: #6c757d;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            font-weight: bold;
-            color: var(--light-gold);
-        }
-
-        .header p {
-            font-size: 1.3rem;
-            opacity: 0.95;
-        }
-
-        .main-card {
-            background: white;
-            border-radius: 20px;
-            padding: 0;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            border: 3px solid var(--gold);
-            overflow: hidden;
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            color: white;
-            padding: 25px 30px;
-            border-bottom: 3px solid var(--gold);
-        }
-
-        .card-content {
-            padding: 30px;
-        }
-
-        .role-selector {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-
-        .role-card {
-            background: linear-gradient(135deg, #f0f4ff 0%, white 100%);
-            border: 3px solid var(--border-gray);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 280px;
-            max-width: 350px;
-            flex: 1;
-        }
-
-        .role-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--gold);
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
-        }
-
-        .role-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: var(--primary-blue);
-        }
-
-        .role-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-
-        .role-description {
-            color: var(--dark-gray);
-            font-size: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-blue);
-            font-size: 1rem;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border-gray);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            background: white;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin: 5px;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--light-gold) 100%);
-            color: var(--primary-blue);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%);
-            color: var(--primary-blue);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%);
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, var(--info) 0%, #138496 100%);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--dark-gray) 0%, #9ca3af 100%);
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-large {
-            padding: 20px 40px;
-            font-size: 1.2rem;
-        }
-
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-        }
-
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid var(--gold);
-            transition: transform 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--light-gold);
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border-gray);
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 15px 25px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .tab.active {
-            color: var(--primary-blue);
-            border-bottom-color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .tab:hover {
-            color: var(--primary-blue);
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section-card {
-            background: var(--light-gray);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid var(--border-gray);
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            color: var(--primary-blue);
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--gold);
-            padding-bottom: 10px;
-        }
-
-        .data-table {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 30px 0;
-            border: 2px solid var(--border-gray);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            min-width: 600px;
-        }
-
-        .table th, .table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-gray);
-            vertical-align: middle;
-        }
-
-        .table th {
-            background: #f0f4ff;
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .table tr:hover {
-            background: var(--light-gray);
-        }
-
-        .status-chip {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .status-confirmed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-completed {
-            background: #cce5ff;
-            color: #004085;
-        }
-
-        .admin-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 1px solid #f5c6cb;
-        }
-
+        /* Vos styles CSS ici */
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 15px 20px;
+            border-radius: 5px;
             color: white;
-            font-weight: bold;
             z-index: 1000;
             transform: translateX(400px);
-            transition: transform 0.3s;
-            min-width: 300px;
-            max-width: 400px;
+            transition: transform 0.3s ease;
         }
-
+        
         .notification.show {
             transform: translateX(0);
         }
-
+        
         .notification.success {
-            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+            background-color: #4CAF50;
         }
-
+        
         .notification.error {
-            background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%);
+            background-color: #f44336;
         }
-
+        
         .notification.info {
-            background: linear-gradient(135deg, var(--info) 0%, #138496 100%);
+            background-color: #2196F3;
         }
-
-        .info-box {
-            background: #e8f4f8;
-            border: 2px solid var(--info);
-            border-radius: 10px;
+        
+        .hidden {
+            display: none;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
             padding: 20px;
-            margin: 20px 0;
-            color: var(--primary-blue);
+            background-color: #f5f5f5;
         }
-
-        .appointment-card {
-            border: 2px solid var(--border-gray);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             background: white;
-            transition: all 0.3s;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .appointment-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        
+        .interface-choice {
+            text-align: center;
+            margin: 20px 0;
         }
-
-        .appointment-card.upcoming {
-            border-color: var(--info);
-            background: #e8f4f8;
+        
+        .interface-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px 30px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: background 0.3s;
         }
-
-        @media (max-width: 768px) {
-            .role-selector {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .admin-section {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .form-row, .form-row-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .tab {
-                min-width: 100px;
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
+        
+        .interface-button:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Dr. Shine</h1>
-            <p>Système de Gestion Professionnel</p>
+        <h1>🏥 Dr. Shine</h1>
+        <h2>Système de Gestion Professionnel</h2>
+        
+        <div class="interface-choice">
+            <h3>Choisissez votre interface</h3>
+            <a href="#" class="interface-button" onclick="showClientInterface()">
+                👤 Espace Client<br>
+                <small>Connectez-vous pour voir vos contrats et prendre rendez-vous</small>
+            </a>
+            <a href="#" class="interface-button" onclick="showAdminInterface()">
+                🔧 Administration<br>
+                <small>Gestion complète de l'entreprise Dr. Shine</small>
+            </a>
         </div>
-
-        <!-- Page d'accueil -->
-        <div id="role-selection" class="main-card">
-            <div class="card-header">
-                <h2 style="text-align: center; margin: 0;">Choisissez votre interface</h2>
-            </div>
-            <div class="card-content">
-                <div class="role-selector">
-                    <div class="role-card" onclick="showClientLogin()">
-                        <div class="role-icon">👤</div>
-                        <div class="role-title">Espace Client</div>
-                        <div class="role-description">Gérez vos contrats et prenez rendez-vous</div>
-                    </div>
-                    <div class="role-card" onclick="showAdminLogin()">
-                        <div class="role-icon">🔧</div>
-                        <div class="role-title">Administration</div>
-                        <div class="role-description">Gestion complète de l'entreprise</div>
-                    </div>
-                </div>
-            </div>
+        
+        <!-- Interface Client -->
+        <div id="client-interface" class="hidden">
+            <h3>👤 Connexion Client</h3>
+            <form onsubmit="return loginClient()">
+                <input type="email" id="client-email" placeholder="Email" required>
+                <input type="password" id="client-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
         </div>
-
-        <!-- Connexion Client -->
-        <div id="client-login" class="main-card hidden">
-            <div class="card-header">
-                <h2 style="margin: 0;">🔐 Connexion Client</h2>
-            </div>
-            <div class="card-content">
-                <div style="max-width: 500px; margin: 0 auto;">
-                    <div class="form-group">
-                        <label for="client-email">Votre email :</label>
-                        <input type="email" id="client-email" placeholder="exemple@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="client-password">Mot de passe :</label>
-                        <input type="password" id="client-password" placeholder="Votre mot de passe">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginClient()">Se connecter</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
-                    </div>
-                    <div id="client-login-error" class="error-message hidden"></div>
-                    
-                    <div class="info-box">
-                        <h4>💡 Connexion rapide avec QR Code</h4>
-                        <p>Votre administrateur peut vous fournir un QR code pour vous connecter automatiquement sans saisir vos identifiants.</p>
-                    </div>
-                </div>
-            </div>
+        
+        <!-- Interface Admin -->
+        <div id="admin-interface" class="hidden">
+            <h3>🔧 Administration</h3>
+            <form onsubmit="return loginAdmin()">
+                <input type="text" id="admin-login" placeholder="Identifiant admin" required>
+                <input type="password" id="admin-password" placeholder="Mot de passe admin" required>
+                <button type="submit">Se connecter</button>
+            </form>
         </div>
-
+        
         <!-- Dashboard Client -->
-        <div id="client-dashboard" class="main-card hidden">
-            <div class="card-header">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                    <div>
-                        <h2 id="client-welcome" style="margin: 0;">Tableau de bord</h2>
-                        <p id="client-info" style="margin: 5px 0 0 0; opacity: 0.9;">Informations du contrat</p>
-                    </div>
-                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
-                </div>
-            </div>
-            <div class="card-content">
-                <!-- Statistiques client -->
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-number" id="client-remaining">0</div>
-                        <div class="stat-label">Passages Restants</div>
-                    </div>
-                    <div class="stat-card" style="background: var(--success);">
-                        <div class="stat-number" id="client-paid">0$</div>
-                        <div class="stat-label">Montant Payé</div>
-                    </div>
-                    <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                        <div class="stat-number" id="client-due">0$</div>
-                        <div class="stat-label">Montant Dû</div>
-                    </div>
-                    <div class="stat-card" style="background: var(--info);">
-                        <div class="stat-number" id="client-next">--</div>
-                        <div class="stat-label">Prochain RDV (jours)</div>
-                    </div>
-                </div>
-
-                <!-- Réservation -->
-                <div class="section-card">
-                    <h3 class="section-title">📅 Réserver un Rendez-vous</h3>
-                    <div id="client-booking-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="client-service-select">Service souhaité :</label>
-                                <select id="client-service-select">
-                                    <option value="">Choisir un service</option>
-                                    <option value="menage">🏠 Entretien ménager</option>
-                                    <option value="vitres">🪟 Lavage de vitres</option>
-                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
-                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
-                                    <option value="auto-complet">✨ Lavage auto complet</option>
-                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
-                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
-                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="client-booking-date">Date souhaitée :</label>
-                                <input type="date" id="client-booking-date">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Créneaux horaires disponibles :</label>
-                            <div id="client-time-slots" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
-                                <p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez d'abord une date</p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="client-booking-notes">Instructions particulières (optionnel) :</label>
-                            <textarea id="client-booking-notes" rows="3" placeholder="Accès, consignes spéciales, etc..."></textarea>
-                        </div>
-                        
-                        <button class="btn btn-success btn-large" id="client-confirm-booking" onclick="confirmClientBooking()" disabled style="width: 100%;">✅ Confirmer la réservation</button>
-                    </div>
-                    
-                    <div id="client-no-visits" class="hidden" style="text-align: center; padding: 30px; background: #fff3cd; border-radius: 10px; color: #856404;">
-                        <h4 style="margin-bottom: 15px;">😔 Aucun passage restant</h4>
-                        <p>Vous avez utilisé tous vos passages inclus dans votre contrat. Contactez-nous pour renouveler ou étendre votre forfait.</p>
-                    </div>
-                </div>
-
-                <!-- Mes rendez-vous -->
-                <div class="section-card">
-                    <h3 class="section-title">📋 Mes Rendez-vous</h3>
-                    <div id="client-appointments-list">
-                        <p style="text-align: center; color: var(--dark-gray);">Chargement de vos rendez-vous...</p>
-                    </div>
-                </div>
-            </div>
+        <div id="client-dashboard" class="hidden">
+            <h3>Tableau de bord client</h3>
+            <div id="client-info"></div>
+            <button onclick="logout()">Déconnexion</button>
         </div>
-
-        <!-- Connexion Admin -->
-        <div id="admin-login" class="main-card hidden">
-            <div class="card-header">
-                <h2 style="margin: 0;">🔐 Interface Administrateur</h2>
-            </div>
-            <div class="card-content">
-                <div style="max-width: 500px; margin: 0 auto;">
-                    <div class="form-group">
-                        <label for="admin-email">Email administrateur :</label>
-                        <input type="email" id="admin-email" placeholder="admin@docshine.net" value="admin@docshine.net">
-                    </div>
-                    <div class="form-group">
-                        <label for="admin-password">Mot de passe :</label>
-                        <input type="password" id="admin-password" placeholder="DrShine2025!">
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-gold btn-large" onclick="loginAdmin()">Accéder à l'administration</button>
-                        <button class="btn" onclick="backToHome()">Retour</button>
-                    </div>
-                    <div id="admin-login-error" class="error-message hidden"></div>
-                    
-                    <div class="info-box">
-                        <h4>🔒 Accès sécurisé</h4>
-                        <p><strong>Email :</strong> admin@docshine.net<br>
-                        <strong>Mot de passe :</strong> DrShine2025!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Dashboard Admin -->
-        <div id="admin-dashboard" class="main-card hidden">
-            <div class="card-header">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                    <div>
-                        <h2 style="margin: 0;">🔧 Administration Dr. Shine</h2>
-                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gestion complète de l'entreprise</p>
-                    </div>
-                    <button class="btn btn-warning" onclick="logout()">Déconnexion</button>
-                </div>
-            </div>
-            <div class="card-content">
-                <!-- Onglets -->
-                <div class="tabs">
-                    <button class="tab active" onclick="showAdminTab('dashboard')">📊 Vue d'ensemble</button>
-                    <button class="tab" onclick="showAdminTab('clients')">👥 Clients</button>
-                    <button class="tab" onclick="showAdminTab('appointments')">📅 Rendez-vous</button>
-                    <button class="tab" onclick="showAdminTab('finances')">💰 Finances</button>
-                    <button class="tab" onclick="showAdminTab('tools')">🔧 Outils</button>
-                </div>
-
-                <!-- Vue d'ensemble -->
-                <div id="admin-dashboard-content" class="tab-content active">
-                    <div class="dashboard-stats">
-                        <div class="stat-card" style="background: var(--success);">
-                            <div class="stat-number" id="admin-revenue">0$</div>
-                            <div class="stat-label">Revenus totaux</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="admin-total-clients">0</div>
-                            <div class="stat-label">Clients actifs</div>
-                        </div>
-                        <div class="stat-card" style="background: var(--info);">
-                            <div class="stat-number" id="admin-total-appointments">0</div>
-                            <div class="stat-label">Rendez-vous totaux</div>
-                        </div>
-                        <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                            <div class="stat-number" id="admin-pending">0</div>
-                            <div class="stat-label">RDV en attente</div>
-                        </div>
-                    </div>
-
-                    <div class="admin-section">
-                        <div class="section-card">
-                            <h3 class="section-title">⚡ Actions rapides</h3>
-                            <button class="btn btn-success" onclick="showAdminTab('clients')" style="width: 100%; margin-bottom: 10px;">➕ Créer un nouveau client</button>
-                            <button class="btn btn-info" onclick="showAdminTab('appointments')" style="width: 100%; margin-bottom: 10px;">📅 Programmer un rendez-vous</button>
-                            <button class="btn btn-gold" onclick="showQRManagement()" style="width: 100%; margin-bottom: 10px;">📱 Gérer les QR codes</button>
-                        </div>
-
-                        <div class="section-card">
-                            <h3 class="section-title">📅 Derniers rendez-vous</h3>
-                            <div id="recent-appointments">
-                                <p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous pour le moment.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Clients -->
-                <div id="admin-clients-content" class="tab-content">
-                    <div class="section-card">
-                        <h3 class="section-title">➕ Créer un nouveau client</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="new-client-name">Nom complet :</label>
-                                <input type="text" id="new-client-name" placeholder="Prénom Nom">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-client-email">Email :</label>
-                                <input type="email" id="new-client-email" placeholder="client@email.com">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="new-client-phone">Téléphone :</label>
-                                <input type="tel" id="new-client-phone" placeholder="819-555-0000">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-client-password">Mot de passe :</label>
-                                <input type="text" id="new-client-password" value="DR2025!">
-                            </div>
-                        </div>
-                        <div class="form-row-3">
-                            <div class="form-group">
-                                <label for="contract-amount">Montant du contrat ($) :</label>
-                                <input type="number" id="contract-amount" placeholder="4000" step="100">
-                            </div>
-                            <div class="form-group">
-                                <label for="total-visits">Nombre de passages :</label>
-                                <input type="number" id="total-visits" placeholder="24">
-                            </div>
-                            <div class="form-group">
-                                <label for="initial-payment">Paiement initial ($) :</label>
-                                <input type="number" id="initial-payment" placeholder="2000" step="0.01">
-                            </div>
-                        </div>
-                        <button class="btn btn-success btn-large" onclick="createClient()" style="width: 100%;">✅ Créer le client</button>
-                    </div>
-
-                    <div class="data-table">
-                        <h3 class="section-title">👥 Liste des clients</h3>
-                        <div style="overflow-x: auto;">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Client</th>
-                                        <th>Contact</th>
-                                        <th>Contrat</th>
-                                        <th>Passages</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clients-table">
-                                    <tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client. Créez votre premier client !</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rendez-vous -->
-                <div id="admin-appointments-content" class="tab-content">
-                    <div class="section-card">
-                        <h3 class="section-title">📅 Programmer un nouveau rendez-vous</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="admin-client-select">Client :</label>
-                                <select id="admin-client-select">
-                                    <option value="">Choisir un client</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="admin-apt-service">Service :</label>
-                                <select id="admin-apt-service">
-                                    <option value="">Sélectionner un service</option>
-                                    <option value="menage">🏠 Entretien ménager</option>
-                                    <option value="vitres">🪟 Lavage de vitres</option>
-                                    <option value="auto-ext">🚗 Lavage auto extérieur</option>
-                                    <option value="auto-int">🚙 Lavage auto intérieur</option>
-                                    <option value="auto-complet">✨ Lavage auto complet</option>
-                                    <option value="bacs">🗑️ Lavage bacs à ordures</option>
-                                    <option value="goutieres">🏘️ Nettoyage gouttières</option>
-                                    <option value="sinistre">🔧 Nettoyage après sinistre</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="admin-apt-date">Date :</label>
-                                <input type="date" id="admin-apt-date">
-                            </div>
-                            <div class="form-group">
-                                <label for="admin-apt-time">Heure :</label>
-                                <select id="admin-apt-time">
-                                    <option value="">Choisir l'heure</option>
-                                    <option value="08:00">08:00</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="admin-apt-notes">Notes :</label>
-                            <textarea id="admin-apt-notes" rows="2" placeholder="Instructions particulières..."></textarea>
-                        </div>
-                        <button class="btn btn-success btn-large" onclick="createAppointment()" style="width: 100%;">✅ Créer le rendez-vous</button>
-                    </div>
-
-                    <div class="data-table">
-                        <h3 class="section-title">📅 Tous les rendez-vous</h3>
-                        <div style="overflow-x: auto;">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date & Heure</th>
-                                        <th>Client</th>
-                                        <th>Service</th>
-                                        <th>Statut</th>
-                                        <th>Coût</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="appointments-table">
-                                    <tr><td colspan="5" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous programmé.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Finances -->
-                <div id="admin-finances-content" class="tab-content">
-                    <div class="admin-section">
-                        <div class="section-card">
-                            <h3 class="section-title">💰 Enregistrer un paiement</h3>
-                            <div class="form-group">
-                                <label for="payment-client-select">Client :</label>
-                                <select id="payment-client-select">
-                                    <option value="">Choisir un client</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="payment-amount">Montant reçu ($) :</label>
-                                <input type="number" id="payment-amount" step="0.01" placeholder="0.00">
-                            </div>
-                            <button class="btn btn-success btn-large" onclick="recordPayment()" style="width: 100%;">💰 Enregistrer le paiement</button>
-                        </div>
-
-                        <div class="section-card">
-                            <h3 class="section-title">💰 Résumé financier</h3>
-                            <div class="dashboard-stats">
-                                <div class="stat-card" style="background: var(--success);">
-                                    <div class="stat-number" id="finance-total-revenue">0$</div>
-                                    <div class="stat-label">Revenus totaux</div>
-                                </div>
-                                <div class="stat-card" style="background: var(--warning); color: var(--primary-blue);">
-                                    <div class="stat-number" id="finance-pending-amount">0$</div>
-                                    <div class="stat-label">Montants en attente</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Outils -->
-                <div id="admin-tools-content" class="tab-content">
-                    <div class="section-card">
-                        <h3 class="section-title">📱 QR Codes</h3>
-                        <p>Générez des QR codes pour permettre à vos clients de se connecter automatiquement.</p>
-                        <button class="btn btn-gold btn-large" onclick="showQRManagement()" style="width: 100%; margin-bottom: 15px;">📱 Gérer les QR codes clients</button>
-                    </div>
-
-                    <div class="section-card">
-                        <h3 class="section-title">💾 Sauvegarde et Export</h3>
-                        <button class="btn btn-info" onclick="exportData()" style="width: 100%; margin-bottom: 15px;">📊 Exporter les données</button>
-                        <button class="btn btn-warning" onclick="backupData()" style="width: 100%; margin-bottom: 15px;">💾 Sauvegarder dans le navigateur</button>
-                    </div>
-
-                    <div class="section-card">
-                        <h3 class="section-title">⚙️ Paramètres</h3>
-                        <div class="form-group">
-                            <label>Nom de l'entreprise :</label>
-                            <input type="text" value="Dr. Shine" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Email de contact :</label>
-                            <input type="email" value="contact@drshine.com" readonly>
-                        </div>
-                    </div>
-
-                    <div class="section-card" style="border-color: var(--danger);">
-                        <h3 class="section-title" style="color: var(--danger);">⚠️ Zone dangereuse</h3>
-                        <p style="color: var(--danger); margin-bottom: 15px;">Action irréversible : supprime toutes les données</p>
-                        <button class="btn btn-danger" onclick="resetDatabase()" style="width: 100%;">🗑️ Réinitialiser la base de données</button>
-                    </div>
-                </div>
-            </div>
+        <div id="admin-dashboard" class="hidden">
+            <h3>Tableau de bord administrateur</h3>
+            <div id="admin-info"></div>
+            <button onclick="exportData()">Exporter les données</button>
+            <button onclick="backupData()">Sauvegarder</button>
+            <button onclick="resetDatabase()" style="background: red;">Réinitialiser</button>
+            <button onclick="logout()">Déconnexion</button>
         </div>
     </div>
 
     <script>
         // Variables globales
-        var currentUser = null;
-        var nextClientId = 1;
-        var nextAppointmentId = 1;
         var clients = [];
         var appointments = [];
-        var selectedTimeSlot = null;
-
-        var serviceNames = {
-            'menage': '🏠 Entretien ménager',
-            'vitres': '🪟 Lavage de vitres',
-            'auto-ext': '🚗 Lavage auto extérieur',
-            'auto-int': '🚙 Lavage auto intérieur',
-            'auto-complet': '✨ Lavage auto complet',
-            'bacs': '🗑️ Lavage bacs à ordures',
-            'goutieres': '🏘️ Nettoyage gouttières',
-            'sinistre': '🔧 Nettoyage après sinistre'
-        };
-
-        // Système de stockage
+        var nextClientId = 1;
+        var nextAppointmentId = 1;
+        var currentUser = null;
+        
+        // Stockage local
         var Storage = {
             save: function() {
                 try {
-                    var data = {
-                        clients: clients,
-                        appointments: appointments,
-                        nextClientId: nextClientId,
-                        nextAppointmentId: nextAppointmentId
-                    };
-                    localStorage.setItem('drshine_data', JSON.stringify(data));
+                    localStorage.setItem('drshine_clients', JSON.stringify(clients));
+                    localStorage.setItem('drshine_appointments', JSON.stringify(appointments));
+                    localStorage.setItem('drshine_nextClientId', nextClientId);
+                    localStorage.setItem('drshine_nextAppointmentId', nextAppointmentId);
                 } catch (e) {
-                    console.log('Erreur sauvegarde');
+                    console.error('Erreur de sauvegarde:', e);
                 }
             },
             
             load: function() {
                 try {
-                    var data = localStorage.getItem('drshine_data');
-                    if (data) {
-                        var parsed = JSON.parse(data);
-                        clients = parsed.clients || [];
-                        appointments = parsed.appointments || [];
-                        nextClientId = parsed.nextClientId || 1;
-                        nextAppointmentId = parsed.nextAppointmentId || 1;
-                        return true;
-                    }
+                    var savedClients = localStorage.getItem('drshine_clients');
+                    var savedAppointments = localStorage.getItem('drshine_appointments');
+                    var savedNextClientId = localStorage.getItem('drshine_nextClientId');
+                    var savedNextAppointmentId = localStorage.getItem('drshine_nextAppointmentId');
+                    
+                    if (savedClients) clients = JSON.parse(savedClients);
+                    if (savedAppointments) appointments = JSON.parse(savedAppointments);
+                    if (savedNextClientId) nextClientId = parseInt(savedNextClientId);
+                    if (savedNextAppointmentId) nextAppointmentId = parseInt(savedNextAppointmentId);
                 } catch (e) {
-                    console.log('Aucune donnée sauvegardée');
+                    console.error('Erreur de chargement:', e);
                 }
-                return false;
             },
             
             clear: function() {
-                try {
-                    localStorage.removeItem('drshine_data');
-                } catch (e) {
-                    console.log('Erreur suppression');
-                }
+                localStorage.removeItem('drshine_clients');
+                localStorage.removeItem('drshine_appointments');
+                localStorage.removeItem('drshine_nextClientId');
+                localStorage.removeItem('drshine_nextAppointmentId');
             }
         };
-
-        // Navigation
-        function showClientLogin() {
-            hideAll();
-            document.getElementById('client-login').classList.remove('hidden');
-            showNotification('Interface client activée', 'info');
-        }
-
-        function showAdminLogin() {
-            hideAll();
-            document.getElementById('admin-login').classList.remove('hidden');
-            showNotification('Interface admin activée', 'info');
-        }
-
-        function backToHome() {
-            hideAll();
-            document.getElementById('role-selection').classList.remove('hidden');
-            showNotification('Retour à l\'accueil', 'info');
-        }
-
+        
+        // Fonctions d'interface
         function hideAll() {
-            var elements = ['role-selection', 'client-login', 'admin-login', 'client-dashboard', 'admin-dashboard'];
+            var elements = document.querySelectorAll('.container > div');
             for (var i = 0; i < elements.length; i++) {
-                var element = document.getElementById(elements[i]);
-                if (element) element.classList.add('hidden');
+                elements[i].classList.add('hidden');
             }
         }
-
-        function logout() {
-            currentUser = null;
-            selectedTimeSlot = null;
-            backToHome();
-            showNotification('Déconnexion réussie', 'info');
+        
+        function showClientInterface() {
+            hideAll();
+            document.getElementById('client-interface').classList.remove('hidden');
         }
-
-        // Connexions
+        
+        function showAdminInterface() {
+            hideAll();
+            document.getElementById('admin-interface').classList.remove('hidden');
+        }
+        
         function loginClient() {
-            var email = document.getElementById('client-email').value.trim();
-            var password = document.getElementById('client-password').value.trim();
-
-            if (!email || !password) {
-                showError('client-login-error', 'Veuillez saisir votre email et mot de passe');
-                return;
-            }
-
-            Storage.load();
-
-            var client = null;
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].email.toLowerCase() === email.toLowerCase() && clients[i].password === password) {
-                    client = clients[i];
-                    break;
-                }
-            }
-
+            var email = document.getElementById('client-email').value;
+            var password = document.getElementById('client-password').value;
+            
+            var client = clients.find(function(c) {
+                return c.email === email && c.password === password;
+            });
+            
             if (client) {
                 currentUser = client;
                 hideAll();
                 document.getElementById('client-dashboard').classList.remove('hidden');
                 updateClientDashboard();
-                showNotification('Connexion réussie ! Bienvenue ' + currentUser.name, 'success');
-                
-                document.getElementById('client-email').value = '';
-                document.getElementById('client-password').value = '';
+                showNotification('Bienvenue ' + client.name, 'success');
             } else {
-                showError('client-login-error', 'Email ou mot de passe incorrect');
+                showNotification('Identifiants incorrects', 'error');
             }
+            
+            return false; // Empêche le rechargement de la page
         }
-
+        
         function loginAdmin() {
-            var email = document.getElementById('admin-email').value;
+            var login = document.getElementById('admin-login').value;
             var password = document.getElementById('admin-password').value;
-
-            if (email === 'admin@docshine.net' && password === 'DrShine2025!') {
+            
+            // Identifiants admin simples (à sécuriser en production)
+            if (login === 'admin' && password === 'admin123') {
                 hideAll();
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                showAdminTab('dashboard');
-                loadAdminData();
-                showNotification('Accès administrateur autorisé !', 'success');
+                showNotification('Connexion admin réussie', 'success');
             } else {
-                showError('admin-login-error', 'Identifiants incorrects');
+                showNotification('Identifiants admin incorrects', 'error');
             }
+            
+            return false;
         }
-
-        // Dashboard Client
+        
+        function logout() {
+            currentUser = null;
+            hideAll();
+            document.querySelector('.interface-choice').parentNode.querySelector('.interface-choice').style.display = 'block';
+            showNotification('Déconnexion réussie', 'info');
+        }
+        
         function updateClientDashboard() {
-            if (!currentUser) return;
-            
-            Storage.load();
-            
-            // Mettre à jour les informations du client
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].id === currentUser.id || clients[i].email === currentUser.email) {
-                    currentUser = clients[i];
-                    break;
-                }
-            }
-            
-            document.getElementById('client-welcome').textContent = 'Bienvenue, ' + (currentUser.name || 'Client');
-            document.getElementById('client-info').textContent = 'Contrat: ' + (currentUser.contractAmount || 0) + '$ (' + (currentUser.totalVisits || 0) + ' passages)';
-            
-            var passagesRestants = Math.max(0, (currentUser.totalVisits || 0) - (currentUser.usedVisits || 0));
-            var costPerVisit = (currentUser.totalVisits || 1) > 0 ? (currentUser.contractAmount || 0) / (currentUser.totalVisits || 1) : 0;
-            var amountDue = Math.max(0, ((currentUser.usedVisits || 0) * costPerVisit) - (currentUser.amountPaid || 0));
-            
-            document.getElementById('client-remaining').textContent = passagesRestants;
-            document.getElementById('client-paid').textContent = (currentUser.amountPaid || 0).toFixed(0) + '$';
-            document.getElementById('client-due').textContent = amountDue.toFixed(0) + '$';
-            
-            // Prochain rendez-vous
-            var nextAppt = null;
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            for (var i = 0; i < appointments.length; i++) {
-                if (appointments[i].clientId === currentUser.id) {
-                    var aptDate = new Date(appointments[i].date);
-                    if (aptDate >= today) {
-                        if (!nextAppt || aptDate < new Date(nextAppt.date)) {
-                            nextAppt = appointments[i];
-                        }
-                    }
-                }
-            }
-            
-            if (nextAppt) {
-                var daysUntil = Math.ceil((new Date(nextAppt.date) - today) / (1000 * 60 * 60 * 24));
-                document.getElementById('client-next').textContent = daysUntil;
-            } else {
-                document.getElementById('client-next').textContent = '--';
-            }
-            
-            updateClientBookingSection();
-            updateClientAppointmentsList();
-        }
-
-        function updateClientBookingSection() {
-            if (!currentUser) return;
-            
-            var passagesRestants = (currentUser.totalVisits || 0) - (currentUser.usedVisits || 0);
-            var bookingForm = document.getElementById('client-booking-form');
-            var noVisitsMessage = document.getElementById('client-no-visits');
-            
-            if (passagesRestants > 0) {
-                bookingForm.classList.remove('hidden');
-                noVisitsMessage.classList.add('hidden');
-                
-                var today = new Date().toISOString().split('T')[0];
-                document.getElementById('client-booking-date').setAttribute('min', today);
-                
-                var dateField = document.getElementById('client-booking-date');
-                dateField.addEventListener('change', updateAvailableTimeSlots);
-            } else {
-                bookingForm.classList.add('hidden');
-                noVisitsMessage.classList.remove('hidden');
+            if (currentUser) {
+                var info = document.getElementById('client-info');
+                info.innerHTML = 
+                    '<h4>Informations du contrat</h4>' +
+                    '<p><strong>Nom:</strong> ' + currentUser.name + '</p>' +
+                    '<p><strong>Email:</strong> ' + currentUser.email + '</p>' +
+                    '<p><strong>Téléphone:</strong> ' + currentUser.phone + '</p>' +
+                    '<p><strong>Montant du contrat:</strong> ' + currentUser.contractAmount + '€</p>' +
+                    '<p><strong>Visites totales:</strong> ' + currentUser.totalVisits + '</p>' +
+                    '<p><strong>Visites utilisées:</strong> ' + currentUser.usedVisits + '</p>' +
+                    '<p><strong>Visites restantes:</strong> ' + (currentUser.totalVisits - currentUser.usedVisits) + '</p>' +
+                    '<p><strong>Montant payé:</strong> ' + currentUser.amountPaid + '€</p>';
             }
         }
-
-        function updateAvailableTimeSlots() {
-            var selectedDate = document.getElementById('client-booking-date').value;
-            var timeSlotsContainer = document.getElementById('client-time-slots');
-            
-            if (!selectedDate) {
-                timeSlotsContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez d\'abord une date</p>';
-                document.getElementById('client-confirm-booking').disabled = true;
-                return;
-            }
-            
-            var availableSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
-            var takenSlots = [];
-            
-            for (var i = 0; i < appointments.length; i++) {
-                if (appointments[i].date === selectedDate) {
-                    takenSlots.push(appointments[i].time);
-                }
-            }
-            
-            var slotsHTML = '';
-            for (var j = 0; j < availableSlots.length; j++) {
-                var slot = availableSlots[j];
-                var isAvailable = takenSlots.indexOf(slot) === -1;
-                
-                if (isAvailable) {
-                    slotsHTML += '<button class="btn btn-info btn-small" onclick="selectTimeSlot(\'' + slot + '\')" style="margin: 2px;">' + slot + '</button>';
-                } else {
-                    slotsHTML += '<button class="btn btn-secondary btn-small" disabled style="margin: 2px;">' + slot + ' (Occupé)</button>';
-                }
-            }
-            
-            timeSlotsContainer.innerHTML = slotsHTML;
-            document.getElementById('client-confirm-booking').disabled = true;
-        }
-
-        function selectTimeSlot(time) {
-            var allSlots = document.querySelectorAll('#client-time-slots .btn');
-            for (var i = 0; i < allSlots.length; i++) {
-                if (!allSlots[i].disabled) {
-                    allSlots[i].classList.remove('btn-warning');
-                    allSlots[i].classList.add('btn-info');
-                }
-            }
-            
-            var clickedSlot = null;
-            for (var j = 0; j < allSlots.length; j++) {
-                if (allSlots[j].textContent.indexOf(time) === 0) {
-                    clickedSlot = allSlots[j];
-                    break;
-                }
-            }
-            
-            if (clickedSlot && !clickedSlot.disabled) {
-                clickedSlot.classList.remove('btn-info');
-                clickedSlot.classList.add('btn-warning');
-            }
-            
-            selectedTimeSlot = time;
-            document.getElementById('client-confirm-booking').disabled = false;
-        }
-
-        function confirmClientBooking() {
-            var service = document.getElementById('client-service-select').value;
-            var date = document.getElementById('client-booking-date').value;
-            var time = selectedTimeSlot;
-            var notes = document.getElementById('client-booking-notes').value;
-            
-            if (!service || !date || !time) {
-                showNotification('Veuillez sélectionner un service, une date et un créneau horaire', 'error');
-                return;
-            }
-            
-            if (!currentUser) {
-                showNotification('Erreur de session utilisateur', 'error');
-                return;
-            }
-            
-            var passagesRestants = (currentUser.totalVisits || 0) - (currentUser.usedVisits || 0);
-            if (passagesRestants <= 0) {
-                showNotification('Aucun passage restant disponible', 'error');
-                return;
-            }
-            
-            var newAppointment = {
-                id: nextAppointmentId++,
-                clientId: currentUser.id,
-                date: date,
-                time: time,
-                service: service,
-                notes: notes,
-                status: 'confirmed',
-                cost: (currentUser.contractAmount || 0) / (currentUser.totalVisits || 1)
-            };
-            
-            appointments.push(newAppointment);
-            currentUser.usedVisits = (currentUser.usedVisits || 0) + 1;
-            Storage.save();
-            
-            // Reset form
-            document.getElementById('client-service-select').value = '';
-            document.getElementById('client-booking-date').value = '';
-            document.getElementById('client-booking-notes').value = '';
-            document.getElementById('client-time-slots').innerHTML = '<p style="text-align: center; color: var(--dark-gray); grid-column: 1 / -1;">Sélectionnez d\'abord une date</p>';
-            document.getElementById('client-confirm-booking').disabled = true;
-            selectedTimeSlot = null;
-            
-            updateClientDashboard();
-            
-            var serviceName = serviceNames[service] || service;
-            var dateFormatted = new Date(date).toLocaleDateString('fr-FR');
-            showNotification('Rendez-vous confirmé pour le ' + dateFormatted + ' à ' + time + ' (' + serviceName + ')', 'success');
-        }
-
-        function updateClientAppointmentsList() {
-            if (!currentUser) return;
-            
-            var container = document.getElementById('client-appointments-list');
-            var clientAppointments = [];
-            
-            for (var i = 0; i < appointments.length; i++) {
-                if (appointments[i].clientId === currentUser.id) {
-                    clientAppointments.push(appointments[i]);
-                }
-            }
-            
-            clientAppointments.sort(function(a, b) {
-                var dateA = new Date(a.date + ' ' + a.time);
-                var dateB = new Date(b.date + ' ' + b.time);
-                return dateB - dateA;
-            });
-            
-            var html = '';
-            if (clientAppointments.length === 0) {
-                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous programmé pour le moment.</p>';
-            } else {
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                for (var j = 0; j < clientAppointments.length; j++) {
-                    var apt = clientAppointments[j];
-                    var aptDate = new Date(apt.date);
-                    var isUpcoming = aptDate >= today;
-                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
-                    var statusClass = apt.status === 'confirmed' ? 'status-confirmed' : apt.status === 'completed' ? 'status-completed' : 'status-pending';
-                    
-                    var cardClass = isUpcoming ? 'appointment-card upcoming' : 'appointment-card';
-                    
-                    html += '<div class="' + cardClass + '">';
-                    html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">';
-                    html += '<div><div style="font-size: 1.1rem; font-weight: bold; color: var(--primary-blue);">';
-                    html += new Date(apt.date).toLocaleDateString('fr-FR') + ' à ' + apt.time + '</div>';
-                    html += '<div style="margin: 5px 0;">' + serviceNames[apt.service] + '</div>';
-                    if (apt.notes) {
-                        html += '<div style="font-size: 0.9rem; color: var(--dark-gray);">' + apt.notes + '</div>';
-                    }
-                    html += '</div><div style="text-align: right;">';
-                    html += '<span class="status-chip ' + statusClass + '">' + statusText + '</span><br>';
-                    html += '<small style="color: var(--dark-gray);">Coût: ' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</small>';
-                    html += '</div></div></div>';
-                }
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Administration
-        function showAdminTab(tabName) {
-            var tabs = document.querySelectorAll('#admin-dashboard .tab');
-            var contents = document.querySelectorAll('#admin-dashboard .tab-content');
-            
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-            for (var j = 0; j < contents.length; j++) {
-                contents[j].classList.remove('active');
-            }
-            
-            var targetContent = document.getElementById('admin-' + tabName + '-content');
-            if (targetContent) {
-                targetContent.classList.add('active');
-                
-                // Activer l'onglet correspondant
-                for (var k = 0; k < tabs.length; k++) {
-                    if (tabs[k].onclick && tabs[k].onclick.toString().indexOf(tabName) > -1) {
-                        tabs[k].classList.add('active');
-                        break;
-                    }
-                }
-            }
-        }
-
-        function loadAdminData() {
-            updateClientsTable();
-            updateAppointmentsTable();
-            updateClientSelects();
-            updateStats();
-            updateRecentAppointments();
-        }
-
-        function updateStats() {
-            var totalRevenue = 0;
-            for (var i = 0; i < clients.length; i++) {
-                totalRevenue += clients[i].amountPaid || 0;
-            }
-            
-            var pendingAppointments = 0;
-            for (var j = 0; j < appointments.length; j++) {
-                if (appointments[j].status === 'pending') {
-                    pendingAppointments++;
-                }
-            }
-            
-            var pendingAmount = 0;
-            for (var k = 0; k < clients.length; k++) {
-                var client = clients[k];
-                var costPerVisit = (client.totalVisits || 1) > 0 ? (client.contractAmount || 0) / (client.totalVisits || 1) : 0;
-                var amountDue = ((client.usedVisits || 0) * costPerVisit) - (client.amountPaid || 0);
-                if (amountDue > 0) {
-                    pendingAmount += amountDue;
-                }
-            }
-            
-            document.getElementById('admin-revenue').textContent = totalRevenue + '$';
-            document.getElementById('admin-total-clients').textContent = clients.length;
-            document.getElementById('admin-total-appointments').textContent = appointments.length;
-            document.getElementById('admin-pending').textContent = pendingAppointments;
-            
-            var financeRevenue = document.getElementById('finance-total-revenue');
-            var financePending = document.getElementById('finance-pending-amount');
-            if (financeRevenue) financeRevenue.textContent = totalRevenue + '$';
-            if (financePending) financePending.textContent = Math.round(pendingAmount) + '$';
-        }
-
-        function updateRecentAppointments() {
-            var container = document.getElementById('recent-appointments');
-            var html = '';
-            
-            if (appointments.length === 0) {
-                html = '<p style="text-align: center; color: var(--dark-gray);">Aucun rendez-vous pour le moment.</p>';
-            } else {
-                var recent = appointments.slice(-3);
-                for (var i = 0; i < recent.length; i++) {
-                    var apt = recent[i];
-                    var client = null;
-                    for (var j = 0; j < clients.length; j++) {
-                        if (clients[j].id === apt.clientId) {
-                            client = clients[j];
-                            break;
-                        }
-                    }
-                    var clientName = client ? client.name : 'Client inconnu';
-                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
-                    
-                    html += '<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-gray); border-radius: 8px; margin-bottom: 8px; background: white;">';
-                    html += '<div><strong>' + apt.time + '</strong> - ' + clientName + '<br><small>' + serviceNames[apt.service] + '</small></div>';
-                    html += '<span class="status-chip status-' + apt.status + '">' + statusText + '</span></div>';
-                }
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Gestion clients
-        function createClient() {
-            var name = document.getElementById('new-client-name').value;
-            var email = document.getElementById('new-client-email').value;
-            var phone = document.getElementById('new-client-phone').value;
-            var contractAmount = parseFloat(document.getElementById('contract-amount').value);
-            var totalVisits = parseInt(document.getElementById('total-visits').value);
-            var initialPayment = parseFloat(document.getElementById('initial-payment').value) || 0;
-
-            if (!name || !email || !phone || !contractAmount || !totalVisits) {
-                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-                return;
-            }
-
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].email === email) {
-                    showNotification('Un client avec cet email existe déjà', 'error');
-                    return;
-                }
-            }
-
-            var newClient = {
-                id: nextClientId++,
-                name: name,
-                email: email,
-                password: document.getElementById('new-client-password').value,
-                phone: phone,
-                contractAmount: contractAmount,
-                totalVisits: totalVisits,
-                usedVisits: 0,
-                amountPaid: initialPayment
-            };
-
-            clients.push(newClient);
-            Storage.save();
-            
-            // Reset form
-            document.getElementById('new-client-name').value = '';
-            document.getElementById('new-client-email').value = '';
-            document.getElementById('new-client-phone').value = '';
-            document.getElementById('new-client-password').value = 'DR2025!';
-            document.getElementById('contract-amount').value = '';
-            document.getElementById('total-visits').value = '';
-            document.getElementById('initial-payment').value = '';
-            
-            updateClientsTable();
-            updateClientSelects();
-            updateStats();
-            showNotification('Client créé avec succès !', 'success');
-        }
-
-        function updateClientsTable() {
-            var tbody = document.getElementById('clients-table');
-            if (!tbody) return;
-
-            var html = '';
-            if (clients.length === 0) {
-                html = '<tr><td colspan="6" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun client. Créez votre premier client !</td></tr>';
-            } else {
-                for (var i = 0; i < clients.length; i++) {
-                    var client = clients[i];
-                    var remaining = (client.totalVisits || 0) - (client.usedVisits || 0);
-                    var costPerVisit = (client.totalVisits || 1) > 0 ? (client.contractAmount || 0) / (client.totalVisits || 1) : 0;
-                    var balance = ((client.usedVisits || 0) * costPerVisit) - (client.amountPaid || 0);
-                    
-                    html += '<tr><td><strong>' + client.name + '</strong></td>';
-                    html += '<td>' + client.email + '<br><small>' + client.phone + '</small></td>';
-                    html += '<td>' + (client.contractAmount || 0) + '$<br><small>Payé: ' + (client.amountPaid || 0) + '$</small></td>';
-                    html += '<td>Restants: <strong>' + remaining + '</strong><br>Total: ' + (client.totalVisits || 0) + '</td>';
-                    html += '<td><span class="status-chip ' + (balance <= 0 ? 'status-completed' : 'status-pending') + '">' + (balance <= 0 ? 'Payé ✓' : 'Dû: ' + balance.toFixed(0) + '$') + '</span></td>';
-                    html += '<td><button class="btn btn-gold btn-small" onclick="generateQRForClient(' + client.id + ')" style="margin: 2px;">📱 QR</button></td></tr>';
-                }
-            }
-            
-            tbody.innerHTML = html;
-        }
-
-        // Gestion rendez-vous
-        function createAppointment() {
-            var clientId = parseInt(document.getElementById('admin-client-select').value);
-            var service = document.getElementById('admin-apt-service').value;
-            var date = document.getElementById('admin-apt-date').value;
-            var time = document.getElementById('admin-apt-time').value;
-            var notes = document.getElementById('admin-apt-notes').value;
-
-            if (!clientId || !service || !date || !time) {
-                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
-                return;
-            }
-
-            var client = null;
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].id === clientId) {
-                    client = clients[i];
-                    break;
-                }
-            }
-            
-            if (!client) {
-                showNotification('Client introuvable', 'error');
-                return;
-            }
-
-            var remaining = (client.totalVisits || 0) - (client.usedVisits || 0);
-            if (remaining <= 0) {
-                showNotification('Ce client n\'a plus de passages restants', 'error');
-                return;
-            }
-
-            var newAppointment = {
-                id: nextAppointmentId++,
-                clientId: clientId,
-                date: date,
-                time: time,
-                service: service,
-                notes: notes,
-                status: 'confirmed',
-                cost: (client.contractAmount || 0) / (client.totalVisits || 1)
-            };
-
-            appointments.push(newAppointment);
-            client.usedVisits = (client.usedVisits || 0) + 1;
-
-            Storage.save();
-
-            // Reset form
-            document.getElementById('admin-client-select').value = '';
-            document.getElementById('admin-apt-service').value = '';
-            document.getElementById('admin-apt-date').value = '';
-            document.getElementById('admin-apt-time').value = '';
-            document.getElementById('admin-apt-notes').value = '';
-
-            updateAppointmentsTable();
-            updateClientsTable();
-            updateStats();
-            updateRecentAppointments();
-            showNotification('Rendez-vous créé avec succès !', 'success');
-        }
-
-        function updateAppointmentsTable() {
-            var tbody = document.getElementById('appointments-table');
-            if (!tbody) return;
-
-            var html = '';
-            if (appointments.length === 0) {
-                html = '<tr><td colspan="5" style="text-align: center; color: var(--dark-gray); padding: 40px;">Aucun rendez-vous programmé.</td></tr>';
-            } else {
-                for (var i = 0; i < appointments.length; i++) {
-                    var apt = appointments[i];
-                    var client = null;
-                    for (var j = 0; j < clients.length; j++) {
-                        if (clients[j].id === apt.clientId) {
-                            client = clients[j];
-                            break;
-                        }
-                    }
-                    var clientName = client ? client.name : 'Client inconnu';
-                    var statusText = apt.status === 'confirmed' ? 'Confirmé' : apt.status === 'completed' ? 'Terminé' : 'En attente';
-                    var statusClass = apt.status === 'confirmed' ? 'status-confirmed' : apt.status === 'completed' ? 'status-completed' : 'status-pending';
-                    
-                    html += '<tr><td><strong>' + new Date(apt.date).toLocaleDateString('fr-FR') + '</strong><br>' + apt.time + '</td>';
-                    html += '<td>' + clientName + '</td>';
-                    html += '<td>' + serviceNames[apt.service] + '</td>';
-                    html += '<td><span class="status-chip ' + statusClass + '">' + statusText + '</span></td>';
-                    html += '<td>' + (apt.cost ? apt.cost.toFixed(2) + '$' : '-') + '</td></tr>';
-                }
-            }
-            
-            tbody.innerHTML = html;
-        }
-
-        function updateClientSelects() {
-            var selects = ['admin-client-select', 'payment-client-select'];
-            
-            for (var s = 0; s < selects.length; s++) {
-                var select = document.getElementById(selects[s]);
-                if (!select) continue;
-                
-                var currentValue = select.value;
-                var html = '<option value="">Choisir un client</option>';
-                
-                for (var i = 0; i < clients.length; i++) {
-                    var client = clients[i];
-                    html += '<option value="' + client.id + '">' + client.name + ' (' + client.email + ')</option>';
-                }
-                
-                select.innerHTML = html;
-                select.value = currentValue;
-            }
-        }
-
-        // Finances
-        function recordPayment() {
-            var clientId = parseInt(document.getElementById('payment-client-select').value);
-            var amount = parseFloat(document.getElementById('payment-amount').value);
-
-            if (!clientId || !amount) {
-                showNotification('Veuillez sélectionner un client et saisir un montant', 'error');
-                return;
-            }
-
-            var client = null;
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].id === clientId) {
-                    client = clients[i];
-                    break;
-                }
-            }
-
-            if (!client) {
-                showNotification('Client introuvable', 'error');
-                return;
-            }
-
-            client.amountPaid = (client.amountPaid || 0) + amount;
-            Storage.save();
-
-            document.getElementById('payment-client-select').value = '';
-            document.getElementById('payment-amount').value = '';
-
-            updateClientsTable();
-            updateStats();
-            showNotification('Paiement de ' + amount + '$ enregistré pour ' + client.name, 'success');
-        }
-
-        // QR Codes et outils
-        function generateQRForClient(clientId) {
-            showNotification('Fonctionnalité QR code : à venir', 'info');
-        }
-
-        function showQRManagement() {
-            if (clients.length === 0) {
-                showNotification('Aucun client disponible pour les QR codes', 'error');
-                return;
-            }
-            showNotification('Gestion des QR codes : fonctionnalité à venir', 'info');
-        }
-
+        
+        // Fonctions d'export et gestion
         function exportData() {
             try {
                 var data = {
@@ -1652,25 +266,24 @@
                 
                 var dataStr = JSON.stringify(data, null, 2);
                 var dataBlob = new Blob([dataStr], {type: 'application/json'});
-                
                 var link = document.createElement('a');
                 link.href = URL.createObjectURL(dataBlob);
                 link.download = 'drshine_export_' + new Date().toISOString().split('T')[0] + '.json';
                 link.click();
                 
-                showNotification('Données exportées avec succès', 'success');
+                showNotification('Données exportées', 'success');
             } catch (e) {
-                showNotification('Erreur lors de l\'export', 'error');
+                showNotification('Erreur export', 'error');
             }
         }
-
+        
         function backupData() {
             Storage.save();
-            showNotification('Sauvegarde effectuée dans le navigateur', 'success');
+            showNotification('Sauvegarde effectuée', 'success');
         }
-
+        
         function resetDatabase() {
-            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\nVous allez supprimer TOUTES les données.\nTapez "SUPPRIMER" pour confirmer :';
+            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\nTapez "SUPPRIMER" pour confirmer :';
             var userInput = prompt(confirmMessage);
             
             if (userInput === 'SUPPRIMER') {
@@ -1680,20 +293,17 @@
                 nextAppointmentId = 1;
                 currentUser = null;
                 Storage.clear();
-                
-                loadAdminData();
-                showNotification('Base de données réinitialisée', 'success');
+                showNotification('Base réinitialisée', 'success');
             } else {
-                showNotification('Réinitialisation annulée', 'info');
+                showNotification('Annulé', 'info');
             }
         }
-
+        
         // Notifications
         function showNotification(message, type) {
             var notification = document.createElement('div');
             notification.className = 'notification ' + type;
             notification.textContent = message;
-            
             document.body.appendChild(notification);
             
             setTimeout(function() {
@@ -1709,30 +319,57 @@
                 }, 300);
             }, 3000);
         }
-
-        function showError(elementId, message) {
-            var errorElement = document.getElementById(elementId);
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.classList.remove('hidden');
-                
-                setTimeout(function() {
-                    errorElement.classList.add('hidden');
-                }, 5000);
-            }
-        }
-
+        
         // Initialisation
         window.onload = function() {
             Storage.load();
             
-            if (clients.length > 0) {
-                showNotification('Système prêt ! (' + clients.length + ' clients chargés)', 'success');
-            } else {
-                showNotification('Bienvenue dans Dr. Shine ! Connectez-vous en tant qu\'administrateur pour commencer.', 'info');
+            // Client de démo
+            if (clients.length === 0) {
+                var demoClient = {
+                    id: nextClientId++,
+                    name: 'Client Démo',
+                    email: 'demo@client.com',
+                    password: 'demo123',
+                    phone: '819-555-0000',
+                    contractAmount: 2000,
+                    totalVisits: 12,
+                    usedVisits: 3,
+                    amountPaid: 1000
+                };
+                clients.push(demoClient);
+                Storage.save();
             }
             
-            // Configurer les dates minimales
+            // Connexion automatique par URL
+            var urlParams = new URLSearchParams(window.location.search);
+            var email = urlParams.get('email');
+            var password = urlParams.get('password');
+            
+            if (email && password) {
+                var client = clients.find(function(c) {
+                    return c.email === email && c.password === password;
+                });
+                
+                if (client) {
+                    currentUser = client;
+                    hideAll();
+                    document.getElementById('client-dashboard').classList.remove('hidden');
+                    updateClientDashboard();
+                    showNotification('Connexion QR réussie ! Bienvenue ' + currentUser.name, 'success');
+                    
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                    return;
+                } else {
+                    showNotification('QR code invalide', 'error');
+                }
+            }
+            
+            showNotification('Système prêt ! (' + clients.length + ' clients)', 'success');
+            
+            // Dates minimales
             var today = new Date().toISOString().split('T')[0];
             var dateInputs = document.querySelectorAll('input[type="date"]');
             for (var i = 0; i < dateInputs.length; i++) {
