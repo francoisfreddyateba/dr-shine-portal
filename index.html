@@ -621,11 +621,7 @@
                     <button type="submit" class="btn">🚀 Se connecter</button>
                 </form>
                 
-                <div class="demo-info">
-                    <strong>Compte de démonstration :</strong>
-                    Email: demo@client.com<br>
-                    Mot de passe: demo123
-                </div>
+
             </div>
         </div>
 
@@ -674,11 +670,7 @@
                     <button type="submit" class="btn">🔑 Se connecter</button>
                 </form>
                 
-                <div class="demo-info">
-                    <strong>Identifiants administrateur :</strong>
-                    Identifiant: admin<br>
-                    Mot de passe: admin123
-                </div>
+
             </div>
         </div>
 
@@ -930,6 +922,11 @@
                 return false;
             }
             
+            if (clients.length === 0) {
+                showNotification('❌ Aucun compte client n\'existe encore. Contactez l\'administrateur.', 'error');
+                return false;
+            }
+            
             var client = findClientByCredentials(email, password);
             
             if (client) {
@@ -945,7 +942,7 @@
         
         function loginAdmin() {
             var username = document.getElementById('admin-username').value.trim();
-            var password = document.getElementById('admin-password').value;
+            var password = document.getElementById('admin-password').value.trim();
             
             if (username === 'admin' && password === 'admin123') {
                 showAdminDashboard();
@@ -1357,7 +1354,7 @@
             clientsList.innerHTML = '';
             
             if (clients.length === 0) {
-                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">📝 Aucun client enregistré. Ajoutez votre premier client !</td></tr>';
+                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">📝 Aucun client enregistré.<br><br><button class="btn btn-success" onclick="showAddClientForm()">➕ Ajouter votre premier client</button></td></tr>';
                 return;
             }
             
@@ -1558,58 +1555,17 @@
                 // Charger les données sauvegardées
                 Storage.load();
                 
-                // Créer des données de démonstration si nécessaire
-                if (clients.length === 0) {
-                    console.log('📝 Création des données de démonstration...');
-                    
-                    var demoClients = [
-                        {
-                            id: nextClientId++,
-                            name: 'Client Démo',
-                            email: 'demo@client.com',
-                            password: 'demo123',
-                            phone: '819-555-0000',
-                            contractAmount: 2000,
-                            totalVisits: 12,
-                            usedVisits: 3,
-                            amountPaid: 1000,
-                            createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // Il y a 30 jours
-                        },
-                        {
-                            id: nextClientId++,
-                            name: 'Marie Dubois',
-                            email: 'marie@example.com',
-                            password: 'marie123',
-                            phone: '819-555-0001',
-                            contractAmount: 1500,
-                            totalVisits: 10,
-                            usedVisits: 7,
-                            amountPaid: 1500,
-                            createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString() // Il y a 15 jours
-                        },
-                        {
-                            id: nextClientId++,
-                            name: 'Jean Martin',
-                            email: 'jean@example.com',
-                            password: 'jean456',
-                            phone: '819-555-0002',
-                            contractAmount: 2500,
-                            totalVisits: 15,
-                            usedVisits: 2,
-                            amountPaid: 1250,
-                            createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // Il y a 7 jours
-                        }
-                    ];
-                    
-                    clients = demoClients;
-                    Storage.save();
-                    console.log('✅ Données de démonstration créées');
-                }
+                // Base de données vide au démarrage
+                console.log('📊 Base de données chargée:', clients.length, 'clients');
                 
                 // Vérifier la connexion automatique par QR code
                 if (!checkAutoLogin()) {
                     showHome();
-                    showNotification('🏥 Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
+                    if (clients.length === 0) {
+                        showNotification('🏥 Dr. Shine prêt ! Base de données vide - Ajoutez vos premiers clients', 'info');
+                    } else {
+                        showNotification('🏥 Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
+                    }
                 }
                 
                 console.log('✅ Système Dr. Shine initialisé avec succès');
@@ -1617,6 +1573,11 @@
                     clients: clients.length,
                     appointments: appointments.length
                 });
+                
+                // Message d'aide pour l'administrateur (visible uniquement dans la console)
+                if (clients.length === 0) {
+                    console.log('💡 AIDE: Pour l\'accès administrateur, utilisez "admin" comme identifiant et "admin123" comme mot de passe');
+                }
                 
             } catch (error) {
                 console.error('❌ Erreur lors de l\'initialisation:', error);
