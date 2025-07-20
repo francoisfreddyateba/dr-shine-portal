@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Shine - Système de Gestion Professionnel</title>
+    <script>
+        // Fallback automatique si le CDN échoue
+        function loadQRFallback() {
+            console.log('⚠️ CDN QR Code échoué - Mode manuel activé');
+            window.qrManualMode = true;
+        }
+    </script>
     <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js" onload="console.log('✅ QR Code library loaded from unpkg')" onerror="loadQRFallback()"></script>
     <style>
         * {
@@ -688,7 +695,7 @@
                         <div class="label">👥 Clients actifs</div>
                     </div>
                     <div class="stat-card">
-                        <div class="number" id="stat-revenue">0€</div>
+                        <div class="number" id="stat-revenue">0$</div>
                         <div class="label">💰 Revenus totaux</div>
                     </div>
                     <div class="stat-card">
@@ -748,7 +755,7 @@
                         <input type="tel" id="new-phone" required placeholder="819-555-0000">
                     </div>
                     <div class="form-group">
-                        <label for="new-contract">💰 Montant du contrat (€) :</label>
+                        <label for="new-contract">💰 Montant du contrat ($) :</label>
                         <input type="number" id="new-contract" required placeholder="2000" min="0">
                     </div>
                     <div class="form-group">
@@ -756,7 +763,7 @@
                         <input type="number" id="new-visits" required placeholder="12" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="new-paid">💳 Montant déjà payé (€) :</label>
+                        <label for="new-paid">💳 Montant déjà payé ($) :</label>
                         <input type="number" id="new-paid" required placeholder="1000" min="0">
                     </div>
                     <div class="text-center">
@@ -1016,10 +1023,10 @@
             
             // Proposer de générer le QR code
             setTimeout(function() {
-                if (confirm('🎯 Voulez-vous générer le QR code de connexion pour ' + newClient.name + ' ?')) {
+                if (confirm('🎯 Voulez-vous générer le QR code de connexion pour ' + newClient.name + ' ?\n\nCela permettra au client de se connecter automatiquement en scannant le code.')) {
                     generateQRCode(newClient);
                 }
-            }, 1000);
+            }, 500);
             
             return false;
         }
@@ -1548,9 +1555,9 @@
             // Informations du contrat
             var balance = currentUser.contractAmount - currentUser.amountPaid;
             document.getElementById('client-contract-info').innerHTML = 
-                '<p><strong>💰 Montant total:</strong> ' + currentUser.contractAmount + '€</p>' +
-                '<p><strong>💳 Montant payé:</strong> ' + currentUser.amountPaid + '€</p>' +
-                '<p><strong>💸 Solde restant:</strong> ' + balance + '€</p>' +
+                '<p><strong>💰 Montant total:</strong> ' + currentUser.contractAmount + '$</p>' +
+                '<p><strong>💳 Montant payé:</strong> ' + currentUser.amountPaid + '$</p>' +
+                '<p><strong>💸 Solde restant:</strong> ' + balance + '$</p>' +
                 '<p><strong>📊 État:</strong> ' + (balance <= 0 ? '<span style="color: green;">✅ Payé intégralement</span>' : '<span style="color: orange;">⏳ Paiement en cours</span>') + '</p>';
             
             // Progression des visites
@@ -1580,7 +1587,272 @@
             
             // Mise à jour des statistiques
             document.getElementById('stat-clients').textContent = totalClients;
-            document.getElementById('stat-revenue').textContent = totalRevenue + '€';
+            document.getElementById('stat-revenue').textContent = totalRevenue + '
+            
+            // Mise à jour de la liste des clients
+            var clientsList = document.getElementById('clients-list');
+            clientsList.innerHTML = '';
+            
+            if (clients.length === 0) {
+                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">📝 Aucun client enregistré.<br><br><button class="btn btn-success" onclick="showAddClientForm()">➕ Ajouter votre premier client</button></td></tr>';
+                return;
+            }
+            
+            for (var i = 0; i < clients.length; i++) {
+                var client = clients[i];
+                var row = document.createElement('tr');
+                
+                var remainingVisits = client.totalVisits - client.usedVisits;
+                var progressPercent = Math.round((client.usedVisits / client.totalVisits) * 100);
+                
+                row.innerHTML = 
+                    '<td><strong>' + client.name + '</strong><br><small>ID: ' + client.id + '</small></td>' +
+                    '<td>' + client.email + '<br><small>' + client.phone + '</small></td>' +
+                    '<td>' + client.amountPaid + '$ / ' + client.contractAmount + '$<br>' +
+                        '<small style="color: ' + (client.amountPaid >= client.contractAmount ? 'green' : 'orange') + '">' +
+                        (client.amountPaid >= client.contractAmount ? '✅ Payé' : '⏳ ' + (client.contractAmount - client.amountPaid) + '$ restant') +
+                        '</small></td>' +
+                    '<td>' +
+                        '<div style="margin-bottom: 5px;">' + client.usedVisits + ' / ' + client.totalVisits + '</div>' +
+                        '<div style="background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 8px;">' +
+                            '<div style="background: ' + (progressPercent >= 100 ? '#dc3545' : '#007bff') + '; height: 100%; width: ' + progressPercent + '%;"></div>' +
+                        '</div>' +
+                        '<small>' + remainingVisits + ' restante(s)</small>' +
+                    '</td>' +
+                    '<td>' +
+                        '<button class="btn" onclick="generateQRCode(clients[' + i + '])" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Générer QR Code">📱</button>' +
+                        '<button class="btn btn-warning" onclick="editClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Modifier visites">✏️</button>' +
+                        '<button class="btn btn-danger" onclick="deleteClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Supprimer client">🗑️</button>' +
+                    '</td>';
+                
+                clientsList.appendChild(row);
+            }
+        }
+        
+        // ========================================
+        // OUTILS ADMINISTRATEUR
+        // ========================================
+        function exportData() {
+            try {
+                var data = {
+                    clients: clients,
+                    appointments: appointments,
+                    exportInfo: {
+                        exportDate: new Date().toISOString(),
+                        totalClients: clients.length,
+                        version: '2.0',
+                        application: 'Dr. Shine Management System'
+                    }
+                };
+                
+                var dataStr = JSON.stringify(data, null, 2);
+                var dataBlob = new Blob([dataStr], {type: 'application/json'});
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = 'DrShine_Export_' + new Date().toISOString().split('T')[0] + '.json';
+                link.click();
+                
+                showNotification('📤 Données exportées avec succès (' + clients.length + ' clients)', 'success');
+            } catch (e) {
+                console.error('❌ Erreur export:', e);
+                showNotification('❌ Erreur lors de l\'exportation', 'error');
+            }
+        }
+        
+        function backupData() {
+            if (Storage.save()) {
+                showNotification('💾 Sauvegarde locale effectuée avec succès', 'success');
+            } else {
+                showNotification('❌ Erreur lors de la sauvegarde', 'error');
+            }
+        }
+        
+        function resetDatabase() {
+            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\n' +
+                'Cette action va supprimer TOUTES les données :\n' +
+                '• ' + clients.length + ' client(s)\n' +
+                '• Tous les rendez-vous\n' +
+                '• Toutes les statistiques\n\n' +
+                'Cette action est IRRÉVERSIBLE !\n\n' +
+                'Tapez exactement "SUPPRIMER" pour confirmer :';
+            
+            var userInput = prompt(confirmMessage);
+            
+            if (userInput === 'SUPPRIMER') {
+                clients = [];
+                appointments = [];
+                nextClientId = 1;
+                nextAppointmentId = 1;
+                currentUser = null;
+                currentQRClient = null;
+                Storage.clear();
+                updateAdminDashboard();
+                showNotification('🗑️ Base de données réinitialisée complètement', 'warning');
+            } else {
+                showNotification('❌ Réinitialisation annulée', 'info');
+            }
+        }
+        
+        // ========================================
+        // FONCTIONS UTILITAIRES
+        // ========================================
+        function findClientByCredentials(email, password) {
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email && clients[i].password === password) {
+                    return clients[i];
+                }
+            }
+            return null;
+        }
+        
+        function findClientByEmail(email) {
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email) {
+                    return clients[i];
+                }
+            }
+            return null;
+        }
+        
+        function findClientById(id) {
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].id === id) {
+                    return clients[i];
+                }
+            }
+            return null;
+        }
+        
+        function generatePassword() {
+            var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            var result = '';
+            for (var i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'Date inconnue';
+            try {
+                return new Date(dateString).toLocaleDateString('fr-FR');
+            } catch (e) {
+                return 'Date invalide';
+            }
+        }
+        
+        // ========================================
+        // SYSTÈME DE NOTIFICATIONS
+        // ========================================
+        function showNotification(message, type, duration) {
+            type = type || 'info';
+            duration = duration || 4000;
+            
+            var notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animation d'entrée
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Animation de sortie
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 400);
+            }, duration);
+        }
+        
+        // ========================================
+        // GESTION DES ERREURS GLOBALES
+        // ========================================
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Erreur JavaScript:', {
+                message: msg,
+                source: url,
+                line: lineNo,
+                column: columnNo,
+                error: error
+            });
+            showNotification('❌ Une erreur technique est survenue', 'error');
+            return false;
+        };
+        
+        // ========================================
+        // INITIALISATION DU SYSTÈME
+        // ========================================
+        window.onload = function() {
+            console.log('🚀 Initialisation du système Dr. Shine...');
+            
+            try {
+                // Charger les données sauvegardées
+                Storage.load();
+                
+                // Base de données vide au démarrage
+                console.log('📊 Base de données chargée:', clients.length, 'clients');
+                
+                // Vérifier la connexion automatique par QR code
+                if (!checkAutoLogin()) {
+                    showHome();
+                    if (clients.length === 0) {
+                        showNotification('🏥 Dr. Shine prêt ! Base de données vide - Ajoutez vos premiers clients', 'info');
+                    } else {
+                        showNotification('🏥 Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
+                    }
+                }
+                
+                // Test du système QR après chargement
+                setTimeout(function() {
+                    if (typeof QRCode !== 'undefined') {
+                        console.log('✅ Bibliothèque QR Code prête');
+                    } else {
+                        console.log('⚠️ Mode QR manuel activé');
+                        window.qrManualMode = true;
+                    }
+                }, 1000);
+                
+                console.log('✅ Système Dr. Shine initialisé avec succès');
+                
+            } catch (error) {
+                console.error('❌ Erreur lors de l\'initialisation:', error);
+                showNotification('❌ Erreur lors de l\'initialisation du système', 'error');
+                showHome();
+            }
+        };
+        
+        // ========================================
+        // FERMETURE DE LA MODAL QR AU CLIC EXTÉRIEUR
+        // ========================================
+        document.addEventListener('click', function(event) {
+            var modal = document.getElementById('qr-modal');
+            if (event.target === modal) {
+                closeQR();
+            }
+        });
+        
+        // ========================================
+        // RACCOURCIS CLAVIER
+        // ========================================
+        document.addEventListener('keydown', function(event) {
+            // Échapper pour fermer la modal QR
+            if (event.key === 'Escape') {
+                if (!document.getElementById('qr-modal').classList.contains('hidden')) {
+                    closeQR();
+                }
+            }
+        });
+        
+        console.log('🎯 Dr. Shine Management System chargé et prêt à l\'utilisation !');
+    </script>
+</body>
+</html>;
             document.getElementById('stat-visits').textContent = totalVisits;
             
             // Mise à jour de la liste des clients
