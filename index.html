@@ -930,7 +930,7 @@
             }
             
             if (clients.length === 0) {
-                showNotification('❌ Aucun compte client n\'existe encore. Contactez l\'administrateur.', 'error');
+                showNotification('Aucun compte client n existe encore. Contactez l administrateur.', 'error');
                 return false;
             }
             
@@ -939,9 +939,9 @@
             if (client) {
                 currentUser = client;
                 showClientDashboard();
-                showNotification('🎉 Bienvenue ' + client.name + ' !', 'success');
+                showNotification('Bienvenue ' + client.name + ' !', 'success');
             } else {
-                showNotification('❌ Email ou mot de passe incorrect', 'error');
+                showNotification('Email ou mot de passe incorrect', 'error');
             }
             
             return false;
@@ -953,9 +953,9 @@
             
             if (username === 'admin' && password === 'admin123') {
                 showAdminDashboard();
-                showNotification('🔑 Connexion administrateur réussie', 'success');
+                showNotification('Connexion administrateur reussie', 'success');
             } else {
-                showNotification('❌ Identifiants administrateur incorrects', 'error');
+                showNotification('Identifiants administrateur incorrects', 'error');
             }
             
             return false;
@@ -965,7 +965,7 @@
             currentUser = null;
             currentQRClient = null;
             showHome();
-            showNotification('👋 Déconnexion réussie. À bientôt !', 'info');
+            showNotification('Deconnexion reussie. A bientot !', 'info');
         }
         
         // ========================================
@@ -982,23 +982,23 @@
             
             // Validation
             if (!name || !email || !password || !phone || !contractAmount || !totalVisits || isNaN(amountPaid)) {
-                showNotification('❌ Veuillez remplir tous les champs correctement', 'error');
+                showNotification('Veuillez remplir tous les champs correctement', 'error');
                 return false;
             }
             
             if (contractAmount < 0 || totalVisits < 1 || amountPaid < 0) {
-                showNotification('❌ Les montants et visites doivent être positifs', 'error');
+                showNotification('Les montants et visites doivent etre positifs', 'error');
                 return false;
             }
             
             if (amountPaid > contractAmount) {
-                showNotification('❌ Le montant payé ne peut pas dépasser le montant du contrat', 'error');
+                showNotification('Le montant paye ne peut pas depasser le montant du contrat', 'error');
                 return false;
             }
             
             // Vérification email unique
             if (findClientByEmail(email)) {
-                showNotification('❌ Cette adresse email est déjà utilisée', 'error');
+                showNotification('Cette adresse email est deja utilisee', 'error');
                 return false;
             }
             
@@ -1018,12 +1018,12 @@
             clients.push(newClient);
             Storage.save();
             
-            showNotification('✅ Client ' + newClient.name + ' créé avec succès !', 'success');
+            showNotification('Client ' + newClient.name + ' cree avec succes !', 'success');
             showAdminDashboard();
             
             // Proposer de générer le QR code
             setTimeout(function() {
-                if (confirm('🎯 Voulez-vous générer le QR code de connexion pour ' + newClient.name + ' ?\n\nCela permettra au client de se connecter automatiquement en scannant le code.')) {
+                if (confirm('Voulez-vous generer le QR code de connexion pour ' + newClient.name + ' ?\n\nCela permettra au client de se connecter automatiquement en scannant le code.')) {
                     generateQRCode(newClient);
                 }
             }, 500);
@@ -1034,37 +1034,37 @@
         function editClient(clientId) {
             var client = findClientById(clientId);
             if (!client) {
-                showNotification('❌ Client introuvable', 'error');
+                showNotification('Client introuvable', 'error');
                 return;
             }
             
             var currentVisits = client.usedVisits;
-            var newVisits = prompt('✏️ Modifier les visites utilisées pour ' + client.name + '\n\nActuellement: ' + currentVisits + ' visites\nTotal autorisé: ' + client.totalVisits + ' visites\n\nNouveau nombre de visites utilisées:');
+            var newVisits = prompt('Modifier les visites utilisees pour ' + client.name + '\n\nActuellement: ' + currentVisits + ' visites\nTotal autorise: ' + client.totalVisits + ' visites\n\nNouveau nombre de visites utilisees:');
             
             if (newVisits === null) return; // Annulé
             
             var visits = parseInt(newVisits);
             if (isNaN(visits) || visits < 0) {
-                showNotification('❌ Nombre de visites invalide', 'error');
+                showNotification('Nombre de visites invalide', 'error');
                 return;
             }
             
             if (visits > client.totalVisits) {
-                showNotification('❌ Impossible de dépasser ' + client.totalVisits + ' visites', 'error');
+                showNotification('Impossible de depasser ' + client.totalVisits + ' visites', 'error');
                 return;
             }
             
             client.usedVisits = visits;
             Storage.save();
             updateAdminDashboard();
-            showNotification('✅ Visites mises à jour pour ' + client.name + ' (' + visits + '/' + client.totalVisits + ')', 'success');
+            showNotification('Visites mises a jour pour ' + client.name + ' (' + visits + '/' + client.totalVisits + ')', 'success');
         }
         
         function deleteClient(clientId) {
             var client = findClientById(clientId);
             if (!client) return;
             
-            if (confirm('⚠️ ATTENTION !\n\nÊtes-vous sûr de vouloir supprimer définitivement le client :\n\n' + client.name + ' (' + client.email + ')\n\nCette action est irréversible !')) {
+            if (confirm('ATTENTION !\n\nEtes-vous sur de vouloir supprimer definitivement le client :\n\n' + client.name + ' (' + client.email + ')\n\nCette action est irreversible !')) {
                 for (var i = 0; i < clients.length; i++) {
                     if (clients[i].id === clientId) {
                         clients.splice(i, 1);
@@ -1073,7 +1073,7 @@
                 }
                 Storage.save();
                 updateAdminDashboard();
-                showNotification('🗑️ Client ' + client.name + ' supprimé', 'info');
+                showNotification('Client ' + client.name + ' supprime', 'info');
             }
         }
         
@@ -1321,70 +1321,75 @@
         function printQR() {
             if (!currentQRClient) return;
             
-            var canvas = document.getElementById('qr-canvas');
-            var dataURL = canvas.toDataURL('image/png');
-            
-            var printWindow = window.open('', '_blank', 'width=600,height=600');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>QR Code - ${currentQRClient.name}</title>
-                    <style>
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            text-align: center; 
-                            padding: 20px; 
-                            background: white;
-                        }
-                        .header { 
-                            color: #007bff; 
-                            margin-bottom: 20px; 
-                        }
-                        .qr-image { 
-                            border: 3px solid #007bff; 
-                            border-radius: 10px; 
-                            margin: 20px 0; 
-                        }
-                        .instructions { 
-                            background: #f8f9fa; 
-                            padding: 20px; 
-                            border-radius: 10px; 
-                            margin: 20px 0; 
-                            text-align: left;
-                        }
-                        .instructions ol { 
-                            margin: 10px 0; 
-                        }
-                        .instructions li { 
-                            margin: 8px 0; 
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>🏥 Dr. Shine</h1>
-                        <h2>QR Code de Connexion</h2>
-                        <h3>${currentQRClient.name}</h3>
-                    </div>
-                    <img src="${dataURL}" class="qr-image" alt="QR Code">
-                    <div class="instructions">
-                        <h4>📱 Instructions :</h4>
-                        <ol>
-                            <li>Ouvrez l'appareil photo de votre téléphone</li>
-                            <li>Pointez vers ce QR code</li>
-                            <li>Touchez la notification qui apparaît</li>
-                            <li>Vous serez connecté automatiquement !</li>
-                        </ol>
-                    </div>
-                    <p><small>Généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}</small></p>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-            printWindow.close();
-            
-            showNotification('🖨️ QR code envoyé à l\'impression', 'success');
+            try {
+                var canvas = document.getElementById('qr-canvas');
+                var dataURL = canvas.toDataURL('image/png');
+                
+                var printWindow = window.open('', '_blank', 'width=600,height=600');
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>QR Code - ${currentQRClient.name}</title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                text-align: center; 
+                                padding: 20px; 
+                                background: white;
+                            }
+                            .header { 
+                                color: #007bff; 
+                                margin-bottom: 20px; 
+                            }
+                            .qr-image { 
+                                border: 3px solid #007bff; 
+                                border-radius: 10px; 
+                                margin: 20px 0; 
+                            }
+                            .instructions { 
+                                background: #f8f9fa; 
+                                padding: 20px; 
+                                border-radius: 10px; 
+                                margin: 20px 0; 
+                                text-align: left;
+                            }
+                            .instructions ol { 
+                                margin: 10px 0; 
+                            }
+                            .instructions li { 
+                                margin: 8px 0; 
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>Dr. Shine</h1>
+                            <h2>QR Code de Connexion</h2>
+                            <h3>${currentQRClient.name}</h3>
+                        </div>
+                        <img src="${dataURL}" class="qr-image" alt="QR Code">
+                        <div class="instructions">
+                            <h4>Instructions :</h4>
+                            <ol>
+                                <li>Ouvrez l'appareil photo de votre telephone</li>
+                                <li>Pointez vers ce QR code</li>
+                                <li>Touchez la notification qui apparait</li>
+                                <li>Vous serez connecte automatiquement !</li>
+                            </ol>
+                        </div>
+                        <p><small>Genere le ${new Date().toLocaleDateString('fr-FR')} a ${new Date().toLocaleTimeString('fr-FR')}</small></p>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+                printWindow.close();
+                
+                showNotification('QR code envoye a l impression', 'success');
+            } catch (error) {
+                console.error('Erreur impression:', error);
+                showNotification('Erreur lors de l impression', 'error');
+            }
         }
         
         function shareQR() {
@@ -1393,13 +1398,13 @@
             var loginUrl = document.getElementById('qr-link').textContent;
             var shareData = {
                 title: 'Connexion Dr. Shine - ' + currentQRClient.name,
-                text: 'Cliquez sur ce lien pour vous connecter automatiquement à votre espace Dr. Shine',
+                text: 'Cliquez sur ce lien pour vous connecter automatiquement a votre espace Dr. Shine',
                 url: loginUrl
             };
             
             if (navigator.share) {
                 navigator.share(shareData).then(function() {
-                    showNotification('📤 QR code partagé avec succès', 'success');
+                    showNotification('QR code partage avec succes', 'success');
                 }).catch(function(error) {
                     console.log('Erreur partage:', error);
                     copyLink(); // Fallback
@@ -1415,7 +1420,7 @@
             try {
                 var canvas = document.getElementById('qr-canvas');
                 if (!canvas || !canvas.getContext) {
-                    showNotification('❌ Canvas non disponible', 'error');
+                    showNotification('Canvas non disponible', 'error');
                     return;
                 }
                 
@@ -1424,10 +1429,10 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 
-                showNotification('⬇️ QR code téléchargé', 'success');
+                showNotification('QR code telecharge', 'success');
             } catch (error) {
                 console.error('Erreur download QR:', error);
-                showNotification('❌ Erreur lors du téléchargement', 'error');
+                showNotification('Erreur lors du telechargement', 'error');
             }
         }
         
@@ -1436,7 +1441,7 @@
             
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(loginUrl).then(function() {
-                    showNotification('📋 Lien copié dans le presse-papier', 'success');
+                    showNotification('Lien copie dans le presse-papier', 'success');
                 }).catch(function() {
                     fallbackCopyLink(loginUrl);
                 });
@@ -1458,13 +1463,13 @@
                 document.body.removeChild(textArea);
                 
                 if (successful) {
-                    showNotification('📋 Lien copié', 'success');
+                    showNotification('Lien copie', 'success');
                 } else {
-                    showNotification('❌ Impossible de copier automatiquement', 'error');
+                    showNotification('Impossible de copier automatiquement', 'error');
                 }
             } catch (err) {
                 console.error('Erreur copy fallback:', err);
-                showNotification('❌ Erreur lors de la copie', 'error');
+                showNotification('Erreur lors de la copie', 'error');
             }
         }
         
@@ -1652,28 +1657,28 @@
                 link.download = 'DrShine_Export_' + new Date().toISOString().split('T')[0] + '.json';
                 link.click();
                 
-                showNotification('📤 Données exportées avec succès (' + clients.length + ' clients)', 'success');
+                showNotification('Donnees exportees avec succes (' + clients.length + ' clients)', 'success');
             } catch (e) {
-                console.error('❌ Erreur export:', e);
-                showNotification('❌ Erreur lors de l\'exportation', 'error');
+                console.error('Erreur export:', e);
+                showNotification('Erreur lors de l exportation', 'error');
             }
         }
         
         function backupData() {
             if (Storage.save()) {
-                showNotification('💾 Sauvegarde locale effectuée avec succès', 'success');
+                showNotification('Sauvegarde locale effectuee avec succes', 'success');
             } else {
-                showNotification('❌ Erreur lors de la sauvegarde', 'error');
+                showNotification('Erreur lors de la sauvegarde', 'error');
             }
         }
         
         function resetDatabase() {
-            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\n' +
-                'Cette action va supprimer TOUTES les données :\n' +
+            var confirmMessage = 'ATTENTION - SUPPRESSION DEFINITIVE\n\n' +
+                'Cette action va supprimer TOUTES les donnees :\n' +
                 '• ' + clients.length + ' client(s)\n' +
                 '• Tous les rendez-vous\n' +
                 '• Toutes les statistiques\n\n' +
-                'Cette action est IRRÉVERSIBLE !\n\n' +
+                'Cette action est IRREVERSIBLE !\n\n' +
                 'Tapez exactement "SUPPRIMER" pour confirmer :';
             
             var userInput = prompt(confirmMessage);
@@ -1687,9 +1692,9 @@
                 currentQRClient = null;
                 Storage.clear();
                 updateAdminDashboard();
-                showNotification('🗑️ Base de données réinitialisée complètement', 'warning');
+                showNotification('Base de donnees reinitialisee completement', 'warning');
             } else {
-                showNotification('❌ Réinitialisation annulée', 'info');
+                showNotification('Reinitialisation annulee', 'info');
             }
         }
         
@@ -1697,11 +1702,24 @@
         // FONCTIONS UTILITAIRES
         // ========================================
         function findClientByCredentials(email, password) {
+            // Décoder les paramètres URL si nécessaire
+            var decodedEmail = decodeURIComponent(email);
+            var decodedPassword = decodeURIComponent(password);
+            
+            console.log('Recherche client avec:', { 
+                email: decodedEmail, 
+                password: '***' + decodedPassword.slice(-3) 
+            });
+            
             for (var i = 0; i < clients.length; i++) {
-                if (clients[i].email === email && clients[i].password === password) {
-                    return clients[i];
+                var client = clients[i];
+                if (client.email === decodedEmail && client.password === decodedPassword) {
+                    console.log('Client trouve:', client.name);
+                    return client;
                 }
             }
+            
+            console.log('Aucun client trouve avec ces identifiants');
             return null;
         }
         
@@ -1742,15 +1760,44 @@
         }
         
         // ========================================
-        // SYSTÈME DE NOTIFICATIONS
+        // SYSTÈME DE NOTIFICATIONS - CORRIGÉ
         // ========================================
         function showNotification(message, type, duration) {
             type = type || 'info';
             duration = duration || 4000;
             
+            // Nettoyer le message des caractères problématiques
+            var cleanMessage = message
+                .replace(/[^\w\s\-\.\!\?\,\:\(\)]/g, '') // Supprimer émojis et caractères spéciaux
+                .replace(/\s+/g, ' ') // Normaliser les espaces
+                .trim();
+            
+            // Messages de fallback si vide
+            if (!cleanMessage) {
+                switch(type) {
+                    case 'success': cleanMessage = 'Operation reussie'; break;
+                    case 'error': cleanMessage = 'Une erreur est survenue'; break;
+                    case 'warning': cleanMessage = 'Attention'; break;
+                    default: cleanMessage = 'Information'; break;
+                }
+            }
+            
+            console.log('📢 Notification:', type, '-', cleanMessage);
+            
             var notification = document.createElement('div');
             notification.className = 'notification ' + type;
-            notification.textContent = message;
+            notification.textContent = cleanMessage;
+            
+            // Ajouter un bouton de fermeture
+            var closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = 'float: right; cursor: pointer; font-weight: bold; margin-left: 10px;';
+            closeBtn.onclick = function() {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            };
+            notification.appendChild(closeBtn);
             
             document.body.appendChild(notification);
             
@@ -1759,14 +1806,16 @@
                 notification.classList.add('show');
             }, 100);
             
-            // Animation de sortie
+            // Animation de sortie automatique
             setTimeout(function() {
-                notification.classList.remove('show');
-                setTimeout(function() {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 400);
+                if (notification.classList.contains('show')) {
+                    notification.classList.remove('show');
+                    setTimeout(function() {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 400);
+                }
             }, duration);
         }
         
@@ -1789,40 +1838,44 @@
         // INITIALISATION DU SYSTÈME
         // ========================================
         window.onload = function() {
-            console.log('🚀 Initialisation du système Dr. Shine...');
+            console.log('Initialisation du systeme Dr. Shine...');
             
             try {
                 // Charger les données sauvegardées
                 Storage.load();
                 
                 // Base de données vide au démarrage
-                console.log('📊 Base de données chargée:', clients.length, 'clients');
+                console.log('Base de donnees chargee:', clients.length, 'clients');
                 
-                // Vérifier la connexion automatique par QR code
-                if (!checkAutoLogin()) {
-                    showHome();
-                    if (clients.length === 0) {
-                        showNotification('🏥 Dr. Shine prêt ! Base de données vide - Ajoutez vos premiers clients', 'info');
-                    } else {
-                        showNotification('🏥 Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
-                    }
+                // Vérifier IMMÉDIATEMENT la connexion automatique par QR code
+                if (checkAutoLogin()) {
+                    console.log('Auto-login detecte et execute');
+                    return; // Ne pas afficher l'accueil si auto-login réussi
+                }
+                
+                // Afficher l'accueil seulement si pas d'auto-login
+                showHome();
+                if (clients.length === 0) {
+                    showNotification('Dr. Shine pret ! Base de donnees vide - Ajoutez vos premiers clients', 'info');
+                } else {
+                    showNotification('Dr. Shine pret ! (' + clients.length + ' clients)', 'success');
                 }
                 
                 // Test du système QR après chargement
                 setTimeout(function() {
                     if (typeof QRCode !== 'undefined') {
-                        console.log('✅ Bibliothèque QR Code prête');
+                        console.log('Bibliotheque QR Code prete');
                     } else {
-                        console.log('⚠️ Mode QR manuel activé');
+                        console.log('Mode QR manuel active');
                         window.qrManualMode = true;
                     }
                 }, 1000);
                 
-                console.log('✅ Système Dr. Shine initialisé avec succès');
+                console.log('Systeme Dr. Shine initialise avec succes');
                 
             } catch (error) {
-                console.error('❌ Erreur lors de l\'initialisation:', error);
-                showNotification('❌ Erreur lors de l\'initialisation du système', 'error');
+                console.error('Erreur lors de l initialisation:', error);
+                showNotification('Erreur lors de l initialisation du systeme', 'error');
                 showHome();
             }
         };
