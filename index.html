@@ -3,15 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Shine - Système de Gestion Professionnel</title>
-    <script>
-        // Fallback automatique si le CDN échoue
-        function loadQRFallback() {
-            console.log('⚠️ CDN QR Code échoué - Mode manuel activé');
-            window.qrManualMode = true;
-        }
-    </script>
-    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js" onload="console.log('✅ QR Code library loaded from unpkg')" onerror="loadQRFallback()"></script>
+    <title>Dr. Shine - Système de Gestion</title>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -38,22 +31,13 @@
             color: white;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .header h2 {
-            font-size: 1.2em;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-        
-        /* Interface de sélection */
         .interface-selection {
             display: flex;
             min-height: 70vh;
@@ -66,27 +50,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-right: 1px solid #eee;
-            position: relative;
-            overflow: hidden;
         }
         
         .interface-option:last-child {
             border-right: none;
-        }
-        
-        .interface-option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-        
-        .interface-option:hover::before {
-            left: 100%;
         }
         
         .interface-option:hover {
@@ -98,28 +65,19 @@
             font-size: 5em;
             margin-bottom: 30px;
             color: #007bff;
-            transition: all 0.3s ease;
-        }
-        
-        .interface-option:hover .icon {
-            transform: scale(1.1);
-            color: #0056b3;
         }
         
         .interface-option h3 {
             font-size: 1.8em;
             margin-bottom: 20px;
             color: #333;
-            font-weight: 600;
         }
         
         .interface-option p {
             color: #666;
             line-height: 1.6;
-            font-size: 1.1em;
         }
         
-        /* Sections de contenu */
         .content-section {
             padding: 40px;
             display: none;
@@ -130,14 +88,12 @@
             display: block;
         }
         
-        /* Formulaires */
         .form-container {
             max-width: 500px;
             margin: 0 auto;
             padding: 40px;
             background: #f8f9fa;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .form-container h3 {
@@ -156,7 +112,6 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #333;
-            font-size: 1.1em;
         }
         
         .form-group input {
@@ -166,17 +121,14 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
-            background: white;
         }
         
         .form-group input:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-            transform: translateY(-1px);
         }
         
-        /* Boutons */
         .btn {
             background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
@@ -190,8 +142,6 @@
             margin: 5px;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .btn:hover {
@@ -216,12 +166,6 @@
             background: linear-gradient(135deg, #6c757d, #545b62);
         }
         
-        .back-btn {
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #6c757d, #545b62);
-        }
-        
-        /* Dashboard */
         .dashboard {
             max-width: 1000px;
             margin: 0 auto;
@@ -239,7 +183,6 @@
         .dashboard-header h2 {
             color: #007bff;
             font-size: 2em;
-            font-weight: 700;
         }
         
         .stats-grid {
@@ -255,23 +198,12 @@
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
         }
         
         .stat-card .number {
             font-size: 2.5em;
             font-weight: 700;
             margin-bottom: 10px;
-        }
-        
-        .stat-card .label {
-            font-size: 1.1em;
-            opacity: 0.9;
         }
         
         .info-cards {
@@ -286,29 +218,14 @@
             padding: 25px;
             border-radius: 15px;
             border-left: 5px solid #007bff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
         
         .info-card h4 {
             color: #007bff;
             margin-bottom: 20px;
             font-size: 1.3em;
-            font-weight: 600;
         }
         
-        .info-card p {
-            margin: 10px 0;
-            color: #333;
-            line-height: 1.5;
-        }
-        
-        /* Table des clients */
         .clients-table {
             width: 100%;
             border-collapse: collapse;
@@ -325,118 +242,17 @@
             padding: 20px 15px;
             text-align: left;
             font-weight: 600;
-            font-size: 1.1em;
         }
         
         .clients-table td {
             padding: 15px;
             border-bottom: 1px solid #eee;
-            vertical-align: middle;
         }
         
         .clients-table tr:hover {
             background: #f8f9fa;
         }
         
-        .clients-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        /* Modal QR Code */
-        .qr-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-        
-        .qr-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            animation: modalAppear 0.3s ease;
-        }
-        
-        @keyframes modalAppear {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        .qr-content h3 {
-            color: #007bff;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        
-        .qr-instructions {
-            background: #e3f2fd;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-            text-align: left;
-            border: 2px solid #007bff;
-        }
-        
-        .qr-instructions h4 {
-            color: #007bff;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-        
-        .qr-instructions ol {
-            margin: 15px 0;
-            padding-left: 25px;
-        }
-        
-        .qr-instructions li {
-            margin: 10px 0;
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-        
-        .qr-canvas {
-            margin: 25px 0;
-            border: 3px solid #007bff;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
-        }
-        
-        .qr-link-container {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 1px solid #dee2e6;
-        }
-        
-        .qr-link {
-            word-break: break-all;
-            font-family: monospace;
-            color: #007bff;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        
-        /* Notifications */
         .notification {
             position: fixed;
             top: 20px;
@@ -444,12 +260,10 @@
             padding: 15px 25px;
             border-radius: 10px;
             color: white;
-            z-index: 1001;
+            z-index: 1000;
             transform: translateX(400px);
             transition: transform 0.4s ease;
             font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            min-width: 300px;
         }
         
         .notification.show {
@@ -468,29 +282,48 @@
             background: linear-gradient(135deg, #007bff, #0056b3);
         }
         
-        .notification.warning {
-            background: linear-gradient(135deg, #ffc107, #e0a800);
-            color: #333;
+        .qr-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         
-        /* Utilities */
-        .hidden {
-            display: none !important;
-        }
-        
-        .text-center {
+        .qr-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
+            max-width: 600px;
+            width: 90%;
         }
         
-        .mt-20 {
-            margin-top: 20px;
-        }
-        
-        .mb-20 {
+        .qr-content h3 {
+            color: #007bff;
             margin-bottom: 20px;
+            font-size: 1.8em;
         }
         
-        /* Progress bar */
+        .qr-instructions {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .qr-canvas {
+            margin: 25px 0;
+            border: 3px solid #007bff;
+            border-radius: 15px;
+        }
+        
         .progress-bar {
             background: #e0e0e0;
             border-radius: 10px;
@@ -511,23 +344,14 @@
             font-size: 12px;
         }
         
-        /* Demo info */
-        .demo-info {
-            background: #e8f4fd;
-            border: 1px solid #007bff;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
             text-align: center;
-            color: #007bff;
         }
         
-        .demo-info strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        /* Responsive */
         @media (max-width: 768px) {
             .interface-selection {
                 flex-direction: column;
@@ -536,7 +360,6 @@
             .dashboard-header {
                 flex-direction: column;
                 gap: 20px;
-                text-align: center;
             }
             
             .info-cards {
@@ -546,44 +369,6 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .clients-table {
-                font-size: 14px;
-            }
-            
-            .clients-table th,
-            .clients-table td {
-                padding: 10px 8px;
-            }
-            
-            .form-container {
-                margin: 20px;
-                padding: 20px;
-            }
-            
-            .qr-content {
-                margin: 20px;
-                padding: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .interface-option {
-                padding: 40px 20px;
-            }
-            
-            .interface-option .icon {
-                font-size: 3em;
-            }
-            
-            .btn {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
         }
     </style>
 </head>
@@ -592,43 +377,42 @@
         <!-- Écran d'accueil -->
         <div id="home-screen">
             <div class="header">
-                <h1>🏥 Dr. Shine</h1>
+                <h1>Dr. Shine</h1>
                 <h2>Système de Gestion Professionnel</h2>
+                <p>Choisissez votre interface pour commencer</p>
             </div>
             
             <div class="interface-selection">
                 <div class="interface-option" onclick="showClientLogin()">
                     <div class="icon">👤</div>
                     <h3>Espace Client</h3>
-                    <p>Connectez-vous pour consulter votre contrat, suivre vos visites et gérer vos rendez-vous en toute simplicité.</p>
+                    <p>Connectez-vous pour consulter votre contrat et suivre vos visites.</p>
                 </div>
                 
                 <div class="interface-option" onclick="showAdminLogin()">
                     <div class="icon">🔧</div>
                     <h3>Administration</h3>
-                    <p>Accès complet à la gestion des clients, génération de QR codes et administration de l'entreprise Dr. Shine.</p>
+                    <p>Gestion complète des clients et génération de QR codes.</p>
                 </div>
             </div>
         </div>
 
         <!-- Connexion Client -->
         <div id="client-login" class="content-section">
-            <button class="btn back-btn" onclick="showHome()">← Retour à l'accueil</button>
+            <button class="btn" onclick="showHome()">← Retour</button>
             <div class="form-container">
-                <h3>👤 Connexion Client</h3>
+                <h3>Connexion Client</h3>
                 <form onsubmit="return loginClient()">
                     <div class="form-group">
-                        <label for="client-email">📧 Adresse email :</label>
+                        <label for="client-email">Email :</label>
                         <input type="email" id="client-email" required placeholder="votre@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="client-password">🔒 Mot de passe :</label>
-                        <input type="password" id="client-password" required placeholder="Votre mot de passe">
+                        <label for="client-password">Mot de passe :</label>
+                        <input type="password" id="client-password" required>
                     </div>
-                    <button type="submit" class="btn">🚀 Se connecter</button>
+                    <button type="submit" class="btn">Se connecter</button>
                 </form>
-                
-
             </div>
         </div>
 
@@ -636,25 +420,25 @@
         <div id="client-dashboard" class="content-section">
             <div class="dashboard">
                 <div class="dashboard-header">
-                    <h2>🏠 Mon Espace Personnel</h2>
-                    <button class="btn btn-danger" onclick="logout()">🚪 Déconnexion</button>
+                    <h2>Mon Espace</h2>
+                    <button class="btn btn-danger" onclick="logout()">Déconnexion</button>
                 </div>
                 
-                <div id="client-welcome" class="text-center mb-20"></div>
+                <div id="client-welcome"></div>
                 
                 <div class="info-cards">
                     <div class="info-card">
-                        <h4>👤 Informations personnelles</h4>
+                        <h4>Informations personnelles</h4>
                         <div id="client-personal-info"></div>
                     </div>
                     <div class="info-card">
-                        <h4>💼 Détails du contrat</h4>
+                        <h4>Détails du contrat</h4>
                         <div id="client-contract-info"></div>
                     </div>
                 </div>
                 
                 <div class="info-card">
-                    <h4>📊 Progression des visites</h4>
+                    <h4>Progression des visites</h4>
                     <div id="client-progress"></div>
                 </div>
             </div>
@@ -662,22 +446,20 @@
 
         <!-- Connexion Admin -->
         <div id="admin-login" class="content-section">
-            <button class="btn back-btn" onclick="showHome()">← Retour à l'accueil</button>
+            <button class="btn" onclick="showHome()">← Retour</button>
             <div class="form-container">
-                <h3>🔧 Administration</h3>
+                <h3>Administration</h3>
                 <form onsubmit="return loginAdmin()">
                     <div class="form-group">
-                        <label for="admin-username">👤 Identifiant administrateur :</label>
-                        <input type="text" id="admin-username" required placeholder="admin">
+                        <label for="admin-username">Identifiant :</label>
+                        <input type="text" id="admin-username" required>
                     </div>
                     <div class="form-group">
-                        <label for="admin-password">🔒 Mot de passe :</label>
-                        <input type="password" id="admin-password" required placeholder="Mot de passe admin">
+                        <label for="admin-password">Mot de passe :</label>
+                        <input type="password" id="admin-password" required>
                     </div>
-                    <button type="submit" class="btn">🔑 Se connecter</button>
+                    <button type="submit" class="btn">Se connecter</button>
                 </form>
-                
-
             </div>
         </div>
 
@@ -685,44 +467,42 @@
         <div id="admin-dashboard" class="content-section">
             <div class="dashboard">
                 <div class="dashboard-header">
-                    <h2>🎛️ Administration Dr. Shine</h2>
-                    <button class="btn btn-danger" onclick="logout()">🚪 Déconnexion</button>
+                    <h2>Administration Dr. Shine</h2>
+                    <button class="btn btn-danger" onclick="logout()">Déconnexion</button>
                 </div>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="number" id="stat-clients">0</div>
-                        <div class="label">👥 Clients actifs</div>
+                        <div class="label">Clients</div>
                     </div>
                     <div class="stat-card">
                         <div class="number" id="stat-revenue">0$</div>
-                        <div class="label">💰 Revenus totaux</div>
+                        <div class="label">Revenus</div>
                     </div>
                     <div class="stat-card">
                         <div class="number" id="stat-visits">0</div>
-                        <div class="label">📊 Visites effectuées</div>
+                        <div class="label">Visites</div>
                     </div>
                 </div>
                 
                 <div class="stats-grid">
-                    <button class="btn btn-success" onclick="showAddClientForm()">➕ Ajouter un client</button>
-                    <button class="btn btn-warning" onclick="exportData()">📤 Exporter données</button>
-                    <button class="btn btn-secondary" onclick="backupData()">💾 Sauvegarder</button>
-                    <button class="btn btn-danger" onclick="resetDatabase()">🗑️ Réinitialiser</button>
+                    <button class="btn btn-success" onclick="showAddClientForm()">Ajouter Client</button>
+                    <button class="btn btn-warning" onclick="exportData()">Exporter</button>
+                    <button class="btn btn-secondary" onclick="backupData()">Sauvegarder</button>
+                    <button class="btn btn-danger" onclick="resetDatabase()">Réinitialiser</button>
                 </div>
                 
                 <div class="info-card">
-                    <h4>👥 Gestion des clients</h4>
-                    <p>Gérez vos clients, générez des QR codes pour la connexion automatique et suivez leurs progressions.</p>
-                    
+                    <h4>Liste des clients</h4>
                     <table class="clients-table">
                         <thead>
                             <tr>
-                                <th>👤 Client</th>
-                                <th>📧 Contact</th>
-                                <th>💰 Contrat</th>
-                                <th>📊 Visites</th>
-                                <th>⚡ Actions</th>
+                                <th>Client</th>
+                                <th>Contact</th>
+                                <th>Contrat</th>
+                                <th>Visites</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="clients-list">
@@ -734,41 +514,41 @@
 
         <!-- Formulaire Ajout Client -->
         <div id="add-client-form" class="content-section">
-            <button class="btn back-btn" onclick="showAdminDashboard()">← Retour à l'administration</button>
+            <button class="btn" onclick="showAdminDashboard()">← Retour</button>
             <div class="form-container" style="max-width: 700px;">
-                <h3>➕ Créer un nouveau client</h3>
+                <h3>Nouveau Client</h3>
                 <form onsubmit="return addClient()">
                     <div class="form-group">
-                        <label for="new-name">👤 Nom complet :</label>
-                        <input type="text" id="new-name" required placeholder="Prénom Nom">
+                        <label for="new-name">Nom complet :</label>
+                        <input type="text" id="new-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="new-email">📧 Adresse email :</label>
-                        <input type="email" id="new-email" required placeholder="client@email.com">
+                        <label for="new-email">Email :</label>
+                        <input type="email" id="new-email" required>
                     </div>
                     <div class="form-group">
-                        <label for="new-password">🔒 Mot de passe :</label>
-                        <input type="text" id="new-password" required placeholder="motdepasse123" value="">
+                        <label for="new-password">Mot de passe :</label>
+                        <input type="text" id="new-password" required>
                     </div>
                     <div class="form-group">
-                        <label for="new-phone">📱 Numéro de téléphone :</label>
-                        <input type="tel" id="new-phone" required placeholder="819-555-0000">
+                        <label for="new-phone">Téléphone :</label>
+                        <input type="tel" id="new-phone" required>
                     </div>
                     <div class="form-group">
-                        <label for="new-contract">💰 Montant du contrat ($) :</label>
-                        <input type="number" id="new-contract" required placeholder="2000" min="0">
+                        <label for="new-contract">Montant contrat ($) :</label>
+                        <input type="number" id="new-contract" required min="0">
                     </div>
                     <div class="form-group">
-                        <label for="new-visits">🔢 Nombre de visites incluses :</label>
-                        <input type="number" id="new-visits" required placeholder="12" min="1">
+                        <label for="new-visits">Nombre de visites :</label>
+                        <input type="number" id="new-visits" required min="1">
                     </div>
                     <div class="form-group">
-                        <label for="new-paid">💳 Montant déjà payé ($) :</label>
-                        <input type="number" id="new-paid" required placeholder="1000" min="0">
+                        <label for="new-paid">Montant payé ($) :</label>
+                        <input type="number" id="new-paid" required min="0">
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success">✅ Créer le client</button>
-                        <button type="button" class="btn btn-secondary" onclick="showAdminDashboard()">❌ Annuler</button>
+                        <button type="submit" class="btn btn-success">Créer</button>
+                        <button type="button" class="btn btn-secondary" onclick="showAdminDashboard()">Annuler</button>
                     </div>
                 </form>
             </div>
@@ -778,66 +558,54 @@
     <!-- Modal QR Code -->
     <div id="qr-modal" class="qr-modal hidden">
         <div class="qr-content">
-            <h3 id="qr-title">📱 QR Code - Connexion Automatique</h3>
+            <h3 id="qr-title">QR Code - Connexion</h3>
             
             <div class="qr-instructions">
-                <h4>📱 Instructions pour votre client :</h4>
+                <h4>Instructions :</h4>
                 <ol>
-                    <li><strong>Ouvrez l'appareil photo</strong> de votre smartphone</li>
-                    <li><strong>Pointez vers le QR code</strong> ci-dessous</li>
-                    <li><strong>Touchez la notification</strong> qui apparaît à l'écran</li>
-                    <li><strong>Vous serez connecté automatiquement</strong> à votre espace !</li>
+                    <li>Ouvrez l'appareil photo de votre téléphone</li>
+                    <li>Pointez vers le QR code ci-dessous</li>
+                    <li>Touchez la notification qui apparaît</li>
+                    <li>Connexion automatique !</li>
                 </ol>
             </div>
             
             <canvas id="qr-canvas" class="qr-canvas"></canvas>
             
             <div class="text-center">
-                <button class="btn btn-secondary" onclick="printQR()">🖨️ Imprimer</button>
-                <button class="btn btn-success" onclick="shareQR()">📤 Partager le lien</button>
-                <button class="btn btn-warning" onclick="downloadQR()">⬇️ Télécharger</button>
-                <button class="btn btn-danger" onclick="closeQR()">❌ Fermer</button>
+                <button class="btn btn-secondary" onclick="printQR()">Imprimer</button>
+                <button class="btn btn-success" onclick="shareQR()">Partager</button>
+                <button class="btn btn-danger" onclick="closeQR()">Fermer</button>
             </div>
             
-            <div class="qr-link-container">
-                <strong>🔗 Lien de connexion directe :</strong><br>
-                <div class="qr-link" id="qr-link"></div>
-                <button class="btn" onclick="copyLink()" style="margin-top: 10px;">📋 Copier le lien</button>
+            <div style="margin-top: 20px; font-size: 12px;">
+                <strong>Lien direct :</strong><br>
+                <div id="qr-link" style="word-break: break-all; margin: 10px 0;"></div>
+                <button class="btn" onclick="copyLink()">Copier</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ========================================
-        // VARIABLES GLOBALES
-        // ========================================
+        // Variables globales
         var clients = [];
         var appointments = [];
         var nextClientId = 1;
-        var nextAppointmentId = 1;
         var currentUser = null;
         var currentQRClient = null;
+        var adminViewingClient = false;
         
-        // ========================================
-        // STOCKAGE LOCAL AVANCÉ
-        // ========================================
+        // Stockage local
         var Storage = {
             save: function() {
                 try {
-                    var data = {
+                    localStorage.setItem('drshine_data', JSON.stringify({
                         clients: clients,
                         appointments: appointments,
-                        nextClientId: nextClientId,
-                        nextAppointmentId: nextAppointmentId,
-                        lastSaved: new Date().toISOString()
-                    };
-                    localStorage.setItem('drshine_data', JSON.stringify(data));
-                    console.log('✅ Données sauvegardées:', clients.length, 'clients');
-                    return true;
+                        nextClientId: nextClientId
+                    }));
                 } catch (e) {
-                    console.error('❌ Erreur sauvegarde:', e);
-                    showNotification('Erreur lors de la sauvegarde', 'error');
-                    return false;
+                    console.error('Erreur sauvegarde:', e);
                 }
             },
             
@@ -849,26 +617,18 @@
                         clients = data.clients || [];
                         appointments = data.appointments || [];
                         nextClientId = data.nextClientId || 1;
-                        nextAppointmentId = data.nextAppointmentId || 1;
-                        console.log('✅ Données chargées:', clients.length, 'clients');
-                        return true;
                     }
                 } catch (e) {
-                    console.error('❌ Erreur chargement:', e);
-                    showNotification('Erreur lors du chargement', 'error');
+                    console.error('Erreur chargement:', e);
                 }
-                return false;
             },
             
             clear: function() {
                 localStorage.removeItem('drshine_data');
-                console.log('🗑️ Stockage nettoyé');
             }
         };
         
-        // ========================================
-        // NAVIGATION ENTRE LES SECTIONS
-        // ========================================
+        // Navigation
         function hideAllSections() {
             var sections = document.querySelectorAll('.content-section');
             for (var i = 0; i < sections.length; i++) {
@@ -885,17 +645,11 @@
         function showClientLogin() {
             hideAllSections();
             document.getElementById('client-login').classList.add('active');
-            // Reset form
-            document.getElementById('client-email').value = '';
-            document.getElementById('client-password').value = '';
         }
         
         function showAdminLogin() {
             hideAllSections();
             document.getElementById('admin-login').classList.add('active');
-            // Reset form
-            document.getElementById('admin-username').value = '';
-            document.getElementById('admin-password').value = '';
         }
         
         function showClientDashboard() {
@@ -913,24 +667,16 @@
         function showAddClientForm() {
             hideAllSections();
             document.getElementById('add-client-form').classList.add('active');
-            // Générer un mot de passe automatique
             document.getElementById('new-password').value = generatePassword();
         }
         
-        // ========================================
-        // SYSTÈME DE CONNEXION
-        // ========================================
+        // Connexions
         function loginClient() {
             var email = document.getElementById('client-email').value.trim();
             var password = document.getElementById('client-password').value;
             
             if (!email || !password) {
-                showNotification('Veuillez remplir tous les champs', 'warning');
-                return false;
-            }
-            
-            if (clients.length === 0) {
-                showNotification('Aucun compte client n existe encore. Contactez l administrateur.', 'error');
+                showNotification('Veuillez remplir tous les champs', 'error');
                 return false;
             }
             
@@ -939,9 +685,9 @@
             if (client) {
                 currentUser = client;
                 showClientDashboard();
-                showNotification('Bienvenue ' + client.name + ' !', 'success');
+                showNotification('Bienvenue ' + client.name, 'success');
             } else {
-                showNotification('Email ou mot de passe incorrect', 'error');
+                showNotification('Identifiants incorrects', 'error');
             }
             
             return false;
@@ -949,13 +695,13 @@
         
         function loginAdmin() {
             var username = document.getElementById('admin-username').value.trim();
-            var password = document.getElementById('admin-password').value.trim();
+            var password = document.getElementById('admin-password').value;
             
             if (username === 'admin' && password === 'admin123') {
                 showAdminDashboard();
-                showNotification('Connexion administrateur reussie', 'success');
+                showNotification('Connexion admin réussie', 'success');
             } else {
-                showNotification('Identifiants administrateur incorrects', 'error');
+                showNotification('Identifiants incorrects', 'error');
             }
             
             return false;
@@ -963,14 +709,12 @@
         
         function logout() {
             currentUser = null;
-            currentQRClient = null;
+            adminViewingClient = false;
             showHome();
-            showNotification('Deconnexion reussie. A bientot !', 'info');
+            showNotification('Déconnexion réussie', 'info');
         }
         
-        // ========================================
-        // GESTION DES CLIENTS
-        // ========================================
+        // Gestion clients
         function addClient() {
             var name = document.getElementById('new-name').value.trim();
             var email = document.getElementById('new-email').value.trim();
@@ -980,25 +724,13 @@
             var totalVisits = parseInt(document.getElementById('new-visits').value);
             var amountPaid = parseInt(document.getElementById('new-paid').value);
             
-            // Validation
-            if (!name || !email || !password || !phone || !contractAmount || !totalVisits || isNaN(amountPaid)) {
-                showNotification('Veuillez remplir tous les champs correctement', 'error');
+            if (!name || !email || !password || !phone) {
+                showNotification('Veuillez remplir tous les champs', 'error');
                 return false;
             }
             
-            if (contractAmount < 0 || totalVisits < 1 || amountPaid < 0) {
-                showNotification('Les montants et visites doivent etre positifs', 'error');
-                return false;
-            }
-            
-            if (amountPaid > contractAmount) {
-                showNotification('Le montant paye ne peut pas depasser le montant du contrat', 'error');
-                return false;
-            }
-            
-            // Vérification email unique
             if (findClientByEmail(email)) {
-                showNotification('Cette adresse email est deja utilisee', 'error');
+                showNotification('Email déjà utilisé', 'error');
                 return false;
             }
             
@@ -1018,12 +750,11 @@
             clients.push(newClient);
             Storage.save();
             
-            showNotification('Client ' + newClient.name + ' cree avec succes !', 'success');
+            showNotification('Client créé avec succès', 'success');
             showAdminDashboard();
             
-            // Proposer de générer le QR code
             setTimeout(function() {
-                if (confirm('Voulez-vous generer le QR code de connexion pour ' + newClient.name + ' ?\n\nCela permettra au client de se connecter automatiquement en scannant le code.')) {
+                if (confirm('Générer le QR code pour ' + newClient.name + ' ?')) {
                     generateQRCode(newClient);
                 }
             }, 500);
@@ -1031,40 +762,61 @@
             return false;
         }
         
-        function editClient(clientId) {
+        function viewClientDashboard(clientId) {
             var client = findClientById(clientId);
             if (!client) {
                 showNotification('Client introuvable', 'error');
                 return;
             }
             
-            var currentVisits = client.usedVisits;
-            var newVisits = prompt('Modifier les visites utilisees pour ' + client.name + '\n\nActuellement: ' + currentVisits + ' visites\nTotal autorise: ' + client.totalVisits + ' visites\n\nNouveau nombre de visites utilisees:');
+            adminViewingClient = true;
+            currentUser = client;
+            showClientDashboard();
             
-            if (newVisits === null) return; // Annulé
+            // Ajouter bandeau admin
+            var dashboard = document.getElementById('client-dashboard');
+            var adminBanner = document.createElement('div');
+            adminBanner.id = 'admin-banner';
+            adminBanner.style.cssText = 'background: #dc3545; color: white; padding: 15px; margin: -40px -40px 20px -40px; text-align: center; font-weight: bold;';
+            adminBanner.innerHTML = 'MODE ADMIN - Vue client: ' + client.name + ' <button onclick="returnToAdmin()" class="btn" style="margin-left: 15px; background: white; color: #333;">Retour Admin</button>';
+            
+            dashboard.insertBefore(adminBanner, dashboard.firstChild);
+            showNotification('Vue client de ' + client.name, 'info');
+        }
+        
+        function returnToAdmin() {
+            var banner = document.getElementById('admin-banner');
+            if (banner) banner.remove();
+            
+            adminViewingClient = false;
+            currentUser = null;
+            showAdminDashboard();
+        }
+        
+        function editClient(clientId) {
+            var client = findClientById(clientId);
+            if (!client) return;
+            
+            var newVisits = prompt('Visites utilisées pour ' + client.name + ' (max: ' + client.totalVisits + '):');
+            if (newVisits === null) return;
             
             var visits = parseInt(newVisits);
-            if (isNaN(visits) || visits < 0) {
-                showNotification('Nombre de visites invalide', 'error');
-                return;
-            }
-            
-            if (visits > client.totalVisits) {
-                showNotification('Impossible de depasser ' + client.totalVisits + ' visites', 'error');
+            if (isNaN(visits) || visits < 0 || visits > client.totalVisits) {
+                showNotification('Nombre invalide', 'error');
                 return;
             }
             
             client.usedVisits = visits;
             Storage.save();
             updateAdminDashboard();
-            showNotification('Visites mises a jour pour ' + client.name + ' (' + visits + '/' + client.totalVisits + ')', 'success');
+            showNotification('Visites mises à jour', 'success');
         }
         
         function deleteClient(clientId) {
             var client = findClientById(clientId);
             if (!client) return;
             
-            if (confirm('ATTENTION !\n\nEtes-vous sur de vouloir supprimer definitivement le client :\n\n' + client.name + ' (' + client.email + ')\n\nCette action est irreversible !')) {
+            if (confirm('Supprimer ' + client.name + ' ?')) {
                 for (var i = 0; i < clients.length; i++) {
                     if (clients[i].id === clientId) {
                         clients.splice(i, 1);
@@ -1073,366 +825,106 @@
                 }
                 Storage.save();
                 updateAdminDashboard();
-                showNotification('Client ' + client.name + ' supprime', 'info');
+                showNotification('Client supprimé', 'info');
             }
         }
         
-        // ========================================
-        // CHARGEMENT DE LA BIBLIOTHÈQUE QR - FALLBACK
-        // ========================================
-        var qrLibraryLoaded = false;
-        var qrLoadAttempts = 0;
-        
-        function loadQRFallback() {
-            qrLoadAttempts++;
-            console.log('🔄 Tentative de chargement QR Code #' + qrLoadAttempts);
-            
-            if (qrLoadAttempts === 1) {
-                // Deuxième tentative avec jsDelivr
-                var script2 = document.createElement('script');
-                script2.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-                script2.onload = function() {
-                    console.log('✅ QR Code library loaded from jsDelivr');
-                    qrLibraryLoaded = true;
-                };
-                script2.onerror = function() {
-                    loadQRFallback();
-                };
-                document.head.appendChild(script2);
-            } else if (qrLoadAttempts === 2) {
-                // Troisième tentative avec un autre CDN
-                var script3 = document.createElement('script');
-                script3.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.js';
-                script3.onload = function() {
-                    console.log('✅ QR Code library loaded from cloudflare (alternative)');
-                    qrLibraryLoaded = true;
-                };
-                script3.onerror = function() {
-                    loadQRFallback();
-                };
-                document.head.appendChild(script3);
-            } else {
-                // Utiliser l'API en ligne comme dernier recours
-                console.log('📡 Utilisation de l\'API QR Code en ligne');
-                qrLibraryLoaded = 'online';
-                showNotification('📡 QR Code via API en ligne activé', 'info');
-            }
-        }
-        
-        // ========================================
-        // SYSTÈME QR CODE - VERSION AMÉLIORÉE
-        // ========================================
+        // QR Code
         function generateQRCode(client) {
-            if (!client) {
-                showNotification('❌ Erreur: client non trouvé', 'error');
-                return;
-            }
+            if (!client) return;
             
             currentQRClient = client;
-            
-            // Construire l'URL de connexion automatique
             var baseUrl = window.location.origin + window.location.pathname;
-            var loginUrl = baseUrl + '?email=' + encodeURIComponent(client.email) + '&password=' + encodeURIComponent(client.password) + '&auto=1&t=' + Date.now();
+            var loginUrl = baseUrl + '?auto=1&email=' + encodeURIComponent(client.email) + '&password=' + encodeURIComponent(client.password);
             
-            console.log('🔍 Génération QR pour:', client.name);
-            console.log('🔗 URL:', loginUrl);
-            
-            // Mettre à jour l'interface
-            document.getElementById('qr-title').textContent = '📱 QR Code pour : ' + client.name;
+            document.getElementById('qr-title').textContent = 'QR Code - ' + client.name;
             document.getElementById('qr-link').textContent = loginUrl;
             document.getElementById('qr-modal').classList.remove('hidden');
             
-            var canvas = document.getElementById('qr-canvas');
-            
-            // Vérifier quelle méthode utiliser
-            if (typeof QRCode !== 'undefined') {
-                // Méthode 1: Bibliothèque locale
-                generateQRWithLibrary(canvas, loginUrl);
-            } else if (qrLibraryLoaded === 'online') {
-                // Méthode 2: API en ligne
-                generateQRWithAPI(canvas, loginUrl);
-            } else {
-                // Méthode 3: Fallback manuel
-                generateQRFallback(canvas, loginUrl);
-            }
+            setTimeout(function() {
+                var canvas = document.getElementById('qr-canvas');
+                canvas.width = 300;
+                canvas.height = 300;
+                
+                if (typeof QRCode !== 'undefined') {
+                    QRCode.toCanvas(canvas, loginUrl, {
+                        width: 300,
+                        margin: 2,
+                        color: {
+                            dark: '#007bff',
+                            light: '#ffffff'
+                        }
+                    }, function(error) {
+                        if (error) {
+                            generateManualQR(canvas, client.name);
+                        } else {
+                            showNotification('QR code généré', 'success');
+                        }
+                    });
+                } else {
+                    generateManualQR(canvas, client.name);
+                }
+            }, 200);
         }
         
-        function generateQRWithLibrary(canvas, url) {
-            try {
-                console.log('📱 Génération QR avec bibliothèque locale');
-                
-                QRCode.toCanvas(canvas, url, {
-                    width: 300,
-                    height: 300,
-                    margin: 3,
-                    color: {
-                        dark: '#007bff',
-                        light: '#ffffff'
-                    },
-                    errorCorrectionLevel: 'H'
-                }, function(error) {
-                    if (error) {
-                        console.error('❌ Erreur QR bibliothèque:', error);
-                        generateQRWithAPI(canvas, url);
-                    } else {
-                        console.log('✅ QR généré avec bibliothèque');
-                        showNotification('📱 QR code généré pour ' + currentQRClient.name, 'success');
-                    }
-                });
-            } catch (e) {
-                console.error('❌ Exception QR bibliothèque:', e);
-                generateQRWithAPI(canvas, url);
-            }
-        }
-        
-        function generateQRWithAPI(canvas, url) {
-            try {
-                console.log('📡 Génération QR avec API en ligne');
-                
-                // Utiliser l'API qr-server.com (gratuite et fiable)
-                var qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url);
-                
-                var img = new Image();
-                img.crossOrigin = 'anonymous';
-                
-                img.onload = function() {
-                    // Redimensionner le canvas
-                    canvas.width = 300;
-                    canvas.height = 300;
-                    
-                    var ctx = canvas.getContext('2d');
-                    
-                    // Fond blanc
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, 300, 300);
-                    
-                    // Dessiner l'image QR
-                    ctx.drawImage(img, 0, 0, 300, 300);
-                    
-                    console.log('✅ QR généré avec API en ligne');
-                    showNotification('📱 QR code généré via API pour ' + currentQRClient.name, 'success');
-                };
-                
-                img.onerror = function() {
-                    console.error('❌ Erreur API QR en ligne');
-                    generateQRFallback(canvas, url);
-                };
-                
-                img.src = qrApiUrl;
-                
-            } catch (e) {
-                console.error('❌ Exception API QR:', e);
-                generateQRFallback(canvas, url);
-            }
-        }
-        
-        function generateQRFallback(canvas, url) {
-            console.log('🎨 Génération QR de secours');
-            
-            canvas.width = 300;
-            canvas.height = 300;
+        function generateManualQR(canvas, clientName) {
             var ctx = canvas.getContext('2d');
             
-            // Fond blanc
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, 300, 300);
             
-            // Bordure bleue
             ctx.strokeStyle = '#007bff';
             ctx.lineWidth = 4;
             ctx.strokeRect(2, 2, 296, 296);
             
-            // Titre
             ctx.fillStyle = '#007bff';
             ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('Dr. Shine', 150, 40);
-            ctx.fillText('Connexion Client', 150, 65);
+            ctx.fillText(clientName, 150, 70);
             
-            // Nom du client
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText(currentQRClient.name, 150, 90);
+            ctx.font = '14px Arial';
+            ctx.fillText('QR Code de connexion', 150, 100);
             
-            // Instructions
-            ctx.font = '12px Arial';
-            ctx.fillText('Utilisez le lien direct', 150, 120);
-            ctx.fillText('ci-dessous pour vous', 150, 135);
-            ctx.fillText('connecter automatiquement', 150, 150);
-            
-            // Motif de QR Code simulé
+            // Motif QR simple
             ctx.fillStyle = '#007bff';
-            var cellSize = 8;
-            var startX = 50;
-            var startY = 170;
-            var gridSize = 25;
-            
-            // Créer un motif qui ressemble à un QR code
-            for (var i = 0; i < gridSize; i++) {
-                for (var j = 0; j < gridSize; j++) {
-                    // Créer un motif pseudo-aléatoire basé sur l'URL
-                    var hash = 0;
-                    var str = url + i + j;
-                    for (var k = 0; k < str.length; k++) {
-                        hash = ((hash << 5) - hash + str.charCodeAt(k)) & 0xffffffff;
-                    }
-                    
-                    if (Math.abs(hash) % 3 === 0) {
-                        ctx.fillRect(startX + i * cellSize, startY + j * cellSize, cellSize - 1, cellSize - 1);
+            for (var i = 0; i < 15; i++) {
+                for (var j = 0; j < 15; j++) {
+                    if ((i + j) % 3 === 0) {
+                        ctx.fillRect(80 + i * 10, 120 + j * 8, 8, 6);
                     }
                 }
             }
             
-            // Carrés de position (coins)
-            var cornerSize = 40;
-            ctx.fillStyle = '#007bff';
-            
-            // Coin supérieur gauche
-            ctx.fillRect(startX, startY, cornerSize, cornerSize);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(startX + 8, startY + 8, cornerSize - 16, cornerSize - 16);
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(startX + 16, startY + 16, cornerSize - 32, cornerSize - 32);
-            
-            // Coin supérieur droit
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(startX + gridSize * cellSize - cornerSize, startY, cornerSize, cornerSize);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(startX + gridSize * cellSize - cornerSize + 8, startY + 8, cornerSize - 16, cornerSize - 16);
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(startX + gridSize * cellSize - cornerSize + 16, startY + 16, cornerSize - 32, cornerSize - 32);
-            
-            // Coin inférieur gauche
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(startX, startY + gridSize * cellSize - cornerSize, cornerSize, cornerSize);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(startX + 8, startY + gridSize * cellSize - cornerSize + 8, cornerSize - 16, cornerSize - 16);
-            ctx.fillStyle = '#007bff';
-            ctx.fillRect(startX + 16, startY + gridSize * cellSize - cornerSize + 16, cornerSize - 32, cornerSize - 32);
-            
-            console.log('✅ QR de secours généré');
-            showNotification('⚠️ QR de secours généré - Utilisez le lien direct', 'warning');
+            ctx.fillText('Utilisez le lien direct ci-dessous', 150, 260);
+            showNotification('QR code créé', 'success');
         }
         
         function closeQR() {
             document.getElementById('qr-modal').classList.add('hidden');
-            currentQRClient = null;
         }
         
         function printQR() {
-            if (!currentQRClient) return;
+            var canvas = document.getElementById('qr-canvas');
+            var dataURL = canvas.toDataURL();
             
-            try {
-                var canvas = document.getElementById('qr-canvas');
-                var dataURL = canvas.toDataURL('image/png');
-                
-                var printWindow = window.open('', '_blank', 'width=600,height=600');
-                printWindow.document.write(`
-                    <html>
-                    <head>
-                        <title>QR Code - ${currentQRClient.name}</title>
-                        <style>
-                            body { 
-                                font-family: Arial, sans-serif; 
-                                text-align: center; 
-                                padding: 20px; 
-                                background: white;
-                            }
-                            .header { 
-                                color: #007bff; 
-                                margin-bottom: 20px; 
-                            }
-                            .qr-image { 
-                                border: 3px solid #007bff; 
-                                border-radius: 10px; 
-                                margin: 20px 0; 
-                            }
-                            .instructions { 
-                                background: #f8f9fa; 
-                                padding: 20px; 
-                                border-radius: 10px; 
-                                margin: 20px 0; 
-                                text-align: left;
-                            }
-                            .instructions ol { 
-                                margin: 10px 0; 
-                            }
-                            .instructions li { 
-                                margin: 8px 0; 
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="header">
-                            <h1>Dr. Shine</h1>
-                            <h2>QR Code de Connexion</h2>
-                            <h3>${currentQRClient.name}</h3>
-                        </div>
-                        <img src="${dataURL}" class="qr-image" alt="QR Code">
-                        <div class="instructions">
-                            <h4>Instructions :</h4>
-                            <ol>
-                                <li>Ouvrez l'appareil photo de votre telephone</li>
-                                <li>Pointez vers ce QR code</li>
-                                <li>Touchez la notification qui apparait</li>
-                                <li>Vous serez connecte automatiquement !</li>
-                            </ol>
-                        </div>
-                        <p><small>Genere le ${new Date().toLocaleDateString('fr-FR')} a ${new Date().toLocaleTimeString('fr-FR')}</small></p>
-                    </body>
-                    </html>
-                `);
-                printWindow.document.close();
-                printWindow.print();
-                printWindow.close();
-                
-                showNotification('QR code envoye a l impression', 'success');
-            } catch (error) {
-                console.error('Erreur impression:', error);
-                showNotification('Erreur lors de l impression', 'error');
-            }
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>QR Code</title></head><body style="text-align:center;padding:20px;"><h2>Dr. Shine - QR Code</h2><img src="' + dataURL + '" style="border:2px solid #007bff;border-radius:10px;"></body></html>');
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.close();
         }
         
         function shareQR() {
-            if (!currentQRClient) return;
-            
             var loginUrl = document.getElementById('qr-link').textContent;
-            var shareData = {
-                title: 'Connexion Dr. Shine - ' + currentQRClient.name,
-                text: 'Cliquez sur ce lien pour vous connecter automatiquement a votre espace Dr. Shine',
-                url: loginUrl
-            };
             
             if (navigator.share) {
-                navigator.share(shareData).then(function() {
-                    showNotification('QR code partage avec succes', 'success');
-                }).catch(function(error) {
-                    console.log('Erreur partage:', error);
-                    copyLink(); // Fallback
+                navigator.share({
+                    title: 'Connexion Dr. Shine',
+                    url: loginUrl
                 });
             } else {
-                copyLink(); // Fallback pour navigateurs sans support
-            }
-        }
-        
-        function downloadQR() {
-            if (!currentQRClient) return;
-            
-            try {
-                var canvas = document.getElementById('qr-canvas');
-                if (!canvas || !canvas.getContext) {
-                    showNotification('Canvas non disponible', 'error');
-                    return;
-                }
-                
-                var link = document.createElement('a');
-                link.download = 'DrShine_QR_' + currentQRClient.name.replace(/\s+/g, '_') + '_' + new Date().toISOString().split('T')[0] + '.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                
-                showNotification('QR code telecharge', 'success');
-            } catch (error) {
-                console.error('Erreur download QR:', error);
-                showNotification('Erreur lors du telechargement', 'error');
+                copyLink();
             }
         }
         
@@ -1441,147 +933,50 @@
             
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(loginUrl).then(function() {
-                    showNotification('Lien copie dans le presse-papier', 'success');
-                }).catch(function() {
-                    fallbackCopyLink(loginUrl);
+                    showNotification('Lien copié', 'success');
                 });
             } else {
-                fallbackCopyLink(loginUrl);
-            }
-        }
-        
-        function fallbackCopyLink(text) {
-            try {
                 var textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
+                textArea.value = loginUrl;
                 document.body.appendChild(textArea);
                 textArea.select();
-                
-                var successful = document.execCommand('copy');
+                document.execCommand('copy');
                 document.body.removeChild(textArea);
-                
-                if (successful) {
-                    showNotification('Lien copie', 'success');
-                } else {
-                    showNotification('Impossible de copier automatiquement', 'error');
-                }
-            } catch (err) {
-                console.error('Erreur copy fallback:', err);
-                showNotification('Erreur lors de la copie', 'error');
+                showNotification('Lien copié', 'success');
             }
         }
         
-        // Test de la fonctionnalité QR Code
-        function testQRCode() {
-            console.log('🧪 Test de la fonctionnalité QR Code...');
-            
-            if (typeof QRCode === 'undefined') {
-                console.error('❌ Bibliothèque QR Code non disponible');
-                return false;
-            }
-            
-            try {
-                var testCanvas = document.createElement('canvas');
-                var testUrl = 'https://example.com/test';
-                
-                QRCode.toCanvas(testCanvas, testUrl, {
-                    width: 100,
-                    height: 100
-                }, function(error) {
-                    if (error) {
-                        console.error('❌ Test QR Code échoué:', error);
-                    } else {
-                        console.log('✅ Test QR Code réussi');
-                    }
-                });
-                
-                return true;
-            } catch (error) {
-                console.error('❌ Exception lors du test QR:', error);
-                return false;
-            }
-        }
-        
-        // ========================================
-        // CONNEXION AUTOMATIQUE PAR QR CODE
-        // ========================================
-        function checkAutoLogin() {
-            try {
-                var urlParams = new URLSearchParams(window.location.search);
-                var email = urlParams.get('email');
-                var password = urlParams.get('password');
-                var auto = urlParams.get('auto');
-                
-                if (email && password && auto === '1') {
-                    console.log('🔍 Tentative de connexion automatique pour:', email);
-                    
-                    var client = findClientByCredentials(email, password);
-                    
-                    if (client) {
-                        currentUser = client;
-                        showClientDashboard();
-                        showNotification('🎉 Connexion QR réussie ! Bienvenue ' + client.name, 'success');
-                        
-                        // Nettoyer l'URL pour la sécurité
-                        if (window.history && window.history.replaceState) {
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-                        return true;
-                    } else {
-                        showNotification('❌ QR code invalide ou expiré', 'error');
-                        console.log('❌ Client non trouvé pour:', email);
-                    }
-                }
-            } catch (error) {
-                console.error('❌ Erreur lors de la connexion automatique:', error);
-            }
-            return false;
-        }
-        
-        // ========================================
-        // MISE À JOUR DES DASHBOARDS
-        // ========================================
+        // Mise à jour dashboards
         function updateClientDashboard() {
             if (!currentUser) return;
             
-            // Message de bienvenue
-            document.getElementById('client-welcome').innerHTML = 
-                '<h3>👋 Bienvenue ' + currentUser.name + ' !</h3>' +
-                '<p>Voici un aperçu de votre contrat et de vos visites chez Dr. Shine.</p>';
+            var welcome = adminViewingClient ? 
+                '<h3>Espace de ' + currentUser.name + '</h3>' :
+                '<h3>Bienvenue ' + currentUser.name + '</h3>';
             
-            // Informations personnelles
+            document.getElementById('client-welcome').innerHTML = welcome;
+            
             document.getElementById('client-personal-info').innerHTML = 
-                '<p><strong>📧 Email:</strong> ' + currentUser.email + '</p>' +
-                '<p><strong>📱 Téléphone:</strong> ' + currentUser.phone + '</p>' +
-                '<p><strong>📅 Client depuis:</strong> ' + formatDate(currentUser.createdAt) + '</p>';
+                '<p><strong>Email:</strong> ' + currentUser.email + '</p>' +
+                '<p><strong>Téléphone:</strong> ' + currentUser.phone + '</p>';
             
-            // Informations du contrat
             var balance = currentUser.contractAmount - currentUser.amountPaid;
             document.getElementById('client-contract-info').innerHTML = 
-                '<p><strong>💰 Montant total:</strong> ' + currentUser.contractAmount + '$</p>' +
-                '<p><strong>💳 Montant payé:</strong> ' + currentUser.amountPaid + '$</p>' +
-                '<p><strong>💸 Solde restant:</strong> ' + balance + '$</p>' +
-                '<p><strong>📊 État:</strong> ' + (balance <= 0 ? '<span style="color: green;">✅ Payé intégralement</span>' : '<span style="color: orange;">⏳ Paiement en cours</span>') + '</p>';
+                '<p><strong>Montant total:</strong> ' + currentUser.contractAmount + '$</p>' +
+                '<p><strong>Montant payé:</strong> ' + currentUser.amountPaid + '$</p>' +
+                '<p><strong>Solde:</strong> ' + balance + '$</p>';
             
-            // Progression des visites
-            var remainingVisits = currentUser.totalVisits - currentUser.usedVisits;
-            var progressPercent = Math.round((currentUser.usedVisits / currentUser.totalVisits) * 100);
+            var remaining = currentUser.totalVisits - currentUser.usedVisits;
+            var progress = Math.round((currentUser.usedVisits / currentUser.totalVisits) * 100);
             
             document.getElementById('client-progress').innerHTML = 
-                '<p><strong>🔢 Visites totales:</strong> ' + currentUser.totalVisits + '</p>' +
-                '<p><strong>✅ Visites utilisées:</strong> ' + currentUser.usedVisits + '</p>' +
-                '<p><strong>⏳ Visites restantes:</strong> ' + remainingVisits + '</p>' +
-                '<div class="progress-bar">' +
-                    '<div class="progress-fill" style="width: ' + progressPercent + '%">' + progressPercent + '%</div>' +
-                '</div>' +
-                '<p><small>' + (remainingVisits > 0 ? '🎯 Encore ' + remainingVisits + ' visite(s) disponible(s)' : '⚠️ Toutes les visites ont été utilisées') + '</small></p>';
+                '<p><strong>Visites totales:</strong> ' + currentUser.totalVisits + '</p>' +
+                '<p><strong>Utilisées:</strong> ' + currentUser.usedVisits + '</p>' +
+                '<p><strong>Restantes:</strong> ' + remaining + '</p>' +
+                '<div class="progress-bar"><div class="progress-fill" style="width: ' + progress + '%">' + progress + '%</div></div>';
         }
         
         function updateAdminDashboard() {
-            // Calcul des statistiques
-            var totalClients = clients.length;
             var totalRevenue = 0;
             var totalVisits = 0;
             
@@ -1590,330 +985,15 @@
                 totalVisits += clients[i].usedVisits;
             }
             
-            // Mise à jour des statistiques
-            document.getElementById('stat-clients').textContent = totalClients;
-            document.getElementById('stat-revenue').textContent = totalRevenue + '
-            
-            // Mise à jour de la liste des clients
-            var clientsList = document.getElementById('clients-list');
-            clientsList.innerHTML = '';
-            
-            if (clients.length === 0) {
-                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">📝 Aucun client enregistré.<br><br><button class="btn btn-success" onclick="showAddClientForm()">➕ Ajouter votre premier client</button></td></tr>';
-                return;
-            }
-            
-            for (var i = 0; i < clients.length; i++) {
-                var client = clients[i];
-                var row = document.createElement('tr');
-                
-                var remainingVisits = client.totalVisits - client.usedVisits;
-                var progressPercent = Math.round((client.usedVisits / client.totalVisits) * 100);
-                
-                row.innerHTML = 
-                    '<td><strong>' + client.name + '</strong><br><small>ID: ' + client.id + '</small></td>' +
-                    '<td>' + client.email + '<br><small>' + client.phone + '</small></td>' +
-                    '<td>' + client.amountPaid + '$ / ' + client.contractAmount + '$<br>' +
-                        '<small style="color: ' + (client.amountPaid >= client.contractAmount ? 'green' : 'orange') + '">' +
-                        (client.amountPaid >= client.contractAmount ? '✅ Payé' : '⏳ ' + (client.contractAmount - client.amountPaid) + '$ restant') +
-                        '</small></td>' +
-                    '<td>' +
-                        '<div style="margin-bottom: 5px;">' + client.usedVisits + ' / ' + client.totalVisits + '</div>' +
-                        '<div style="background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 8px;">' +
-                            '<div style="background: ' + (progressPercent >= 100 ? '#dc3545' : '#007bff') + '; height: 100%; width: ' + progressPercent + '%;"></div>' +
-                        '</div>' +
-                        '<small>' + remainingVisits + ' restante(s)</small>' +
-                    '</td>' +
-                    '<td>' +
-                        '<button class="btn" onclick="generateQRCode(clients[' + i + '])" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Générer QR Code">📱</button>' +
-                        '<button class="btn btn-warning" onclick="editClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Modifier visites">✏️</button>' +
-                        '<button class="btn btn-danger" onclick="deleteClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Supprimer client">🗑️</button>' +
-                    '</td>';
-                
-                clientsList.appendChild(row);
-            }
-        }
-        
-        // ========================================
-        // OUTILS ADMINISTRATEUR
-        // ========================================
-        function exportData() {
-            try {
-                var data = {
-                    clients: clients,
-                    appointments: appointments,
-                    exportInfo: {
-                        exportDate: new Date().toISOString(),
-                        totalClients: clients.length,
-                        version: '2.0',
-                        application: 'Dr. Shine Management System'
-                    }
-                };
-                
-                var dataStr = JSON.stringify(data, null, 2);
-                var dataBlob = new Blob([dataStr], {type: 'application/json'});
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(dataBlob);
-                link.download = 'DrShine_Export_' + new Date().toISOString().split('T')[0] + '.json';
-                link.click();
-                
-                showNotification('Donnees exportees avec succes (' + clients.length + ' clients)', 'success');
-            } catch (e) {
-                console.error('Erreur export:', e);
-                showNotification('Erreur lors de l exportation', 'error');
-            }
-        }
-        
-        function backupData() {
-            if (Storage.save()) {
-                showNotification('Sauvegarde locale effectuee avec succes', 'success');
-            } else {
-                showNotification('Erreur lors de la sauvegarde', 'error');
-            }
-        }
-        
-        function resetDatabase() {
-            var confirmMessage = 'ATTENTION - SUPPRESSION DEFINITIVE\n\n' +
-                'Cette action va supprimer TOUTES les donnees :\n' +
-                '• ' + clients.length + ' client(s)\n' +
-                '• Tous les rendez-vous\n' +
-                '• Toutes les statistiques\n\n' +
-                'Cette action est IRREVERSIBLE !\n\n' +
-                'Tapez exactement "SUPPRIMER" pour confirmer :';
-            
-            var userInput = prompt(confirmMessage);
-            
-            if (userInput === 'SUPPRIMER') {
-                clients = [];
-                appointments = [];
-                nextClientId = 1;
-                nextAppointmentId = 1;
-                currentUser = null;
-                currentQRClient = null;
-                Storage.clear();
-                updateAdminDashboard();
-                showNotification('Base de donnees reinitialisee completement', 'warning');
-            } else {
-                showNotification('Reinitialisation annulee', 'info');
-            }
-        }
-        
-        // ========================================
-        // FONCTIONS UTILITAIRES
-        // ========================================
-        function findClientByCredentials(email, password) {
-            // Décoder les paramètres URL si nécessaire
-            var decodedEmail = decodeURIComponent(email);
-            var decodedPassword = decodeURIComponent(password);
-            
-            console.log('Recherche client avec:', { 
-                email: decodedEmail, 
-                password: '***' + decodedPassword.slice(-3) 
-            });
-            
-            for (var i = 0; i < clients.length; i++) {
-                var client = clients[i];
-                if (client.email === decodedEmail && client.password === decodedPassword) {
-                    console.log('Client trouve:', client.name);
-                    return client;
-                }
-            }
-            
-            console.log('Aucun client trouve avec ces identifiants');
-            return null;
-        }
-        
-        function findClientByEmail(email) {
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].email === email) {
-                    return clients[i];
-                }
-            }
-            return null;
-        }
-        
-        function findClientById(id) {
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].id === id) {
-                    return clients[i];
-                }
-            }
-            return null;
-        }
-        
-        function generatePassword() {
-            var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            var result = '';
-            for (var i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-        
-        function formatDate(dateString) {
-            if (!dateString) return 'Date inconnue';
-            try {
-                return new Date(dateString).toLocaleDateString('fr-FR');
-            } catch (e) {
-                return 'Date invalide';
-            }
-        }
-        
-        // ========================================
-        // SYSTÈME DE NOTIFICATIONS - CORRIGÉ
-        // ========================================
-        function showNotification(message, type, duration) {
-            type = type || 'info';
-            duration = duration || 4000;
-            
-            // Nettoyer le message des caractères problématiques
-            var cleanMessage = message
-                .replace(/[^\w\s\-\.\!\?\,\:\(\)]/g, '') // Supprimer émojis et caractères spéciaux
-                .replace(/\s+/g, ' ') // Normaliser les espaces
-                .trim();
-            
-            // Messages de fallback si vide
-            if (!cleanMessage) {
-                switch(type) {
-                    case 'success': cleanMessage = 'Operation reussie'; break;
-                    case 'error': cleanMessage = 'Une erreur est survenue'; break;
-                    case 'warning': cleanMessage = 'Attention'; break;
-                    default: cleanMessage = 'Information'; break;
-                }
-            }
-            
-            console.log('📢 Notification:', type, '-', cleanMessage);
-            
-            var notification = document.createElement('div');
-            notification.className = 'notification ' + type;
-            notification.textContent = cleanMessage;
-            
-            // Ajouter un bouton de fermeture
-            var closeBtn = document.createElement('span');
-            closeBtn.innerHTML = '&times;';
-            closeBtn.style.cssText = 'float: right; cursor: pointer; font-weight: bold; margin-left: 10px;';
-            closeBtn.onclick = function() {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            };
-            notification.appendChild(closeBtn);
-            
-            document.body.appendChild(notification);
-            
-            // Animation d'entrée
-            setTimeout(function() {
-                notification.classList.add('show');
-            }, 100);
-            
-            // Animation de sortie automatique
-            setTimeout(function() {
-                if (notification.classList.contains('show')) {
-                    notification.classList.remove('show');
-                    setTimeout(function() {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 400);
-                }
-            }, duration);
-        }
-        
-        // ========================================
-        // GESTION DES ERREURS GLOBALES
-        // ========================================
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Erreur JavaScript:', {
-                message: msg,
-                source: url,
-                line: lineNo,
-                column: columnNo,
-                error: error
-            });
-            showNotification('❌ Une erreur technique est survenue', 'error');
-            return false;
-        };
-        
-        // ========================================
-        // INITIALISATION DU SYSTÈME
-        // ========================================
-        window.onload = function() {
-            console.log('Initialisation du systeme Dr. Shine...');
-            
-            try {
-                // Charger les données sauvegardées
-                Storage.load();
-                
-                // Base de données vide au démarrage
-                console.log('Base de donnees chargee:', clients.length, 'clients');
-                
-                // Vérifier IMMÉDIATEMENT la connexion automatique par QR code
-                if (checkAutoLogin()) {
-                    console.log('Auto-login detecte et execute');
-                    return; // Ne pas afficher l'accueil si auto-login réussi
-                }
-                
-                // Afficher l'accueil seulement si pas d'auto-login
-                showHome();
-                if (clients.length === 0) {
-                    showNotification('Dr. Shine pret ! Base de donnees vide - Ajoutez vos premiers clients', 'info');
-                } else {
-                    showNotification('Dr. Shine pret ! (' + clients.length + ' clients)', 'success');
-                }
-                
-                // Test du système QR après chargement
-                setTimeout(function() {
-                    if (typeof QRCode !== 'undefined') {
-                        console.log('Bibliotheque QR Code prete');
-                    } else {
-                        console.log('Mode QR manuel active');
-                        window.qrManualMode = true;
-                    }
-                }, 1000);
-                
-                console.log('Systeme Dr. Shine initialise avec succes');
-                
-            } catch (error) {
-                console.error('Erreur lors de l initialisation:', error);
-                showNotification('Erreur lors de l initialisation du systeme', 'error');
-                showHome();
-            }
-        };
-        
-        // ========================================
-        // FERMETURE DE LA MODAL QR AU CLIC EXTÉRIEUR
-        // ========================================
-        document.addEventListener('click', function(event) {
-            var modal = document.getElementById('qr-modal');
-            if (event.target === modal) {
-                closeQR();
-            }
-        });
-        
-        // ========================================
-        // RACCOURCIS CLAVIER
-        // ========================================
-        document.addEventListener('keydown', function(event) {
-            // Échapper pour fermer la modal QR
-            if (event.key === 'Escape') {
-                if (!document.getElementById('qr-modal').classList.contains('hidden')) {
-                    closeQR();
-                }
-            }
-        });
-        
-        console.log('🎯 Dr. Shine Management System chargé et prêt à l\'utilisation !');
-    </script>
-</body>
-</html>;
+            document.getElementById('stat-clients').textContent = clients.length;
+            document.getElementById('stat-revenue').textContent = totalRevenue + '$';
             document.getElementById('stat-visits').textContent = totalVisits;
             
-            // Mise à jour de la liste des clients
             var clientsList = document.getElementById('clients-list');
             clientsList.innerHTML = '';
             
             if (clients.length === 0) {
-                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">📝 Aucun client enregistré.<br><br><button class="btn btn-success" onclick="showAddClientForm()">➕ Ajouter votre premier client</button></td></tr>';
+                clientsList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">Aucun client<br><button class="btn btn-success" onclick="showAddClientForm()">Ajouter le premier</button></td></tr>';
                 return;
             }
             
@@ -1921,100 +1001,63 @@
                 var client = clients[i];
                 var row = document.createElement('tr');
                 
-                var remainingVisits = client.totalVisits - client.usedVisits;
-                var progressPercent = Math.round((client.usedVisits / client.totalVisits) * 100);
+                var remaining = client.totalVisits - client.usedVisits;
+                var progress = Math.round((client.usedVisits / client.totalVisits) * 100);
                 
                 row.innerHTML = 
-                    '<td><strong>' + client.name + '</strong><br><small>ID: ' + client.id + '</small></td>' +
-                    '<td>' + client.email + '<br><small>' + client.phone + '</small></td>' +
-                    '<td>' + client.amountPaid + '€ / ' + client.contractAmount + '€<br>' +
-                        '<small style="color: ' + (client.amountPaid >= client.contractAmount ? 'green' : 'orange') + '">' +
-                        (client.amountPaid >= client.contractAmount ? '✅ Payé' : '⏳ ' + (client.contractAmount - client.amountPaid) + '€ restant') +
-                        '</small></td>' +
+                    '<td><strong>' + client.name + '</strong></td>' +
+                    '<td>' + client.email + '<br>' + client.phone + '</td>' +
+                    '<td>' + client.amountPaid + '$ / ' + client.contractAmount + '$</td>' +
+                    '<td>' + client.usedVisits + ' / ' + client.totalVisits + '<br><small>' + remaining + ' restantes</small></td>' +
                     '<td>' +
-                        '<div style="margin-bottom: 5px;">' + client.usedVisits + ' / ' + client.totalVisits + '</div>' +
-                        '<div style="background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 8px;">' +
-                            '<div style="background: ' + (progressPercent >= 100 ? '#dc3545' : '#007bff') + '; height: 100%; width: ' + progressPercent + '%;"></div>' +
-                        '</div>' +
-                        '<small>' + remainingVisits + ' restante(s)</small>' +
-                    '</td>' +
-                    '<td>' +
-                        '<button class="btn" onclick="generateQRCode(clients[' + i + '])" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Générer QR Code">📱</button>' +
-                        '<button class="btn btn-warning" onclick="editClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Modifier visites">✏️</button>' +
-                        '<button class="btn btn-danger" onclick="deleteClient(' + client.id + ')" style="padding: 8px 12px; margin: 2px; font-size: 14px;" title="Supprimer client">🗑️</button>' +
+                        '<button class="btn" onclick="generateQRCode(clients[' + i + '])" style="padding: 6px 10px; margin: 1px; font-size: 12px;">QR</button>' +
+                        '<button class="btn btn-success" onclick="viewClientDashboard(' + client.id + ')" style="padding: 6px 10px; margin: 1px; font-size: 12px;">Vue</button>' +
+                        '<button class="btn btn-warning" onclick="editClient(' + client.id + ')" style="padding: 6px 10px; margin: 1px; font-size: 12px;">Edit</button>' +
+                        '<button class="btn btn-danger" onclick="deleteClient(' + client.id + ')" style="padding: 6px 10px; margin: 1px; font-size: 12px;">Del</button>' +
                     '</td>';
                 
                 clientsList.appendChild(row);
             }
         }
         
-        // ========================================
-        // OUTILS ADMINISTRATEUR
-        // ========================================
+        // Outils
         function exportData() {
             try {
                 var data = {
                     clients: clients,
-                    appointments: appointments,
-                    exportInfo: {
-                        exportDate: new Date().toISOString(),
-                        totalClients: clients.length,
-                        version: '2.0',
-                        application: 'Dr. Shine Management System'
-                    }
+                    exportDate: new Date().toISOString()
                 };
                 
                 var dataStr = JSON.stringify(data, null, 2);
                 var dataBlob = new Blob([dataStr], {type: 'application/json'});
                 var link = document.createElement('a');
                 link.href = URL.createObjectURL(dataBlob);
-                link.download = 'DrShine_Export_' + new Date().toISOString().split('T')[0] + '.json';
+                link.download = 'drshine_export_' + new Date().toISOString().split('T')[0] + '.json';
                 link.click();
                 
-                showNotification('📤 Données exportées avec succès (' + clients.length + ' clients)', 'success');
+                showNotification('Données exportées', 'success');
             } catch (e) {
-                console.error('❌ Erreur export:', e);
-                showNotification('❌ Erreur lors de l\'exportation', 'error');
+                showNotification('Erreur export', 'error');
             }
         }
         
         function backupData() {
-            if (Storage.save()) {
-                showNotification('💾 Sauvegarde locale effectuée avec succès', 'success');
-            } else {
-                showNotification('❌ Erreur lors de la sauvegarde', 'error');
-            }
+            Storage.save();
+            showNotification('Sauvegarde effectuée', 'success');
         }
         
         function resetDatabase() {
-            var confirmMessage = '⚠️ ATTENTION - SUPPRESSION DÉFINITIVE ⚠️\n\n' +
-                'Cette action va supprimer TOUTES les données :\n' +
-                '• ' + clients.length + ' client(s)\n' +
-                '• Tous les rendez-vous\n' +
-                '• Toutes les statistiques\n\n' +
-                'Cette action est IRRÉVERSIBLE !\n\n' +
-                'Tapez exactement "SUPPRIMER" pour confirmer :';
-            
-            var userInput = prompt(confirmMessage);
-            
-            if (userInput === 'SUPPRIMER') {
+            if (prompt('Tapez "SUPPRIMER" pour confirmer:') === 'SUPPRIMER') {
                 clients = [];
-                appointments = [];
                 nextClientId = 1;
-                nextAppointmentId = 1;
                 currentUser = null;
-                currentQRClient = null;
                 Storage.clear();
                 updateAdminDashboard();
-                showNotification('🗑️ Base de données réinitialisée complètement', 'warning');
-            } else {
-                showNotification('❌ Réinitialisation annulée', 'info');
+                showNotification('Base réinitialisée', 'info');
             }
         }
         
-        // ========================================
-        // FONCTIONS UTILITAIRES
-        // ========================================
+        // Utilitaires
         function findClientByCredentials(email, password) {
             for (var i = 0; i < clients.length; i++) {
                 if (clients[i].email === email && clients[i].password === password) {
@@ -2024,15 +1067,6 @@
             return null;
         }
         
-        function findClientByEmail(email) {
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].email === email) {
-                    return clients[i];
-                }
-            }
-            return null;
-        }
-        
         function findClientById(id) {
             for (var i = 0; i < clients.length; i++) {
                 if (clients[i].id === id) {
@@ -2042,43 +1076,30 @@
             return null;
         }
         
+        function findClientByEmail(email) {
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].email === email) {
+                    return clients[i];
+                }
+            }
+            return null;
+        }
+        
         function generatePassword() {
-            var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            var result = '';
-            for (var i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
+            return Math.random().toString(36).substr(2, 8);
         }
         
-        function formatDate(dateString) {
-            if (!dateString) return 'Date inconnue';
-            try {
-                return new Date(dateString).toLocaleDateString('fr-FR');
-            } catch (e) {
-                return 'Date invalide';
-            }
-        }
-        
-        // ========================================
-        // SYSTÈME DE NOTIFICATIONS
-        // ========================================
-        function showNotification(message, type, duration) {
-            type = type || 'info';
-            duration = duration || 4000;
-            
+        function showNotification(message, type) {
             var notification = document.createElement('div');
             notification.className = 'notification ' + type;
             notification.textContent = message;
             
             document.body.appendChild(notification);
             
-            // Animation d'entrée
             setTimeout(function() {
                 notification.classList.add('show');
             }, 100);
             
-            // Animation de sortie
             setTimeout(function() {
                 notification.classList.remove('show');
                 setTimeout(function() {
@@ -2086,94 +1107,51 @@
                         notification.parentNode.removeChild(notification);
                     }
                 }, 400);
-            }, duration);
+            }, 3000);
         }
         
-        // ========================================
-        // GESTION DES ERREURS GLOBALES
-        // ========================================
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Erreur JavaScript:', {
-                message: msg,
-                source: url,
-                line: lineNo,
-                column: columnNo,
-                error: error
-            });
-            showNotification('❌ Une erreur technique est survenue', 'error');
-            return false;
-        };
-        
-        // ========================================
-        // INITIALISATION DU SYSTÈME
-        // ========================================
-        window.onload = function() {
-            console.log('🚀 Initialisation du système Dr. Shine...');
-            
+        function checkAutoLogin() {
             try {
-                // Charger les données sauvegardées
-                Storage.load();
+                var urlParams = new URLSearchParams(window.location.search);
+                var auto = urlParams.get('auto');
+                var email = urlParams.get('email');
+                var password = urlParams.get('password');
                 
-                // Base de données vide au démarrage
-                console.log('📊 Base de données chargée:', clients.length, 'clients');
-                
-                // Vérifier la connexion automatique par QR code
-                if (!checkAutoLogin()) {
-                    showHome();
-                    if (clients.length === 0) {
-                        showNotification('🏥 Dr. Shine prêt ! Base de données vide - Ajoutez vos premiers clients', 'info');
-                    } else {
-                        showNotification('🏥 Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
+                if (auto === '1' && email && password) {
+                    var client = findClientByCredentials(decodeURIComponent(email), decodeURIComponent(password));
+                    
+                    if (client) {
+                        currentUser = client;
+                        hideAllSections();
+                        document.getElementById('client-dashboard').classList.add('active');
+                        updateClientDashboard();
+                        
+                        if (window.history && window.history.replaceState) {
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                        
+                        setTimeout(function() {
+                            showNotification('Connexion QR réussie ! Bienvenue ' + client.name, 'success');
+                        }, 500);
+                        
+                        return true;
                     }
                 }
-                
-                // Vérifier les bibliothèques après un délai
-                setTimeout(function() {
-                    if (typeof QRCode !== 'undefined') {
-                        console.log('✅ Bibliothèque QR Code chargée et prête');
-                        qrLibraryLoaded = true;
-                    } else {
-                        console.log('📡 Bibliothèque QR non disponible - utilisation de l\'API en ligne');
-                        qrLibraryLoaded = 'online';
-                    }
-                }, 2000);
-                
-                console.log('✅ Système Dr. Shine initialisé avec succès');
-                console.log('📊 Statistiques:', {
-                    clients: clients.length,
-                    appointments: appointments.length
-                });
-                
             } catch (error) {
-                console.error('❌ Erreur lors de l\'initialisation:', error);
-                showNotification('❌ Erreur lors de l\'initialisation du système', 'error');
-                showHome(); // Afficher l'accueil en cas d'erreur
+                console.error('Erreur auto-login:', error);
+            }
+            return false;
+        }
+        
+        // Initialisation
+        window.onload = function() {
+            Storage.load();
+            
+            if (!checkAutoLogin()) {
+                showHome();
+                showNotification('Dr. Shine prêt ! (' + clients.length + ' clients)', 'success');
             }
         };
-        
-        // ========================================
-        // FERMETURE DE LA MODAL QR AU CLIC EXTÉRIEUR
-        // ========================================
-        document.addEventListener('click', function(event) {
-            var modal = document.getElementById('qr-modal');
-            if (event.target === modal) {
-                closeQR();
-            }
-        });
-        
-        // ========================================
-        // RACCOURCIS CLAVIER
-        // ========================================
-        document.addEventListener('keydown', function(event) {
-            // Échapper pour fermer la modal QR
-            if (event.key === 'Escape') {
-                if (!document.getElementById('qr-modal').classList.contains('hidden')) {
-                    closeQR();
-                }
-            }
-        });
-        
-        console.log('🎯 Dr. Shine Management System chargé et prêt à l\'utilisation !');
     </script>
 </body>
 </html>
