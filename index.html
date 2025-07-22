@@ -1077,7 +1077,6 @@
             
             var passagesRestants = currentUser.totalVisits - currentUser.usedVisits;
             var costPerVisit = currentUser.contractAmount / currentUser.totalVisits;
-            // MODIFICATION: Nouveau calcul du montant dû = montant contrat - montant payé
             var amountDue = currentUser.contractAmount - currentUser.amountPaid;
             
             document.getElementById('client-remaining').textContent = passagesRestants;
@@ -1400,7 +1399,6 @@
                 }
             }
             
-            // MODIFICATION: Nouveau calcul du montant en attente = somme des (contractAmount - amountPaid)
             var pendingAmount = 0;
             for (var k = 0; k < clients.length; k++) {
                 var amountDue = clients[k].contractAmount - clients[k].amountPaid;
@@ -1671,7 +1669,6 @@
                 for (var i = 0; i < clients.length; i++) {
                     var client = clients[i];
                     var remaining = client.totalVisits - client.usedVisits;
-                    // MODIFICATION: Nouveau calcul du solde = contractAmount - amountPaid
                     var balance = client.contractAmount - client.amountPaid;
                     var progressPercent = (client.usedVisits / client.totalVisits) * 100;
                     
